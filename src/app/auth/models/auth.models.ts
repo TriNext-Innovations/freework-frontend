@@ -28,6 +28,7 @@ export interface User {
   lastName: string;
   role: 'CUSTOMER' | 'FREELANCER' | 'ADMIN';
   profilePicture?: string;
+  avatar?: string;
   createdAt: string;
 }
 
@@ -50,6 +51,6 @@ export interface TokenPayload {
   family_name?: string;
   profilePicture?: string;
   picture?: string;
+  avatar?: string;
   authorities?: string[];
 }
-

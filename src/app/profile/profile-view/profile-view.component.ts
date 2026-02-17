@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ProfileService } from '../profile.service';
 import { AuthService } from '../../auth/auth.service';
-import { Profile, FreelancerProfile, CustomerProfile } from '../models/profile.models';
+import { Profile, FreelancerProfile, CustomerProfile, AdminProfile } from '../models/profile.models';
 
 @Component({
   selector: 'app-profile-view',
@@ -78,6 +78,10 @@ export class ProfileViewComponent implements OnInit {
 
   isCustomer(profile: Profile): profile is CustomerProfile {
     return profile.role === 'CUSTOMER';
+  }
+
+  isAdmin(profile: Profile): profile is AdminProfile {
+    return profile.role === 'ADMIN';
   }
 
   editProfile() {

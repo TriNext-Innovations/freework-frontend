@@ -10,6 +10,7 @@ import { AuthResponse, LoginRequest, RegisterRequest, User, RefreshTokenRequest,
 })
 export class AuthService {
   private readonly API_URL = 'http://localhost:8080/auth'; // Update with your backend URL
+  private readonly PROFILE_API_URL = 'http://localhost:8080/api/profile';
   private readonly TOKEN_KEY = 'freework_access_token';
   private readonly REFRESH_TOKEN_KEY = 'freework_refresh_token';
   private useMockData = false; // Toggle to switch between mock and real API
@@ -52,6 +53,14 @@ export class AuthService {
     // Start refresh token timer if user is logged in
     if (storedUser && this.getAccessToken()) {
       this.startRefreshTokenTimer();
+    }
+
+    if (storedUser && this.getAccessToken() && (!storedUser.avatar && !storedUser.profilePicture || !storedUser.firstName || !storedUser.lastName)) {
+      this.fetchUserProfile().subscribe({
+        error: () => {
+          // Ignore; fallback handling stays in UI.
+        }
+      });
     }
   }
 
@@ -236,8 +245,9 @@ export class AuthService {
    * Fetch current user profile
    */
   fetchUserProfile(): Observable<User> {
-    return this.http.get<User>(`${this.API_URL}/me`)
+    return this.http.get<User>(`${this.PROFILE_API_URL}`)
       .pipe(
+        map(user => this.normalizeUser(user, this.getAccessToken() || undefined) || user),
         tap(user => {
           this.currentUserSubject.next(user);
           this.storeUser(user);
@@ -292,7 +302,8 @@ export class AuthService {
       return null;
     }
     try {
-      return JSON.parse(userStr);
+      const parsed = JSON.parse(userStr);
+      return this.normalizeUser(parsed, this.getAccessToken() || undefined) || parsed;
     } catch (error) {
       console.error('Error parsing stored user:', error);
       return null;
@@ -308,13 +319,60 @@ export class AuthService {
     console.log('🔐 Access token:', response.accessToken ? 'Present' : 'Missing');
 
     this.setTokens(response.accessToken, response.refreshToken);
-    this.currentUserSubject.next(response.user);
-    this.storeUser(response.user);
+
+    const normalizedUser = this.normalizeUser(response.user, response.accessToken) || response.user;
+    if (!normalizedUser) {
+      console.error('❌ No user data available after normalization');
+      return;
+    }
+
+    this.currentUserSubject.next(normalizedUser);
+    this.storeUser(normalizedUser);
     this.startRefreshTokenTimer();
+
+    if (!this.useMockData && (!normalizedUser.avatar || !normalizedUser.firstName || !normalizedUser.lastName)) {
+      this.fetchUserProfile().subscribe({
+        error: (error) => {
+          console.error('❌ Error fetching profile for user details:', error);
+        }
+      });
+    }
 
     console.log('✅ Auth response handled. Current user:', this.currentUserValue);
     console.log('✅ Is authenticated:', this.isAuthenticated);
     console.log('✅ Token in storage:', this.getAccessToken() ? 'Present' : 'Missing');
+  }
+
+  private normalizeUser(rawUser: any, token?: string): User | null {
+    const tokenUser = token ? this.extractUserFromToken(token) : null;
+    if (!rawUser && !tokenUser) {
+      return null;
+    }
+
+    const profilePicture =
+      rawUser?.profilePicture ||
+      rawUser?.profilePictureUrl ||
+      rawUser?.picture ||
+      tokenUser?.profilePicture;
+
+    const avatar =
+      rawUser?.avatar ||
+      rawUser?.avatarUrl ||
+      rawUser?.imageUrl ||
+      rawUser?.photoUrl ||
+      profilePicture ||
+      tokenUser?.avatar;
+
+    return {
+      id: String(rawUser?.id || rawUser?.userId || tokenUser?.id || ''),
+      email: rawUser?.email || tokenUser?.email || '',
+      firstName: rawUser?.firstName || rawUser?.given_name || tokenUser?.firstName || '',
+      lastName: rawUser?.lastName || rawUser?.family_name || tokenUser?.lastName || '',
+      role: (rawUser?.role || tokenUser?.role || 'FREELANCER') as 'CUSTOMER' | 'FREELANCER' | 'ADMIN',
+      avatar: avatar,
+      profilePicture: profilePicture,
+      createdAt: rawUser?.createdAt || tokenUser?.createdAt || new Date().toISOString()
+    };
   }
 
   /**
@@ -347,6 +405,7 @@ export class AuthService {
         firstName: decoded.firstName || decoded.given_name || '',
         lastName: decoded.lastName || decoded.family_name || '',
         role: (decoded.role || decoded.authorities?.[0] || 'FREELANCER') as 'CUSTOMER' | 'FREELANCER' | 'ADMIN',
+        avatar: decoded.avatar,
         profilePicture: decoded.profilePicture || decoded.picture,
         createdAt: decoded.iat ? new Date(decoded.iat * 1000).toISOString() : new Date().toISOString()
       };

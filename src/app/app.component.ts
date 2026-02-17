@@ -82,4 +82,15 @@ export class AppComponent implements OnInit {
   closeSidenav(): void {
     this.sidenavOpened = false;
   }
+
+  getAvatarUrl(user: User): string {
+    return user.avatar || user.profilePicture || '';
+  }
+
+  onAvatarError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    if (img) {
+      img.removeAttribute('src');
+    }
+  }
 }

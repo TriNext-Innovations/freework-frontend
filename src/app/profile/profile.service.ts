@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
-import { tap, catchError, delay } from 'rxjs/operators';
+import { tap, catchError, delay, map } from 'rxjs/operators';
 import { Profile, UpdateProfileRequest, FreelancerProfile, CustomerProfile } from './models/profile.models';
 import { AuthService } from '../auth/auth.service';
 
@@ -9,8 +9,8 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class ProfileService {
-  private readonly API_URL = 'http://localhost:8080/api/profiles';
-  private useMockData = true; // Toggle for testing
+  private readonly API_URL = 'http://localhost:8080/api/profile';
+  private useMockData = false; // Toggle for testing
 
   private currentProfileSubject = new BehaviorSubject<Profile | null>(null);
   public currentProfile$ = this.currentProfileSubject.asObservable();
@@ -28,7 +28,7 @@ export class ProfileService {
     // Load profile when user logs in
     this.authService.currentUser$.subscribe(user => {
       if (user) {
-        this.loadProfile(user.id).subscribe();
+        this.getMyProfile().subscribe();
       } else {
         this.currentProfileSubject.next(null);
       }
@@ -142,8 +142,9 @@ export class ProfileService {
       return this.getMockProfile(user.id);
     }
 
-    return this.http.get<Profile>(`${this.API_URL}/me`)
+    return this.http.get<Profile>(`${this.API_URL}`)
       .pipe(
+        map(profile => this.normalizeProfile(profile)),
         tap(profile => this.currentProfileSubject.next(profile)),
         catchError(error => {
           console.error('Error loading profile:', error);
@@ -160,8 +161,9 @@ export class ProfileService {
       return this.getMockProfile(userId);
     }
 
-    return this.http.get<Profile>(`${this.API_URL}/user/${userId}`)
+    return this.http.get<Profile>(`${this.API_URL}/${userId}`)
       .pipe(
+        map(profile => this.normalizeProfile(profile)),
         catchError(error => {
           console.error('Error loading profile:', error);
           return throwError(() => error);
@@ -177,8 +179,9 @@ export class ProfileService {
       return this.updateMockProfile(updates);
     }
 
-    return this.http.put<Profile>(`${this.API_URL}/me`, updates)
+    return this.http.put<Profile>(`${this.API_URL}`, updates)
       .pipe(
+        map(profile => this.normalizeProfile(profile)),
         tap(profile => this.currentProfileSubject.next(profile)),
         catchError(error => {
           console.error('Error updating profile:', error);
@@ -217,6 +220,20 @@ export class ProfileService {
       .pipe(
         tap(profile => this.currentProfileSubject.next(profile))
       );
+  }
+
+  private normalizeProfile(profile: Profile): Profile {
+    const raw = profile as Profile & { avatar?: string; profilePicture?: string; id?: string | number; userId?: string | number };
+    const avatar = raw.avatar || raw.profilePicture;
+    const profilePicture = raw.profilePicture || raw.avatar;
+
+    return {
+      ...raw,
+      id: String(raw.id ?? ''),
+      userId: String(raw.userId ?? ''),
+      avatar,
+      profilePicture
+    } as Profile;
   }
 
   /**
@@ -260,4 +277,3 @@ export class ProfileService {
     });
   }
 }
-

@@ -2,7 +2,7 @@ name: Deploy GitHub Pages (gh-pages branch)
 
 on:
   push:
-    branches: ["main"]
+    branches: ["main", "feature/api-live-test"]
   workflow_dispatch:
 
 permissions:

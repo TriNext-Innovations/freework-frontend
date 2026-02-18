@@ -11,7 +11,7 @@
       <!-- Current Status Badge -->
       <div class="current-status" *ngIf="currentStatus">
         <mat-chip [color]="getStatusColor(currentStatus)" class="status-chip">
-          <mat-icon>{{ statusSteps[getCurrentStep()]?.icon || 'info' }}</mat-icon>
+          <mat-icon>{{ statusSteps[getCurrentStep()].icon || 'info' }}</mat-icon>
           {{ currentStatus }}
         </mat-chip>
         <p class="status-message" *ngIf="statusMessage">{{ statusMessage }}</p>

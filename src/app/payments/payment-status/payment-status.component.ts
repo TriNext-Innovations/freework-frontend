@@ -91,7 +91,8 @@ export class PaymentStatusComponent implements OnInit {
 
   getCurrentStep(): number {
     if (!this.currentStatus) return 0;
-    return this.statusSteps.findIndex(step => step.status === this.currentStatus);
+    const stepIndex = this.statusSteps.findIndex(step => step.status === this.currentStatus);
+    return stepIndex >= 0 ? stepIndex : 0;
   }
 
   isStepCompleted(index: number): boolean {

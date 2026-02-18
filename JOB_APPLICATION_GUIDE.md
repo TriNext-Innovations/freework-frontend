@@ -288,6 +288,7 @@ GET    /api/applications/check/:jobId - Check if already applied
 
 ### My Applications (Freelancer View)
 
+{% raw %}
 ```html
 <div class="my-applications">
   <h2>My Applications</h2>
@@ -318,6 +319,7 @@ GET    /api/applications/check/:jobId - Check if already applied
   }
 </div>
 ```
+{% endraw %}
 
 ## Notifications
 

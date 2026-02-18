@@ -9,7 +9,7 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class ProfileService {
-  private readonly API_URL = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/profile';
+  private readonly API_URL = 'http://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/profile';
   private useMockData = false; // Toggle for testing
 
   private currentProfileSubject = new BehaviorSubject<Profile | null>(null);

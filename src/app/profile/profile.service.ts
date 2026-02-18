@@ -10,7 +10,7 @@ import { AuthService } from '../auth/auth.service';
 })
 export class ProfileService {
   private readonly API_URL = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/profile';
-  private useMockData = false; // Toggle for testing
+  private useMockData = true; // Toggle for testing
 
   private currentProfileSubject = new BehaviorSubject<Profile | null>(null);
   public currentProfile$ = this.currentProfileSubject.asObservable();

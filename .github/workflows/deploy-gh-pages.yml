@@ -7,6 +7,8 @@ on:
 
 permissions:
   contents: write
+  pages: write
+  id-token: write
 
 jobs:
   build-and-deploy:
@@ -27,9 +29,14 @@ jobs:
       - name: Build
         run: npm run build -- --configuration production
 
-      - name: Deploy
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Copy 404 fallback
+        run: cp dist/angular-app/browser/index.html dist/angular-app/browser/404.html
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: dist/angular-app/browser
+          publish_branch: gh-pages
           force_orphan: true
+          cname: freework.co.za

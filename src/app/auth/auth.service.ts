@@ -18,7 +18,7 @@ export class AuthService {
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
 
-  private refreshTokenTimeout?: ReturnType<typeof setTimeout>;
+  private refreshTokenTimeout?: number;
 
   // Mock users for testing
   private mockUsers: User[] = [
@@ -87,7 +87,16 @@ export class AuthService {
     }
 
     console.log('⚠️ Using real API authentication');
-    return this.http.post<any>(`${this.API_URL}/login`, credentials)
+
+    // Safari-compatible HTTP options
+    const httpOptions = {
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      }
+    };
+
+    return this.http.post<any>(`${this.API_URL}/login`, credentials, httpOptions)
       .pipe(
         tap(response => {
           console.log('📥 Raw API Response received:', response);
@@ -111,6 +120,8 @@ export class AuthService {
         }),
         catchError(error => {
           console.error('❌ Login error:', error);
+          console.error('❌ Error status:', error.status);
+          console.error('❌ Error message:', error.message);
           return throwError(() => error);
         })
       );
@@ -256,53 +267,106 @@ export class AuthService {
   }
 
   /**
+   * Safari-compatible localStorage wrapper
+   * Handles private browsing mode where localStorage throws exceptions
+   */
+  private safeLocalStorageGet(key: string): string | null {
+    try {
+      if (typeof localStorage === 'undefined') {
+        console.warn('localStorage is not available');
+        return null;
+      }
+      return localStorage.getItem(key);
+    } catch (error) {
+      console.warn('localStorage.getItem failed (Safari private mode?):', error);
+      return null;
+    }
+  }
+
+  private safeLocalStorageSet(key: string, value: string): boolean {
+    try {
+      if (typeof localStorage === 'undefined') {
+        console.warn('localStorage is not available');
+        return false;
+      }
+      localStorage.setItem(key, value);
+      return true;
+    } catch (error) {
+      console.warn('localStorage.setItem failed (Safari private mode?):', error);
+      return false;
+    }
+  }
+
+  private safeLocalStorageRemove(key: string): boolean {
+    try {
+      if (typeof localStorage === 'undefined') {
+        console.warn('localStorage is not available');
+        return false;
+      }
+      localStorage.removeItem(key);
+      return true;
+    } catch (error) {
+      console.warn('localStorage.removeItem failed (Safari private mode?):', error);
+      return false;
+    }
+  }
+
+  /**
    * Get access token from storage
    */
   getAccessToken(): string | null {
-    return localStorage.getItem(this.TOKEN_KEY);
+    return this.safeLocalStorageGet(this.TOKEN_KEY);
   }
 
   /**
    * Get refresh token from storage
    */
   getRefreshToken(): string | null {
-    return localStorage.getItem(this.REFRESH_TOKEN_KEY);
+    return this.safeLocalStorageGet(this.REFRESH_TOKEN_KEY);
   }
 
   /**
    * Set tokens in storage
    */
   private setTokens(accessToken: string, refreshToken: string): void {
-    localStorage.setItem(this.TOKEN_KEY, accessToken);
-    localStorage.setItem(this.REFRESH_TOKEN_KEY, refreshToken);
+    this.safeLocalStorageSet(this.TOKEN_KEY, accessToken);
+    this.safeLocalStorageSet(this.REFRESH_TOKEN_KEY, refreshToken);
   }
 
   /**
    * Clear all tokens and user data
    */
   private clearTokens(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_TOKEN_KEY);
-    localStorage.removeItem('freework_user');
+    this.safeLocalStorageRemove(this.TOKEN_KEY);
+    this.safeLocalStorageRemove(this.REFRESH_TOKEN_KEY);
+    this.safeLocalStorageRemove('freework_user');
   }
 
   /**
    * Store user data
    */
   private storeUser(user: User): void {
-    localStorage.setItem('freework_user', JSON.stringify(user));
+    try {
+      const userJson = JSON.stringify(user);
+      this.safeLocalStorageSet('freework_user', userJson);
+    } catch (error) {
+      console.error('Error stringifying user data:', error);
+    }
   }
 
   /**
    * Get stored user data
    */
   private getStoredUser(): User | null {
-    const userStr = localStorage.getItem('freework_user');
-    if (!userStr || userStr === 'undefined') {
+    const userStr = this.safeLocalStorageGet('freework_user');
+    if (!userStr || userStr === 'undefined' || userStr === 'null') {
       return null;
     }
     try {
       const parsed = JSON.parse(userStr);
+      if (!parsed || typeof parsed !== 'object') {
+        return null;
+      }
       return this.normalizeUser(parsed, this.getAccessToken() || undefined) || parsed;
     } catch (error) {
       console.error('Error parsing stored user:', error);
@@ -376,14 +440,55 @@ export class AuthService {
   }
 
   /**
-   * Decode JWT token
+   * Decode JWT token (Safari-compatible)
    */
   private decodeToken(token: string): TokenPayload | null {
     try {
-      const payload = token.split('.')[1];
-      return JSON.parse(atob(payload));
+      if (!token || typeof token !== 'string') {
+        console.error('Invalid token provided to decodeToken');
+        return null;
+      }
+
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        console.error('Invalid JWT token format');
+        return null;
+      }
+
+      const payload = parts[1];
+
+      // Safari-compatible base64 decoding
+      // Replace URL-safe characters and pad if necessary
+      let base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const pad = base64.length % 4;
+      if (pad) {
+        if (pad === 1) {
+          console.error('Invalid base64 string');
+          return null;
+        }
+        base64 += new Array(5 - pad).join('=');
+      }
+
+      // Check if atob is available (should be in all modern browsers including Safari)
+      if (typeof atob === 'undefined') {
+        console.error('atob is not available in this environment');
+        return null;
+      }
+
+      // Use decodeURIComponent for better Unicode support on Safari
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+
+      const parsed = JSON.parse(jsonPayload);
+      console.log('🔍 Successfully decoded token payload:', parsed);
+      return parsed;
     } catch (error) {
-      console.error('Error decoding token:', error);
+      console.error('❌ Error decoding token:', error);
+      console.error('❌ Token that failed:', token?.substring(0, 20) + '...');
       return null;
     }
   }
@@ -455,9 +560,12 @@ export class AuthService {
     const expires = new Date(decoded.exp * 1000);
     const timeout = expires.getTime() - Date.now() - (60 * 1000);
 
-    this.refreshTokenTimeout = setTimeout(() => {
-      this.refreshToken().subscribe();
-    }, timeout);
+    // Safari-compatible timeout handling
+    if (timeout > 0) {
+      this.refreshTokenTimeout = window.setTimeout(() => {
+        this.refreshToken().subscribe();
+      }, timeout);
+    }
   }
 
   /**
@@ -465,7 +573,8 @@ export class AuthService {
    */
   private stopRefreshTokenTimer(): void {
     if (this.refreshTokenTimeout) {
-      clearTimeout(this.refreshTokenTimeout);
+      window.clearTimeout(this.refreshTokenTimeout);
+      this.refreshTokenTimeout = undefined;
     }
   }
 

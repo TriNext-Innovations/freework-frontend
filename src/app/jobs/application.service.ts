@@ -8,7 +8,7 @@ import { MockDataService } from './mock-data.service';
   providedIn: 'root'
 })
 export class ApplicationService {
-  private apiUrl = 'http://localhost:8080/api/applications';
+  private apiUrl = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/applications';
   private useMockData = true; // Toggle this to switch between mock and real API
 
   constructor(

@@ -10,8 +10,8 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class JobService {
-  private readonly API_URL = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/jobs';
-  private useMockData = true; // Toggle this to switch between mock and real API
+  private readonly API_URL = 'http://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/jobs';
+  private useMockData = false; // Toggle this to switch between mock and real API
 
   private jobsSubject = new BehaviorSubject<Job[]>([]);
   public jobs$ = this.jobsSubject.asObservable();

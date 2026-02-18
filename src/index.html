@@ -16,6 +16,10 @@
       if (path) {
         var rest = path + (params.get('q') ? ('?' + params.get('q')) : '') + window.location.hash;
         window.history.replaceState(null, '', rest);
+        return;
+      }
+      if (window.location.pathname === '/' && !window.location.hash) {
+        window.history.replaceState(null, '', '/jobs');
       }
     })();
   </script>

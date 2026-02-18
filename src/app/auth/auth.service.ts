@@ -13,7 +13,6 @@ export class AuthService {
   private readonly TOKEN_KEY = 'freework_access_token';
   private readonly REFRESH_TOKEN_KEY = 'freework_refresh_token';
   private useMockData = true; // Toggle to switch between mock and real API
-
   private currentUserSubject: BehaviorSubject<User | null>;
   public currentUser$: Observable<User | null>;
 

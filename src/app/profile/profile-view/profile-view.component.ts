@@ -94,6 +94,15 @@ export class ProfileViewComponent implements OnInit {
     return availability ? labels[availability] || availability : 'Not specified';
   }
 
+  getProfileImage(profile: Profile): string {
+    const image = (profile as any).profilePicture
+      || (profile as any).profilePictureUrl
+      || (profile as any).avatar
+      || (profile as any).avatarUrl
+      || (profile as any).picture;
+    return image || 'https://via.placeholder.com/150';
+  }
+
   getProficiencyLabel(proficiency: string): string {
     const labels: { [key: string]: string } = {
       'BASIC': 'Basic',
@@ -104,4 +113,3 @@ export class ProfileViewComponent implements OnInit {
     return labels[proficiency] || proficiency;
   }
 }
-

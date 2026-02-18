@@ -9,8 +9,8 @@ import { AuthService } from '../auth/auth.service';
   providedIn: 'root'
 })
 export class ProfileService {
-  private readonly API_URL = 'http://localhost:8080/api/profiles';
-  private useMockData = true; // Toggle for testing
+  private readonly API_URL = 'http://localhost:8080/api/profile';
+  private useMockData = false; // Toggle for testing
 
   private currentProfileSubject = new BehaviorSubject<Profile | null>(null);
   public currentProfile$ = this.currentProfileSubject.asObservable();
@@ -28,7 +28,7 @@ export class ProfileService {
     // Load profile when user logs in
     this.authService.currentUser$.subscribe(user => {
       if (user) {
-        this.loadProfile(user.id).subscribe();
+        this.getMyProfile().subscribe();
       } else {
         this.currentProfileSubject.next(null);
       }
@@ -142,7 +142,7 @@ export class ProfileService {
       return this.getMockProfile(user.id);
     }
 
-    return this.http.get<Profile>(`${this.API_URL}/me`)
+    return this.http.get<Profile>(`${this.API_URL}`)
       .pipe(
         tap(profile => this.currentProfileSubject.next(profile)),
         catchError(error => {
@@ -177,7 +177,7 @@ export class ProfileService {
       return this.updateMockProfile(updates);
     }
 
-    return this.http.put<Profile>(`${this.API_URL}/me`, updates)
+    return this.http.put<Profile>(`${this.API_URL}`, updates)
       .pipe(
         tap(profile => this.currentProfileSubject.next(profile)),
         catchError(error => {
@@ -260,4 +260,3 @@ export class ProfileService {
     });
   }
 }
-

@@ -94,6 +94,7 @@
   &.customer {
     background: #3b82f6;
   }
+}
 
 .profile-info {
   flex: 1;
@@ -352,27 +353,32 @@
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: 100%;
 }
 
 .stat-item {
   text-align: center;
-  padding: 1.5rem;
+  padding: 0.75rem;
   background: #f9fafb;
   border-radius: 8px;
+  min-width: 0;
+  box-sizing: border-box;
 
   .stat-value {
     display: block;
-    font-size: 2rem;
+    font-size: 1.3rem;
     font-weight: 700;
     color: #2563eb;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .stat-label {
     color: #6b7280;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    white-space: normal;
   }
 }
 
@@ -524,6 +530,3 @@
     grid-template-columns: 1fr;
   }
 }
-}
-
-

@@ -1,3 +1,4 @@
+          <div class="rating-section" *ngIf="profile.rating">
 <div class="profile-container">
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
@@ -21,7 +22,7 @@
       <div class="header-content">
         <div class="profile-picture-wrapper">
           <img
-            [src]="profile.avatar || profile.profilePicture || 'https://via.placeholder.com/150'"
+            [src]="profile.profilePicture || 'https://via.placeholder.com/150'"
             [alt]="profile.firstName + ' ' + profile.lastName"
             class="profile-picture"
           />
@@ -67,7 +68,6 @@
 
     <!-- Main Content -->
     <div class="profile-body">
-      <div class="main-column">
         <!-- Bio Section -->
         <section class="profile-section" *ngIf="profile.bio">
           <h2><i class="fas fa-user"></i> About</h2>
@@ -167,34 +167,6 @@
             </div>
           </section>
         </ng-container>
-
-        <!-- Admin Specific Sections -->
-        <ng-container *ngIf="isAdmin(profile)">
-          <section class="profile-section stats-section">
-            <h2><i class="fas fa-chart-bar"></i> Statistics</h2>
-            <div class="stats-grid">
-              <div class="stat-item">
-                <div class="stat-value">{{ profile.completedJobs || 0 }}</div>
-                <div class="stat-label">Completed Jobs</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">{{ profile.rating !== null && profile.rating !== undefined ? profile.rating : 'N/A' }}</div>
-                <div class="stat-label">Rating</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">{{ profile.totalReviews || 0 }}</div>
-                <div class="stat-label">Reviews</div>
-              </div>
-            </div>
-          </section>
-
-          <section class="profile-section" *ngIf="profile.skills && profile.skills.length > 0">
-            <h2><i class="fas fa-code"></i> Skills</h2>
-            <div class="skills-list">
-              <span *ngFor="let skill of profile.skills" class="skill-badge">{{ skill }}</span>
-            </div>
-          </section>
-        </ng-container>
       </div>
 
       <!-- Sidebar -->
@@ -214,25 +186,6 @@
             <div class="stat">
               <span class="stat-label">Completed Jobs</span>
               <span class="stat-value">{{ profile.completedJobs || 0 }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Quick Stats for Admins -->
-        <div class="sidebar-section" *ngIf="isAdmin(profile)">
-          <h3>Quick Stats</h3>
-          <div class="quick-stats">
-            <div class="stat">
-              <span class="stat-label">Completed Jobs</span>
-              <span class="stat-value">{{ profile.completedJobs || 0 }}</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Rating</span>
-              <span class="stat-value">{{ profile.rating !== null && profile.rating !== undefined ? profile.rating : 'N/A' }}</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Reviews</span>
-              <span class="stat-value">{{ profile.totalReviews || 0 }}</span>
             </div>
           </div>
         </div>

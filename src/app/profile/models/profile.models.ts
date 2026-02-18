@@ -7,7 +7,6 @@ export interface BaseProfile {
   lastName: string;
   email: string;
   phone?: string;
-  avatar?: string;
   profilePicture?: string;
   bio?: string;
   location?: string;
@@ -43,15 +42,6 @@ export interface CustomerProfile extends BaseProfile {
   totalJobsPosted?: number;
   verifiedPayment?: boolean;
   socialLinks?: SocialLinks;
-}
-
-export interface AdminProfile extends BaseProfile {
-  role: 'ADMIN';
-  title?: string;
-  rating?: number;
-  totalReviews?: number;
-  completedJobs?: number;
-  skills?: string[];
 }
 
 export interface PortfolioItem {
@@ -111,4 +101,6 @@ export interface UpdateProfileRequest {
   socialLinks?: SocialLinks;
 }
 
-export type Profile = FreelancerProfile | CustomerProfile | AdminProfile;
+export type Profile = FreelancerProfile | CustomerProfile;
+
+

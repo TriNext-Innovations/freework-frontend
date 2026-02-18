@@ -55,10 +55,10 @@ export class AuthService {
       this.startRefreshTokenTimer();
     }
 
-    if (storedUser && this.getAccessToken() && (!storedUser.avatar && !storedUser.profilePicture || !storedUser.firstName || !storedUser.lastName)) {
+    if (storedUser && this.getAccessToken() && !storedUser.avatar && !storedUser.profilePicture) {
       this.fetchUserProfile().subscribe({
         error: () => {
-          // Ignore; fallback handling stays in UI.
+          // Ignore; fallback avatar handling stays in UI.
         }
       });
     }
@@ -330,10 +330,10 @@ export class AuthService {
     this.storeUser(normalizedUser);
     this.startRefreshTokenTimer();
 
-    if (!this.useMockData && (!normalizedUser.avatar || !normalizedUser.firstName || !normalizedUser.lastName)) {
+    if (!this.useMockData && !normalizedUser.avatar) {
       this.fetchUserProfile().subscribe({
         error: (error) => {
-          console.error('❌ Error fetching profile for user details:', error);
+          console.error('❌ Error fetching profile for avatar:', error);
         }
       });
     }

@@ -132,13 +132,20 @@ export class JobListComponent implements OnInit {
       filters.customerId = currentUser.id;
     }
 
+    // If user is a CUSTOMER, only show their posted jobs
+    if (currentUser?.role === 'CUSTOMER') {
+      filters.customerId = currentUser.id;
+    }
+
     console.log('✅ Final filters being applied:', filters);
 
     this.jobService.getJobs(this.pageIndex, this.pageSize, filters).subscribe({
       next: (response) => {
         this.jobs = response.content;
         this.totalElements = response.totalElements;
+        this.totalElements = response.totalElements;
         this.loading = false;
+        console.log(`✅ Found ${response.totalElements} jobs matching filters`);
         console.log(`✅ Found ${response.totalElements} jobs matching filters`);
         console.log('📋 Full jobs data:', this.jobs);
         if (this.jobs.length > 0) {

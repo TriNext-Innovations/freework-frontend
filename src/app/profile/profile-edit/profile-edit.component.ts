@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } fr
 import { Router, RouterModule } from '@angular/router';
 import { ProfileService } from '../profile.service';
 import { AuthService } from '../../auth/auth.service';
-import { Profile, FreelancerProfile, CustomerProfile, AdminProfile, UpdateProfileRequest, Language } from '../models/profile.models';
+import { Profile, FreelancerProfile, CustomerProfile, UpdateProfileRequest, Language } from '../models/profile.models';
 
 @Component({
   selector: 'app-profile-edit',
@@ -71,10 +71,8 @@ export class ProfileEditComponent implements OnInit {
   initializeForm(profile: Profile) {
     if (profile.role === 'FREELANCER') {
       this.initializeFreelancerForm(profile as FreelancerProfile);
-    } else if (profile.role === 'CUSTOMER') {
-      this.initializeCustomerForm(profile as CustomerProfile);
     } else {
-      this.initializeAdminForm(profile as AdminProfile);
+      this.initializeCustomerForm(profile as CustomerProfile);
     }
   }
 
@@ -124,18 +122,6 @@ export class ProfileEditComponent implements OnInit {
     });
   }
 
-  initializeAdminForm(profile: AdminProfile) {
-    this.profileForm = this.fb.group({
-      firstName: [profile.firstName, Validators.required],
-      lastName: [profile.lastName, Validators.required],
-      email: [{ value: profile.email, disabled: true }],
-      phone: [profile.phone],
-      location: [profile.location],
-      title: [profile.title],
-      bio: [profile.bio, [Validators.maxLength(1000)]]
-    });
-  }
-
   createLanguageGroup(language?: Language): FormGroup {
     return this.fb.group({
       name: [language?.name || '', Validators.required],
@@ -161,10 +147,6 @@ export class ProfileEditComponent implements OnInit {
 
   isCustomer(): boolean {
     return this.profile?.role === 'CUSTOMER';
-  }
-
-  isAdmin(): boolean {
-    return this.profile?.role === 'ADMIN';
   }
 
   onFileSelected(event: Event) {
@@ -206,7 +188,6 @@ export class ProfileEditComponent implements OnInit {
         this.previewUrl = null;
         if (this.profile) {
           this.profile.profilePicture = response.url;
-          this.profile.avatar = response.url;
         }
         this.isSaving = false;
         setTimeout(() => this.successMessage = null, 3000);

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Redirecting...</title>
+  <script>
+    (function () {
+      var location = window.location;
+      var path = location.pathname.replace(/^\//, '');
+      var query = location.search ? location.search.substring(1) : '';
+      var redirect = location.origin + '/?p=/' + path + (query ? '&q=' + encodeURIComponent(query) : '') + location.hash;
+      location.replace(redirect);
+    })();
+  </script>
+</head>
+<body>
+  <noscript>Redirecting...</noscript>
+</body>
+</html>

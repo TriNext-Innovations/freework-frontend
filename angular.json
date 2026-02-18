@@ -32,14 +32,22 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": ".nojekyll",
+                "input": ".",
+                "output": "/"
+              },
+              {
+                "glob": "CNAME",
+                "input": ".",
+                "output": "/"
               }
             ],
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [
-              "./node_modules/particles.js/particles.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {

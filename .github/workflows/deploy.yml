@@ -1,0 +1,40 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: ["main", "feature/api-live-test"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - run: npm ci
+
+      - run: npm run build -- --configuration production
+
+      - name: Prepare deploy folder
+        run: |
+          mkdir -p deploy
+          cp -r dist/angular-app/browser/* deploy/
+          cp deploy/index.html deploy/404.html
+          touch deploy/.nojekyll
+          echo "freework.co.za" > deploy/CNAME
+          ls -la deploy/
+
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages
+          folder: deploy
+          clean: true

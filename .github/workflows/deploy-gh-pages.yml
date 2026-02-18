@@ -30,16 +30,27 @@ jobs:
         run: npm run build -- --configuration production
 
       - name: List build output
-        run: ls -la dist/angular-app/ && ls -la dist/angular-app/browser/ || echo "browser folder not found"
+        run: |
+          echo "=== dist/angular-app contents ==="
+          ls -la dist/angular-app/
+          echo "=== dist/angular-app/browser contents ==="
+          ls -la dist/angular-app/browser/ || echo "browser folder not found"
+          echo "=== Checking for index.html ==="
+          cat dist/angular-app/browser/index.html | head -20 || echo "index.html not found"
 
       - name: Copy 404 fallback
         run: cp dist/angular-app/browser/index.html dist/angular-app/browser/404.html
+
+      - name: Add .nojekyll
+        run: touch dist/angular-app/browser/.nojekyll
+
+      - name: Add CNAME
+        run: echo "freework.co.za" > dist/angular-app/browser/CNAME
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: dist/angular-app/browser
+          publish_dir: ./dist/angular-app/browser
           publish_branch: gh-pages
           force_orphan: true
-          cname: freework.co.za

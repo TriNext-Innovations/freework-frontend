@@ -1,3 +1,7 @@
+---
+liquid: false
+---
+
 # Reviews & Ratings System - Quick Reference
 
 ## 🚀 Quick Start

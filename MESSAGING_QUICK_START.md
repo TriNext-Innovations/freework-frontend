@@ -1,3 +1,7 @@
+---
+liquid: false
+---
+
 # Real-Time Messaging System - Quick Start
 
 ## 🎉 Implementation Complete!

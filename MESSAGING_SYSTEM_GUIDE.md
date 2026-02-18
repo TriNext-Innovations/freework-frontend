@@ -1,3 +1,7 @@
+---
+liquid: false
+---
+
 # Messaging System Guide
 
 ## Overview

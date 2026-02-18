@@ -1,3 +1,7 @@
+---
+liquid: false
+---
+
 # Reviews System Guide
 
 ## Overview

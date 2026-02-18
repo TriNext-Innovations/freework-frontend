@@ -1,3 +1,7 @@
+---
+liquid: false
+---
+
 # Payment Integration Guide
 
 ## Overview

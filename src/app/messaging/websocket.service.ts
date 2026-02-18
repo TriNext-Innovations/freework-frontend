@@ -34,7 +34,7 @@ export class WebSocketService {
       return;
     }
 
-    const wsUrl = `wss://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/ws?token=${token}`;
+    const wsUrl = `wss://api.freework.co.za/ws?token=${token}`;
 
     try {
       this.socket = new WebSocket(wsUrl);

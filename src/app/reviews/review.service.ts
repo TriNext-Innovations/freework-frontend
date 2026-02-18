@@ -14,7 +14,7 @@ import { MockReviewService } from './mock-review.service';
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/reviews';
+  private apiUrl = 'https://api.freework.co.za/api/reviews';
   private useMockData = true; // Toggle this to switch between mock and real API
 
   constructor(

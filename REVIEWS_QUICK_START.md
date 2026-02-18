@@ -2,6 +2,8 @@
 liquid: false
 ---
 
+{% raw %}
+
 # Reviews & Ratings System - Quick Reference
 
 ## 🚀 Quick Start
@@ -359,3 +361,5 @@ export class ReviewsComponent implements OnInit {
 ```
 
 Done! Your review system is ready to use.
+
+{% endraw %}

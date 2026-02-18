@@ -9,7 +9,7 @@ import { MockMessagingService } from './mock-messaging.service';
   providedIn: 'root'
 })
 export class MessagingService {
-  private apiUrl = 'http://localhost:8080/api/messages';
+  private apiUrl = 'http://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/messages';
   private useMockData = true; // Toggle this to switch between mock and real API
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();

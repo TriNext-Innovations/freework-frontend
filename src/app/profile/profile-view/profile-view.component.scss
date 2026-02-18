@@ -368,7 +368,7 @@
 
   .stat-value {
     display: block;
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #2563eb;
     margin-bottom: 0.25rem;
@@ -379,6 +379,7 @@
     font-size: 0.8rem;
     line-height: 1.2;
     white-space: normal;
+    word-break: break-word;
   }
 }
 

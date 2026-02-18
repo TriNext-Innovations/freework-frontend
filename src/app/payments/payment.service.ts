@@ -17,7 +17,7 @@ import { MockPaymentService } from './mock-payment.service';
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'http://localhost:8080/api/payments';
+  private apiUrl = 'http://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/payments';
   private useMockData = true; // Toggle this to switch between mock and real API
 
   private paymentStatusSubject = new BehaviorSubject<PaymentStatusUpdate | null>(null);

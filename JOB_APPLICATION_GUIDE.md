@@ -205,6 +205,7 @@ GET    /api/applications/check/:jobId - Check if already applied
 
 ### Application Form
 
+{% raw %}
 ```html
 <form [formGroup]="applicationForm" (ngSubmit)="onSubmit()">
   <h2>Apply to {{ job?.title }}</h2>
@@ -241,9 +242,11 @@ GET    /api/applications/check/:jobId - Check if already applied
   </button>
 </form>
 ```
+{% endraw %}
 
 ### Application List (Client View)
 
+{% raw %}
 ```html
 <div class="applications">
   <h3>Applications ({{ applications.length }})</h3>
@@ -285,6 +288,7 @@ GET    /api/applications/check/:jobId - Check if already applied
   }
 </div>
 ```
+{% endraw %}
 
 ### My Applications (Freelancer View)
 

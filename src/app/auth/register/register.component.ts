@@ -92,7 +92,11 @@ export class RegisterComponent implements OnInit {
     this.authService.register(userData).subscribe({
       next: (response) => {
         this.showSuccess('Registration successful! Welcome to Freework.');
-        this.router.navigate(['/login']);
+
+        // After registration, user needs to complete their profile
+        this.router.navigate(['/profile/edit'], {
+          queryParams: { firstTime: true }
+        });
       },
       error: (error) => {
         this.loading = false;

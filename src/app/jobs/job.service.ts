@@ -11,7 +11,7 @@ import { AuthService } from '../auth/auth.service';
 })
 export class JobService {
   private readonly API_URL = 'http://localhost:8080/jobs';
-  private useMockData = false; // Toggle this to switch between mock and real API
+  private useMockData = false; // Using real backend API
 
   private jobsSubject = new BehaviorSubject<Job[]>([]);
   public jobs$ = this.jobsSubject.asObservable();

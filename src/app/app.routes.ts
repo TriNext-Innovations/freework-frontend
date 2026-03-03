@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard, roleGuard } from './auth/auth.guard';
+import { requireCompleteProfile } from './profile/profile-completion.guard';
 
 export const routes: Routes = [
   // Public routes
@@ -27,7 +28,7 @@ export const routes: Routes = [
   {
     path: 'jobs/new',
     loadComponent: () => import('./jobs/job-form/job-form.component').then(m => m.JobFormComponent),
-    canActivate: [authGuard, roleGuard(['CUSTOMER'])]
+    canActivate: [authGuard, requireCompleteProfile, roleGuard(['CUSTOMER'])]
   },
   {
     path: 'jobs/:id',
@@ -36,63 +37,63 @@ export const routes: Routes = [
   {
     path: 'jobs/:id/edit',
     loadComponent: () => import('./jobs/job-form/job-form.component').then(m => m.JobFormComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, requireCompleteProfile]
   },
   {
     path: 'jobs/:id/apply',
     loadComponent: () => import('./jobs/job-application/job-application.component').then(m => m.JobApplicationComponent),
-    canActivate: [authGuard, roleGuard(['FREELANCER'])]
+    canActivate: [authGuard, requireCompleteProfile, roleGuard(['FREELANCER'])]
   },
 
   // My Jobs & Applications
   {
     path: 'my-jobs',
     loadComponent: () => import('./jobs/my-active-jobs/my-active-jobs.component').then(m => m.MyActiveJobsComponent),
-    canActivate: [authGuard, roleGuard(['CUSTOMER'])]
+    canActivate: [authGuard, requireCompleteProfile, roleGuard(['CUSTOMER'])]
   },
   {
     path: 'my-applications',
     loadComponent: () => import('./jobs/my-applications/my-applications.component').then(m => m.MyApplicationsComponent),
-    canActivate: [authGuard, roleGuard(['FREELANCER'])]
+    canActivate: [authGuard, requireCompleteProfile, roleGuard(['FREELANCER'])]
   },
   {
     path: 'my-active-jobs',
     loadComponent: () => import('./jobs/my-active-jobs/my-active-jobs.component').then(m => m.MyActiveJobsComponent),
-    canActivate: [authGuard, roleGuard(['FREELANCER'])]
+    canActivate: [authGuard, requireCompleteProfile, roleGuard(['FREELANCER'])]
   },
 
   // Messaging routes
   {
     path: 'messages',
     loadComponent: () => import('./messaging/chat/chat.component').then(m => m.ChatComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, requireCompleteProfile]
   },
   {
     path: 'messages/:conversationId',
     loadComponent: () => import('./messaging/chat/chat.component').then(m => m.ChatComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, requireCompleteProfile]
   },
 
   // Payment routes
   {
     path: 'payments',
     loadComponent: () => import('./payments/payment-list/payment-list.component').then(m => m.PaymentListComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, requireCompleteProfile]
   },
   {
     path: 'payments/:id',
     loadComponent: () => import('./payments/payment-status/payment-status.component').then(m => m.PaymentStatusComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, requireCompleteProfile]
   },
   {
     path: 'payments/:id/escrow',
     loadComponent: () => import('./payments/payment-escrow/payment-escrow.component').then(m => m.PaymentEscrowComponent),
-    canActivate: [authGuard]
+    canActivate: [authGuard, requireCompleteProfile]
   },
   {
     path: 'payments/create/:jobId',
     loadComponent: () => import('./payments/stripe-payment/stripe-payment.component').then(m => m.StripePaymentComponent),
-    canActivate: [authGuard, roleGuard(['CUSTOMER'])]
+    canActivate: [authGuard, requireCompleteProfile, roleGuard(['CUSTOMER'])]
   },
 
   // Review routes

@@ -88,7 +88,23 @@ export class LoginComponent implements OnInit {
     this.authService.login(credentials).subscribe({
       next: (response) => {
         this.loading = false;
-        this.router.navigate([this.returnUrl]);
+
+        // Get user from auth service (already set during login)
+        const user = this.authService.currentUserValue;
+
+        // Check if there's a return URL, otherwise use the post-login redirect logic
+        const redirectUrl = this.returnUrl !== '/'
+          ? this.returnUrl
+          : this.authService.getPostLoginRedirectUrl();
+
+        // Add query param if profile needs completion
+        if (user && user.profileCompleted === false) {
+          this.router.navigate(['/profile/edit'], {
+            queryParams: { firstTime: true }
+          });
+        } else {
+          this.router.navigate([redirectUrl]);
+        }
       },
       error: (error) => {
         this.loading = false;

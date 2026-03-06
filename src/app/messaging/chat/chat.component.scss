@@ -1,8 +1,25 @@
+// Pull the chat component out of .main-content's padding so it fills the
+// exact remaining viewport height without the outer page scrolling.
+:host {
+  display: block;
+  margin: calc(-1 * var(--spacing-xl));
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    margin: calc(-1 * var(--spacing-lg));
+  }
+}
+
 .chat-container {
   display: flex;
   height: calc(100vh - 64px);
+  overflow: hidden;
   background: var(--color-surface);
-  position: relative; // Important for mobile overlay
+  position: relative;
+
+  @media (max-width: 768px) {
+    height: calc(100vh - 56px);
+  }
 }
 
 // ========================================

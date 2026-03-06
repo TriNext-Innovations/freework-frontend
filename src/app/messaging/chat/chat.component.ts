@@ -322,6 +322,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  private getOtherParticipantIndex(conversation: Conversation): number {
+    const idx = conversation.participantIds.findIndex(id => id !== this.currentUserId);
+    return idx >= 0 ? idx : 0;
+  }
+
   getOtherParticipantId(): string {
     if (!this.selectedConversation) return '';
     return this.selectedConversation.participantIds.find(id => id !== this.currentUserId) || '';
@@ -329,18 +334,24 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   getOtherParticipantName(): string {
     if (!this.selectedConversation) return '';
-    // participantNames array only contains other participants (not current user)
-    // So we can just return the first name
-    return this.selectedConversation.participantNames[0] || 'Unknown';
+    const idx = this.getOtherParticipantIndex(this.selectedConversation);
+    return this.selectedConversation.participantNames[idx] || 'Unknown';
   }
 
   getOtherParticipantAvatar(): string {
-    if (!this.selectedConversation || !this.selectedConversation.participantAvatars) {
-      return 'https://i.pravatar.cc/150?img=1';
-    }
-    // participantAvatars array only contains other participants (not current user)
-    // So we can just return the first avatar
-    return this.selectedConversation.participantAvatars[0] || 'https://i.pravatar.cc/150?img=1';
+    if (!this.selectedConversation) return 'https://i.pravatar.cc/150?img=1';
+    const idx = this.getOtherParticipantIndex(this.selectedConversation);
+    return this.selectedConversation.participantAvatars?.[idx] || 'https://i.pravatar.cc/150?img=1';
+  }
+
+  getConversationName(conversation: Conversation): string {
+    const idx = this.getOtherParticipantIndex(conversation);
+    return conversation.participantNames[idx] || 'Unknown';
+  }
+
+  getConversationAvatar(conversation: Conversation): string {
+    const idx = this.getOtherParticipantIndex(conversation);
+    return conversation.participantAvatars?.[idx] || 'https://i.pravatar.cc/150?img=1';
   }
 
   isMyMessage(message: Message): boolean {

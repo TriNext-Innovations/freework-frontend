@@ -22,13 +22,13 @@
         (click)="selectConversation(conversation)"
       >
         <div class="conversation-avatar">
-          <img [src]="conversation.participantAvatars?.[0] || 'https://i.pravatar.cc/150?img=1'" alt="Avatar">
+          <img [src]="getConversationAvatar(conversation)" alt="Avatar">
           <span class="unread-indicator" *ngIf="conversation.unreadCount > 0"></span>
         </div>
 
         <div class="conversation-info">
           <div class="conversation-header">
-            <h3 class="conversation-name">{{ conversation.participantNames[0] }}</h3>
+            <h3 class="conversation-name">{{ getConversationName(conversation) }}</h3>
             <span class="conversation-time" *ngIf="conversation.lastMessage">
               {{ formatTime(conversation.lastMessage.timestamp) }}
             </span>

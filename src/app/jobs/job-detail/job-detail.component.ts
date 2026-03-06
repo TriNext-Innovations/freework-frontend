@@ -159,8 +159,9 @@ export class JobDetailComponent implements OnInit {
   }
 
   applyForJob(): void {
-    // TODO: Implement application functionality
-    this.showSuccess('Application feature coming soon!');
+    if (this.job) {
+      this.router.navigate(['/jobs', this.job.id, 'apply']);
+    }
   }
 
   contactCustomer(): void {

@@ -132,7 +132,6 @@
     .conversation-info {
       flex: 1;
       min-width: 0;
-      position: relative;
     }
 
     .conversation-header {
@@ -160,6 +159,12 @@
     }
 
     .conversation-preview {
+      .preview-row {
+        display: flex;
+        align-items: center;
+        gap: var(--spacing-xs);
+      }
+
       .last-message {
         margin: 0;
         font-size: 0.813rem;
@@ -168,6 +173,8 @@
         text-overflow: ellipsis;
         white-space: nowrap;
         line-height: 1.4;
+        flex: 1;
+        min-width: 0;
       }
 
       .job-title {
@@ -187,9 +194,7 @@
     }
 
     .unread-count {
-      position: absolute;
-      top: 0;
-      right: 0;
+      flex-shrink: 0;
       background: #3b82f6;
       color: white;
       font-size: 0.75rem;

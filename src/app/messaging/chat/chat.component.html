@@ -36,18 +36,19 @@
           </div>
 
           <div class="conversation-preview">
-            <p class="last-message" *ngIf="conversation.lastMessage">
-              {{ conversation.lastMessage.content }}
-            </p>
+            <div class="preview-row">
+              <p class="last-message" *ngIf="conversation.lastMessage">
+                {{ conversation.lastMessage.content }}
+              </p>
+              <span class="unread-count" *ngIf="conversation.unreadCount > 0">
+                {{ conversation.unreadCount }}
+              </span>
+            </div>
             <p class="job-title" *ngIf="conversation.jobTitle">
               <mat-icon>work</mat-icon>
               {{ conversation.jobTitle }}
             </p>
           </div>
-
-          <span class="unread-count" *ngIf="conversation.unreadCount > 0">
-            {{ conversation.unreadCount }}
-          </span>
         </div>
       </div>
 

@@ -16,6 +16,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { MessagingService } from '../messaging.service';
 import { WebSocketService } from '../websocket.service';
 import { Message, Conversation, TypingIndicator } from '../models';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-chat',
@@ -58,7 +59,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   // Additional properties
   totalUnreadCount = 0;
   typingUsers = new Map<string, string>();
-  currentUserId = '1'; // This would come from auth service in production
+  currentUserId = '';
 
   private destroy$ = new Subject<void>();
   private typingTimeout: any;
@@ -68,8 +69,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     private router: Router,
     private messagingService: MessagingService,
     private webSocketService: WebSocketService,
+    private authService: AuthService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.currentUserId = this.authService.currentUserValue?.id || '';
+  }
 
   ngOnInit(): void {
     this.checkMobileView();

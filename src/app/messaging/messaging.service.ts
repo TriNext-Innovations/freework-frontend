@@ -4,13 +4,14 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { Message, Conversation, SendMessageRequest, ConversationListResponse } from './models';
 import { MockMessagingService } from './mock-messaging.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagingService {
-  private apiUrl = 'https://api.freework.co.za/api/messages';
-  private useMockData = true; // Toggle this to switch between mock and real API
+  private apiUrl = buildApiEndpointUrl('/messages');
+  private useMockData = false; // Toggle this to switch between mock and real API
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
 

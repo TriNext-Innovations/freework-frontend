@@ -22,7 +22,8 @@
         (click)="selectConversation(conversation)"
       >
         <div class="conversation-avatar">
-          <img [src]="getConversationAvatar(conversation)" alt="Avatar">
+          <img *ngIf="getConversationAvatar(conversation)" [src]="getConversationAvatar(conversation)" alt="Avatar">
+          <mat-icon *ngIf="!getConversationAvatar(conversation)">account_circle</mat-icon>
           <span class="unread-indicator" *ngIf="conversation.unreadCount > 0"></span>
         </div>
 
@@ -76,7 +77,8 @@
       </button>
 
       <div class="chat-header-info">
-        <img [src]="getOtherParticipantAvatar()" alt="Avatar" class="header-avatar">
+        <img *ngIf="getOtherParticipantAvatar()" [src]="getOtherParticipantAvatar()" alt="Avatar" class="header-avatar">
+        <mat-icon *ngIf="!getOtherParticipantAvatar()" class="header-avatar-icon">account_circle</mat-icon>
         <div class="header-details">
           <h3>{{ getOtherParticipantName() }}</h3>
           <p class="job-context" *ngIf="selectedConversation.jobTitle">

@@ -17,6 +17,7 @@ import { MessagingService } from '../messaging.service';
 import { WebSocketService } from '../websocket.service';
 import { Message, Conversation, TypingIndicator } from '../models';
 import { AuthService } from '../../auth/auth.service';
+import { ProfileService } from '../../profile/profile.service';
 
 @Component({
   selector: 'app-chat',
@@ -60,6 +61,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   totalUnreadCount = 0;
   typingUsers = new Map<string, string>();
   currentUserId = '';
+  private avatarCache = new Map<string, string>();
 
   private destroy$ = new Subject<void>();
   private typingTimeout: any;
@@ -70,6 +72,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     private messagingService: MessagingService,
     private webSocketService: WebSocketService,
     private authService: AuthService,
+    private profileService: ProfileService,
     private snackBar: MatSnackBar
   ) {
     this.currentUserId = this.authService.currentUserValue?.id || '';
@@ -119,6 +122,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.conversations = response.conversations;
         this.totalUnreadCount = response.totalUnread;
         this.loadingConversations = false;
+        this.loadParticipantAvatars();
 
         // Auto-select first conversation if none selected
         if (!this.selectedConversation && this.conversations.length > 0) {
@@ -322,6 +326,27 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadParticipantAvatars(): void {
+    const otherIds = new Set<string>();
+    this.conversations.forEach(conv => {
+      const otherId = conv.participantIds.find(id => id !== this.currentUserId);
+      if (otherId && !this.avatarCache.has(otherId)) {
+        otherIds.add(otherId);
+      }
+    });
+
+    otherIds.forEach(userId => {
+      this.profileService.getProfileByUserId(userId).subscribe({
+        next: (profile) => {
+          if (profile.profilePicture) {
+            this.avatarCache.set(userId, profile.profilePicture);
+          }
+        },
+        error: () => {}
+      });
+    });
+  }
+
   private getOtherParticipantIndex(conversation: Conversation): number {
     const idx = conversation.participantIds.findIndex(id => id !== this.currentUserId);
     return idx >= 0 ? idx : 0;
@@ -339,9 +364,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getOtherParticipantAvatar(): string {
-    if (!this.selectedConversation) return 'https://i.pravatar.cc/150?img=1';
-    const idx = this.getOtherParticipantIndex(this.selectedConversation);
-    return this.selectedConversation.participantAvatars?.[idx] || 'https://i.pravatar.cc/150?img=1';
+    const otherId = this.getOtherParticipantId();
+    return this.avatarCache.get(otherId) || '';
   }
 
   getConversationName(conversation: Conversation): string {
@@ -350,8 +374,8 @@ export class ChatComponent implements OnInit, OnDestroy {
   }
 
   getConversationAvatar(conversation: Conversation): string {
-    const idx = this.getOtherParticipantIndex(conversation);
-    return conversation.participantAvatars?.[idx] || 'https://i.pravatar.cc/150?img=1';
+    const otherId = conversation.participantIds.find(id => id !== this.currentUserId);
+    return (otherId && this.avatarCache.get(otherId)) || '';
   }
 
   isMyMessage(message: Message): boolean {

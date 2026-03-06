@@ -197,16 +197,23 @@ export class ProfileService {
         .pipe(delay(1000));
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.post<{ url: string }>(`${this.API_URL}/upload-picture`, formData)
-      .pipe(
-        catchError(error => {
-          console.error('Error uploading picture:', error);
-          return throwError(() => error);
-        })
-      );
+    // Convert the File to a data URL, then send the URL to the backend
+    return new Observable<{ url: string }>(observer => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        this.http.post<{ url: string }>(`${this.API_URL}/upload-picture`, { url: dataUrl })
+          .pipe(
+            catchError(error => {
+              console.error('Error uploading picture:', error);
+              return throwError(() => error);
+            })
+          )
+          .subscribe(observer);
+      };
+      reader.onerror = () => observer.error(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
   }
 
   /**

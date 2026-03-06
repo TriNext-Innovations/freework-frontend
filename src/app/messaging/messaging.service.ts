@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { Message, Conversation, SendMessageRequest, ConversationListResponse } from './models';
 import { MockMessagingService } from './mock-messaging.service';
 
@@ -104,7 +104,8 @@ export class MessagingService {
       );
     }
 
-    return this.http.get<number>(`${this.apiUrl}/unread-count`).pipe(
+    return this.http.get<{ count: number }>(`${this.apiUrl}/unread-count`).pipe(
+      map(r => r.count),
       tap(count => this.unreadCountSubject.next(count))
     );
   }

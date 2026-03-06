@@ -357,29 +357,29 @@
   }
 }
 
-// Status Chip Styles
+// Status Chip Styles — colours sourced from global chip design tokens
 .status-pending {
-  background: rgba(245, 158, 11, 0.1) !important;
-  color: #f59e0b !important;
-  border: 1px solid #fbbf24 !important;
+  background: var(--chip-status-pending-bg) !important;
+  color: var(--chip-status-pending-color) !important;
+  border: 1px solid var(--chip-status-pending-border) !important;
 }
 
 .status-accepted {
-  background: rgba(16, 185, 129, 0.1) !important;
-  color: #10b981 !important;
-  border: 1px solid #34d399 !important;
+  background: var(--chip-status-accepted-bg) !important;
+  color: var(--chip-status-accepted-color) !important;
+  border: 1px solid var(--chip-status-accepted-border) !important;
 }
 
 .status-rejected {
-  background: rgba(239, 68, 68, 0.1) !important;
-  color: #ef4444 !important;
-  border: 1px solid #f87171 !important;
+  background: var(--chip-status-rejected-bg) !important;
+  color: var(--chip-status-rejected-color) !important;
+  border: 1px solid var(--chip-status-rejected-border) !important;
 }
 
 .status-withdrawn {
-  background: rgba(107, 114, 128, 0.1) !important;
-  color: #6b7280 !important;
-  border: 1px solid #9ca3af !important;
+  background: var(--chip-status-withdrawn-bg) !important;
+  color: var(--chip-status-withdrawn-color) !important;
+  border: 1px solid var(--chip-status-withdrawn-border) !important;
 }
 
 // No Results State

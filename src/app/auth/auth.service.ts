@@ -436,7 +436,8 @@ export class AuthService {
       role: (rawUser?.role || tokenUser?.role || 'FREELANCER') as 'CUSTOMER' | 'FREELANCER' | 'ADMIN',
       avatar: avatar,
       profilePicture: profilePicture,
-      createdAt: rawUser?.createdAt || tokenUser?.createdAt || new Date().toISOString()
+      createdAt: rawUser?.createdAt || tokenUser?.createdAt || new Date().toISOString(),
+      profileCompleted: rawUser?.profileCompleted ?? rawUser?.profile_completed
     };
   }
 

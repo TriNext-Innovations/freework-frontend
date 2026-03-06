@@ -81,6 +81,29 @@
   --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 180ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+
+  // ---- Chip & badge design tokens ----
+  // Skill chips (used on job cards, profile, detail views)
+  --chip-skill-bg: var(--color-accent-50);
+  --chip-skill-color: var(--color-accent-700);
+  --chip-skill-border: var(--color-accent-200);
+
+  // Application/job status chips
+  --chip-status-pending-bg: var(--color-warning-50);
+  --chip-status-pending-color: var(--color-warning-600);
+  --chip-status-pending-border: #fbbf24;
+
+  --chip-status-accepted-bg: var(--color-success-50);
+  --chip-status-accepted-color: var(--color-success-600);
+  --chip-status-accepted-border: #34d399;
+
+  --chip-status-rejected-bg: var(--color-error-50);
+  --chip-status-rejected-color: var(--color-error-600);
+  --chip-status-rejected-border: #f87171;
+
+  --chip-status-withdrawn-bg: var(--color-gray-100);
+  --chip-status-withdrawn-color: var(--color-gray-600);
+  --chip-status-withdrawn-border: var(--color-gray-300);
 }
 
 // Premium minimalistic Material theme
@@ -328,34 +351,113 @@ a {
   }
 }
 
-// Chips - Premium subtle style
-.mat-mdc-chip {
+// Chips - Consistent style across all chip variants
+// Covers: mat-chip (display), mat-chip-row (chip-grid input), mat-chip-option (listbox)
+// MDC chips render colour via CSS custom properties on the host element.
+.mat-mdc-chip,
+.mat-mdc-chip-row,
+.mat-mdc-chip-option {
+  // MDC internal CSS custom properties (what actually drives the rendered colour)
+  --mdc-chip-elevated-container-color: var(--color-gray-100);
+  --mdc-chip-elevated-selected-container-color: var(--color-gray-100);
+  --mdc-chip-label-text-color: var(--color-text-secondary);
+  --mdc-chip-selected-label-text-color: var(--color-text-secondary);
+  --mdc-chip-outline-color: var(--color-border);
+  // Fallback for any non-MDC overrides
   border-radius: var(--radius-sm) !important;
   font-size: 12px !important;
   font-weight: 500 !important;
   height: 24px !important;
   padding: 0 var(--spacing-sm) !important;
-  background-color: var(--color-gray-100) !important;
-  color: var(--color-text-secondary) !important;
-  border: 1px solid var(--color-border) !important;
 
   &.mat-primary {
-    background-color: var(--color-accent-50) !important;
-    color: var(--color-accent-700) !important;
-    border-color: var(--color-accent-200) !important;
+    --mdc-chip-elevated-container-color: var(--chip-skill-bg);
+    --mdc-chip-elevated-selected-container-color: var(--chip-skill-bg);
+    --mdc-chip-label-text-color: var(--chip-skill-color);
+    --mdc-chip-selected-label-text-color: var(--chip-skill-color);
+    --mdc-chip-outline-color: var(--chip-skill-border);
   }
 
   &.mat-accent {
-    background-color: var(--color-success-50) !important;
-    color: var(--color-success-600) !important;
-    border-color: transparent !important;
+    --mdc-chip-elevated-container-color: var(--color-success-50);
+    --mdc-chip-elevated-selected-container-color: var(--color-success-50);
+    --mdc-chip-label-text-color: var(--color-success-600);
+    --mdc-chip-selected-label-text-color: var(--color-success-600);
+    --mdc-chip-outline-color: transparent;
   }
 
   &.mat-warn {
-    background-color: var(--color-error-50) !important;
-    color: var(--color-error-600) !important;
-    border-color: transparent !important;
+    --mdc-chip-elevated-container-color: var(--color-error-50);
+    --mdc-chip-elevated-selected-container-color: var(--color-error-50);
+    --mdc-chip-label-text-color: var(--color-error-600);
+    --mdc-chip-selected-label-text-color: var(--color-error-600);
+    --mdc-chip-outline-color: transparent;
   }
+}
+
+// Skill chip utility — apply on mat-chip elements to show skill tags
+.chip-skill {
+  --mdc-chip-elevated-container-color: var(--chip-skill-bg);
+  --mdc-chip-elevated-selected-container-color: var(--chip-skill-bg);
+  --mdc-chip-label-text-color: var(--chip-skill-color);
+  --mdc-chip-selected-label-text-color: var(--chip-skill-color);
+  --mdc-chip-outline-color: var(--chip-skill-border);
+  background-color: var(--chip-skill-bg) !important;
+  color: var(--chip-skill-color) !important;
+  border-color: var(--chip-skill-border) !important;
+}
+
+// Status chip utilities — consistent semantic colours throughout the app
+.status-pending,
+.chip-status-pending {
+  background: var(--chip-status-pending-bg) !important;
+  color: var(--chip-status-pending-color) !important;
+  border: 1px solid var(--chip-status-pending-border) !important;
+}
+
+.status-accepted,
+.chip-status-accepted {
+  background: var(--chip-status-accepted-bg) !important;
+  color: var(--chip-status-accepted-color) !important;
+  border: 1px solid var(--chip-status-accepted-border) !important;
+}
+
+.status-rejected,
+.chip-status-rejected {
+  background: var(--chip-status-rejected-bg) !important;
+  color: var(--chip-status-rejected-color) !important;
+  border: 1px solid var(--chip-status-rejected-border) !important;
+}
+
+.status-withdrawn,
+.chip-status-withdrawn {
+  background: var(--chip-status-withdrawn-bg) !important;
+  color: var(--chip-status-withdrawn-color) !important;
+  border: 1px solid var(--chip-status-withdrawn-border) !important;
+}
+
+// Skill badge — pill-shaped tag used outside of mat-chip contexts (e.g. profile view)
+.skill-badge {
+  display: inline-block;
+  padding: 0.375rem 0.875rem;
+  background: var(--chip-skill-bg);
+  color: var(--chip-skill-color);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  border: 1px solid var(--chip-skill-border);
+}
+
+// Tech/secondary badge — neutral label for technologies, categories, etc.
+.tech-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background: var(--color-gray-100);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  font-weight: 400;
+  border: 1px solid var(--color-border);
 }
 
 // Form fields - Premium clean style

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard, roleGuard } from './auth/auth.guard';
+import { authGuard, guestGuard, roleGuard, profileSetupDeactivateGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
   // Public routes
@@ -115,6 +115,14 @@ export const routes: Routes = [
     path: 'settings',
     loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
     canActivate: [authGuard]
+  },
+
+  // Profile setup (post-registration onboarding)
+  {
+    path: 'profile/setup',
+    loadComponent: () => import('./profile/profile-setup/profile-setup.component').then(m => m.ProfileSetupComponent),
+    canActivate: [authGuard],
+    canDeactivate: [profileSetupDeactivateGuard]
   },
 
   // Profile routes

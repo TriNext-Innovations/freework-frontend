@@ -86,9 +86,21 @@ export class LoginComponent implements OnInit {
     };
 
     this.authService.login(credentials).subscribe({
-      next: (response) => {
-        this.loading = false;
-        this.router.navigate([this.returnUrl]);
+      next: () => {
+        this.authService.fetchUserProfile().subscribe({
+          next: (user) => {
+            this.loading = false;
+            if (user.profileCompleted === false) {
+              this.router.navigate(['/profile/setup']);
+            } else {
+              this.router.navigate([this.returnUrl || '/jobs']);
+            }
+          },
+          error: () => {
+            this.loading = false;
+            this.router.navigate([this.returnUrl || '/jobs']);
+          }
+        });
       },
       error: (error) => {
         this.loading = false;

@@ -429,9 +429,9 @@
       font-size: 11px;
       height: 22px;
       padding: 0 8px;
-      background-color: var(--color-gray-100);
-      color: var(--color-text-secondary);
-      border: 1px solid var(--color-border);
+      background-color: var(--chip-skill-bg) !important;
+      color: var(--chip-skill-color) !important;
+      border-color: var(--chip-skill-border) !important;
     }
   }
 

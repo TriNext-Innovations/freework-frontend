@@ -227,6 +227,7 @@
 
   .job-info {
     flex: 1;
+    min-width: 0;
 
     .job-title {
       margin: 0 0 var(--spacing-xs);
@@ -277,6 +278,7 @@
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
+        word-break: break-word;
       }
     }
 

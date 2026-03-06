@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthResponse, LoginRequest, RegisterRequest, User, RefreshTokenRequest, TokenPayload } from './models';
+import { buildApiEndpointUrl, buildApiUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'https://api.freework.co.za/auth';
-  private readonly PROFILE_API_URL = 'https://api.freework.co.za/api/profile';
+  private readonly API_URL = buildApiUrl('/auth');
+  private readonly PROFILE_API_URL = buildApiEndpointUrl('/profile');
   private readonly TOKEN_KEY = 'freework_access_token';
   private readonly REFRESH_TOKEN_KEY = 'freework_refresh_token';
   private useMockData = false; // Toggle to switch between mock and real API

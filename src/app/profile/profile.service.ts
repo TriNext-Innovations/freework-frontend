@@ -4,12 +4,13 @@ import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
 import { tap, catchError, delay } from 'rxjs/operators';
 import { Profile, UpdateProfileRequest, FreelancerProfile, CustomerProfile } from './models/profile.models';
 import { AuthService } from '../auth/auth.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
-  private readonly API_URL = 'https://api.freework.co.za/api/profile';
+  private readonly API_URL = buildApiEndpointUrl('/profile');
   private useMockData = false; // Toggle for testing
 
   private currentProfileSubject = new BehaviorSubject<Profile | null>(null);

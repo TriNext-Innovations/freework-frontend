@@ -126,13 +126,6 @@
           <!-- Spacer to push user menu to the right -->
           <span class="spacer"></span>
 
-          <!-- DEBUG INFO (Remove after testing) -->
-          <div style="margin-right: 10px; font-size: 10px; color: #fff;">
-            <div>Auth: {{ authService.isAuthenticated ? 'YES' : 'NO' }}</div>
-            <div>User: {{ (currentUser$ | async)?.email || 'NONE' }}</div>
-            <div>Token: {{ authService.getAccessToken() ? 'YES' : 'NO' }}</div>
-          </div>
-
           <!-- User Menu -->
           <div class="user-menu">
             <!-- Not Logged In -->

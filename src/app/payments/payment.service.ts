@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import {
   Payment,
   PaymentIntent,
@@ -12,13 +11,14 @@ import {
   Milestone
 } from './models/payment.models';
 import { MockPaymentService } from './mock-payment.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PaymentService {
-  private apiUrl = 'https://api.freework.co.za/api/payments';
-  private useMockData = true; // Toggle this to switch between mock and real API
+  private apiUrl = buildApiEndpointUrl('/payments');
+  private useMockData = false; // Toggle this to switch between mock and real API
 
   private paymentStatusSubject = new BehaviorSubject<PaymentStatusUpdate | null>(null);
   public paymentStatus$ = this.paymentStatusSubject.asObservable();

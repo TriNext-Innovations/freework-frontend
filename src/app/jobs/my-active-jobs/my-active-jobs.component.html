@@ -335,7 +335,7 @@
             {{ job.applicationsCount || 0 }}
           </mat-chip>
         </button>
-        <button mat-button [routerLink]="['/jobs/edit', job.id]">
+        <button mat-button [routerLink]="['/jobs', job.id, 'edit']">
           <mat-icon>edit</mat-icon>
           Edit Job
         </button>

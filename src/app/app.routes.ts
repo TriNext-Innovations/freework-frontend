@@ -43,6 +43,11 @@ export const routes: Routes = [
     loadComponent: () => import('./jobs/job-application/job-application.component').then(m => m.JobApplicationComponent),
     canActivate: [authGuard, roleGuard(['FREELANCER'])]
   },
+  {
+    path: 'jobs/:id/applications',
+    loadComponent: () => import('./jobs/job-applications/job-applications.component').then(m => m.JobApplicationsComponent),
+    canActivate: [authGuard, roleGuard(['CUSTOMER'])]
+  },
 
   // My Jobs & Applications
   {
@@ -103,6 +108,13 @@ export const routes: Routes = [
   {
     path: 'reviews/demo',
     loadComponent: () => import('./reviews/reviews-demo/reviews-demo.component').then(m => m.ReviewsDemoComponent)
+  },
+
+  // Settings
+  {
+    path: 'settings',
+    loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+    canActivate: [authGuard]
   },
 
   // Profile routes

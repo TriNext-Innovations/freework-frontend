@@ -118,7 +118,8 @@
           [class.other-message]="!isMyMessage(message)"
         >
           <div class="message-avatar" *ngIf="!isMyMessage(message)">
-            <img [src]="message.senderAvatar || 'https://i.pravatar.cc/150?img=1'" alt="Avatar">
+            <img *ngIf="getMessageAvatar(message)" [src]="getMessageAvatar(message)" alt="Avatar">
+            <mat-icon *ngIf="!getMessageAvatar(message)">account_circle</mat-icon>
           </div>
 
           <div class="message-bubble">
@@ -132,7 +133,8 @@
           </div>
 
           <div class="message-avatar" *ngIf="isMyMessage(message)">
-            <img [src]="message.senderAvatar || 'https://i.pravatar.cc/150?img=2'" alt="Avatar">
+            <img *ngIf="getMessageAvatar(message)" [src]="getMessageAvatar(message)" alt="Avatar">
+            <mat-icon *ngIf="!getMessageAvatar(message)">account_circle</mat-icon>
           </div>
         </div>
 
@@ -166,34 +168,26 @@
           [disabled]="sendingMessage"
           #messageInput
         >
-        <button
-          mat-icon-button
-          matSuffix
-          matTooltip="Attach File"
-          [disabled]="sendingMessage"
-        >
-          <mat-icon>attach_file</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          matSuffix
-          matTooltip="Add Emoji"
-          [disabled]="sendingMessage"
-        >
-          <mat-icon>emoji_emotions</mat-icon>
-        </button>
       </mat-form-field>
 
-      <button
-        mat-fab
-        color="primary"
-        (click)="sendMessage()"
-        [disabled]="!messageText.trim() || sendingMessage"
-        class="send-button"
-      >
-        <mat-spinner *ngIf="sendingMessage" diameter="24"></mat-spinner>
-        <mat-icon *ngIf="!sendingMessage">send</mat-icon>
-      </button>
+      <div class="input-actions">
+        <button mat-icon-button matTooltip="Attach File" [disabled]="sendingMessage">
+          <mat-icon>attach_file</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Add Emoji" [disabled]="sendingMessage">
+          <mat-icon>emoji_emotions</mat-icon>
+        </button>
+        <button
+          mat-fab
+          color="primary"
+          (click)="sendMessage()"
+          [disabled]="!messageText.trim() || sendingMessage"
+          class="send-button"
+        >
+          <mat-spinner *ngIf="sendingMessage" diameter="24"></mat-spinner>
+          <mat-icon *ngIf="!sendingMessage">send</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 </div>

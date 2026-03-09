@@ -5,6 +5,7 @@ export interface JobApplication {
   id?: string;
   jobId: string;
   freelancerId: string;
+  customerId?: string;
   message: string;
   portfolioLink?: string;
   coverLetter: string;

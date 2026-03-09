@@ -10,6 +10,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { AuthService } from './auth/auth.service';
+import { ThemeService } from './theme.service';
 import { Observable } from 'rxjs';
 import { User } from './auth/models';
 
@@ -37,7 +38,7 @@ export class AppComponent implements OnInit {
   sidenavOpened = false;
   currentUser$: Observable<User | null>;
 
-  constructor(public authService: AuthService) {
+  constructor(public authService: AuthService, public themeService: ThemeService) {
     this.currentUser$ = this.authService.currentUser$;
   }
 

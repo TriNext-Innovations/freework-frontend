@@ -13,6 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ApplicationService } from '../application.service';
 import { JobService } from '../job.service';
 import { AuthService } from '../../auth/auth.service';
+import { MessagingService } from '../../messaging/messaging.service';
 import { JobApplication, ApplicationStatus } from '../models/application.models';
 import { Job } from '../models';
 import { ReviewDialogComponent, ReviewDialogData } from '../../reviews/review-dialog/review-dialog.component';
@@ -53,6 +54,7 @@ export class MyActiveJobsComponent implements OnInit {
     private applicationService: ApplicationService,
     private jobService: JobService,
     private authService: AuthService,
+    private messagingService: MessagingService,
     private router: Router,
     private dialog: MatDialog,
     private snackBar: MatSnackBar
@@ -224,14 +226,10 @@ export class MyActiveJobsComponent implements OnInit {
     return 'normal';
   }
 
-  messageClient(customerId: string, customerName: string, jobTitle: string): void {
-    // Navigate to messages with the customer
-    this.router.navigate(['/messages'], {
-      queryParams: {
-        userId: customerId,
-        userName: customerName,
-        context: `Regarding: ${jobTitle}`
-      }
+  messageClient(customerId: string, jobId: string): void {
+    this.messagingService.getOrCreateConversation(customerId, jobId).subscribe({
+      next: (conversation) => this.router.navigate(['/messages', conversation.id]),
+      error: () => this.router.navigate(['/messages'])
     });
   }
 

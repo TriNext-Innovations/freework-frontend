@@ -188,7 +188,7 @@
           <mat-icon>visibility</mat-icon>
           View Details
         </button>
-        <button mat-button *ngIf="activeJob.job.customerId" (click)="messageClient(activeJob.job.customerId!, activeJob.job.customerName || 'Customer', activeJob.job.title)">
+        <button mat-button *ngIf="activeJob.job.customerId" (click)="messageClient(activeJob.job.customerId!, activeJob.job.id)">
           <mat-icon>chat</mat-icon>
           Message Client
         </button>

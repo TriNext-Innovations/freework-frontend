@@ -1,134 +1,262 @@
-/* Premium Modern SaaS-Style Global Styles */
+/* freework — The Weave brand identity */
 
-// Include Angular Material theme
 @use '@angular/material' as mat;
 
-// Include the common styles for Angular Material
 @include mat.core();
 
 // ========================================
-// PREMIUM COLOR PALETTE
+// MATERIAL THEMES — Teal palette
 // ========================================
-:root {
-  // Neutral grays - Premium palette
-  --color-gray-50: #fafbfc;
-  --color-gray-100: #f6f8fa;
-  --color-gray-200: #e1e4e8;
-  --color-gray-300: #d1d5da;
-  --color-gray-400: #959da5;
-  --color-gray-500: #6a737d;
-  --color-gray-600: #586069;
-  --color-gray-700: #444d56;
-  --color-gray-800: #2f363d;
-  --color-gray-900: #24292e;
 
-  // Premium accent - Rich blue
-  --color-accent-50: #f0f7ff;
-  --color-accent-100: #e0efff;
-  --color-accent-200: #b3d9ff;
-  --color-accent-500: #0969da;
-  --color-accent-600: #0366d6;
-  --color-accent-700: #0256c7;
+// --- Dark theme (default) ---
+$dark-primary: mat.m2-define-palette(mat.$m2-teal-palette, 400);
+$dark-accent:  mat.m2-define-palette(mat.$m2-teal-palette, 300);
+$dark-warn:    mat.m2-define-palette(mat.$m2-red-palette, 400);
 
-  // Success green
-  --color-success-50: #edfbf2;
-  --color-success-500: #2da44e;
-  --color-success-600: #1a7f37;
-
-  // Warning amber
-  --color-warning-50: #fff8e5;
-  --color-warning-500: #f59e0b;
-  --color-warning-600: #d97706;
-
-  // Error red
-  --color-error-50: #ffebe9;
-  --color-error-500: #cf222e;
-  --color-error-600: #a40e26;
-
-  // Semantic colors - Premium
-  --color-background: #ffffff;
-  --color-surface: #f6f8fa;
-  --color-border: #d1d5da;
-  --color-border-subtle: #e1e4e8;
-  --color-text-primary: #24292e;
-  --color-text-secondary: #586069;
-  --color-text-tertiary: #6a737d;
-
-  // Spacing - Refined
-  --spacing-xs: 0.25rem;    // 4px
-  --spacing-sm: 0.5rem;     // 8px
-  --spacing-md: 1rem;       // 16px
-  --spacing-lg: 1.5rem;     // 24px
-  --spacing-xl: 2rem;       // 32px
-  --spacing-2xl: 2.5rem;    // 40px
-  --spacing-3xl: 3rem;      // 48px
-
-  // Border radius - More refined
-  --radius-sm: 6px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
-  --radius-full: 9999px;
-
-  // Premium shadows - Softer and more refined
-  --shadow-xs: 0 0 0 1px rgba(0, 0, 0, 0.05);
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 4px 12px 0 rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 12px 24px 0 rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
-
-  // Transitions - Smooth and polished
-  --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 180ms cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 250ms cubic-bezier(0.4, 0, 0.2, 1);
-
-  // ---- Chip & badge design tokens ----
-  // Skill chips (used on job cards, profile, detail views)
-  --chip-skill-bg: var(--color-accent-50);
-  --chip-skill-color: var(--color-accent-700);
-  --chip-skill-border: var(--color-accent-200);
-
-  // Application/job status chips
-  --chip-status-pending-bg: var(--color-warning-50);
-  --chip-status-pending-color: var(--color-warning-600);
-  --chip-status-pending-border: #fbbf24;
-
-  --chip-status-accepted-bg: var(--color-success-50);
-  --chip-status-accepted-color: var(--color-success-600);
-  --chip-status-accepted-border: #34d399;
-
-  --chip-status-rejected-bg: var(--color-error-50);
-  --chip-status-rejected-color: var(--color-error-600);
-  --chip-status-rejected-border: #f87171;
-
-  --chip-status-withdrawn-bg: var(--color-gray-100);
-  --chip-status-withdrawn-color: var(--color-gray-600);
-  --chip-status-withdrawn-border: var(--color-gray-300);
-}
-
-// Premium minimalistic Material theme
-$my-primary: mat.m2-define-palette(mat.$m2-blue-palette, 700);
-$my-accent: mat.m2-define-palette(mat.$m2-blue-palette, 600);
-$my-warn: mat.m2-define-palette(mat.$m2-red-palette, 600);
-
-$my-theme: mat.m2-define-light-theme((
+$dark-theme: mat.m2-define-dark-theme((
   color: (
-    primary: $my-primary,
-    accent: $my-accent,
-    warn: $my-warn,
+    primary: $dark-primary,
+    accent:  $dark-accent,
+    warn:    $dark-warn,
   ),
   typography: mat.m2-define-typography-config(
-    $font-family: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Helvetica", "Arial", sans-serif',
-    $body-1: mat.m2-define-typography-level(14px, 1.6, 400),
-    $body-2: mat.m2-define-typography-level(14px, 1.5, 400),
-    $button: mat.m2-define-typography-level(14px, 1, 500),
-    $caption: mat.m2-define-typography-level(12px, 1.4, 400),
+    $font-family: '"Bricolage Grotesque", "DM Sans", -apple-system, sans-serif',
+    $body-1:    mat.m2-define-typography-level(14px, 1.6, 400),
+    $body-2:    mat.m2-define-typography-level(14px, 1.5, 400),
+    $button:    mat.m2-define-typography-level(14px, 1, 500),
+    $caption:   mat.m2-define-typography-level(12px, 1.4, 400),
     $headline-6: mat.m2-define-typography-level(20px, 1.4, 600),
   ),
   density: 0,
 ));
 
-@include mat.all-component-themes($my-theme);
+@include mat.all-component-themes($dark-theme);
+
+// --- Light theme override (applied via [data-theme="light"]) ---
+$light-primary: mat.m2-define-palette(mat.$m2-teal-palette, 700);
+$light-accent:  mat.m2-define-palette(mat.$m2-teal-palette, 600);
+$light-warn:    mat.m2-define-palette(mat.$m2-red-palette, 600);
+
+$light-theme: mat.m2-define-light-theme((
+  color: (
+    primary: $light-primary,
+    accent:  $light-accent,
+    warn:    $light-warn,
+  ),
+  typography: mat.m2-define-typography-config(
+    $font-family: '"Bricolage Grotesque", "DM Sans", -apple-system, sans-serif',
+    $body-1:    mat.m2-define-typography-level(14px, 1.6, 400),
+    $body-2:    mat.m2-define-typography-level(14px, 1.5, 400),
+    $button:    mat.m2-define-typography-level(14px, 1, 500),
+    $caption:   mat.m2-define-typography-level(12px, 1.4, 400),
+    $headline-6: mat.m2-define-typography-level(20px, 1.4, 600),
+  ),
+  density: 0,
+));
+
+[data-theme="light"] {
+  @include mat.all-component-colors($light-theme);
+}
+
+
+// ========================================
+// THEME-AGNOSTIC TOKENS
+// ========================================
+:root {
+  // Spacing
+  --spacing-xs:  0.25rem;
+  --spacing-sm:  0.5rem;
+  --spacing-md:  1rem;
+  --spacing-lg:  1.5rem;
+  --spacing-xl:  2rem;
+  --spacing-2xl: 2.5rem;
+  --spacing-3xl: 3rem;
+
+  // Border radius
+  --radius-sm:   6px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+
+  // Transitions
+  --transition-fast: 120ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 180ms cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+// ========================================
+// DARK THEME TOKENS — Deep Pine + Teal
+// ========================================
+[data-theme="dark"] {
+  // Neutrals
+  --color-gray-50:  #0f1f1a;
+  --color-gray-100: #162820;
+  --color-gray-200: #1e3329;
+  --color-gray-300: #2a4035;
+  --color-gray-400: #3d5a4c;
+  --color-gray-500: #5a7a6b;
+  --color-gray-600: #8aab9a;
+  --color-gray-700: #b8d4c8;
+  --color-gray-800: #d4e8e0;
+  --color-gray-900: #f0faf5;
+
+  // Accent — Forest Teal / Mint
+  --color-accent-50:  #091a14;
+  --color-accent-100: #0f2d22;
+  --color-accent-200: #134a38;
+  --color-accent-500: #2BB88A;
+  --color-accent-600: #1A8D6F;
+  --color-accent-700: #14705A;
+
+  // Success
+  --color-success-50:  #052e16;
+  --color-success-500: #4ade80;
+  --color-success-600: #22c55e;
+
+  // Warning
+  --color-warning-50:  #431407;
+  --color-warning-500: #fb923c;
+  --color-warning-600: #f97316;
+
+  // Error
+  --color-error-50:  #450a0a;
+  --color-error-500: #f87171;
+  --color-error-600: #ef4444;
+
+  // Semantic
+  --color-background:      #0D1F1A;
+  --color-surface:         #0f2420;
+  --color-surface-raised:  #162d28;
+  --color-border:          #1e3a30;
+  --color-border-subtle:   #152a23;
+  --color-text-primary:    #f0faf5;
+  --color-text-secondary:  #8aab9a;
+  --color-text-tertiary:   #5a7a6b;
+
+  // Chips — skill
+  --chip-skill-bg:     var(--color-accent-50);
+  --chip-skill-color:  var(--color-accent-500);
+  --chip-skill-border: var(--color-accent-200);
+
+  // Chips — status
+  --chip-status-pending-bg:     var(--color-warning-50);
+  --chip-status-pending-color:  var(--color-warning-500);
+  --chip-status-pending-border: #92400e;
+
+  --chip-status-accepted-bg:     var(--color-success-50);
+  --chip-status-accepted-color:  var(--color-success-500);
+  --chip-status-accepted-border: #14532d;
+
+  --chip-status-rejected-bg:     var(--color-error-50);
+  --chip-status-rejected-color:  var(--color-error-500);
+  --chip-status-rejected-border: #7f1d1d;
+
+  --chip-status-withdrawn-bg:     var(--color-gray-100);
+  --chip-status-withdrawn-color:  var(--color-gray-600);
+  --chip-status-withdrawn-border: var(--color-gray-300);
+
+  // Shadows
+  --shadow-xs: 0 0 0 1px rgba(43, 184, 138, 0.06);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 8px 0 rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(43, 184, 138, 0.06);
+  --shadow-lg: 0 4px 16px 0 rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(43, 184, 138, 0.06);
+  --shadow-xl: 0 12px 32px 0 rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(43, 184, 138, 0.08);
+}
+
+// ========================================
+// LIGHT THEME TOKENS — Soft White + Teal
+// ========================================
+[data-theme="light"] {
+  // Neutrals (warm stone)
+  --color-gray-50:  #f7f6f3;
+  --color-gray-100: #f0efeb;
+  --color-gray-200: #e4e2dc;
+  --color-gray-300: #ccc9c0;
+  --color-gray-400: #a8a59c;
+  --color-gray-500: #7a776e;
+  --color-gray-600: #5a5750;
+  --color-gray-700: #403e38;
+  --color-gray-800: #2a2820;
+  --color-gray-900: #1a1810;
+
+  // Accent — Teal
+  --color-accent-50:  #E5F5EE;
+  --color-accent-100: #c8eddf;
+  --color-accent-200: #94d9bf;
+  --color-accent-500: #1A8D6F;
+  --color-accent-600: #1A8D6F;
+  --color-accent-700: #14705A;
+
+  // Success
+  --color-success-50:  #f0fdf4;
+  --color-success-500: #22c55e;
+  --color-success-600: #16a34a;
+
+  // Warning
+  --color-warning-50:  #fffbeb;
+  --color-warning-500: #f59e0b;
+  --color-warning-600: #d97706;
+
+  // Error
+  --color-error-50:  #fef2f2;
+  --color-error-500: #ef4444;
+  --color-error-600: #dc2626;
+
+  // Semantic
+  --color-background:      #F7F6F3;
+  --color-surface:         #f0efeb;
+  --color-surface-raised:  #ffffff;
+  --color-border:          #dddbd5;
+  --color-border-subtle:   #eae8e2;
+  --color-text-primary:    #1a1810;
+  --color-text-secondary:  #5a5750;
+  --color-text-tertiary:   #7a776e;
+
+  // Chips — skill
+  --chip-skill-bg:     var(--color-accent-50);
+  --chip-skill-color:  var(--color-accent-600);
+  --chip-skill-border: var(--color-accent-200);
+
+  // Chips — status
+  --chip-status-pending-bg:     #fffbeb;
+  --chip-status-pending-color:  #d97706;
+  --chip-status-pending-border: #fbbf24;
+
+  --chip-status-accepted-bg:     #f0fdf4;
+  --chip-status-accepted-color:  #16a34a;
+  --chip-status-accepted-border: #34d399;
+
+  --chip-status-rejected-bg:     #fef2f2;
+  --chip-status-rejected-color:  #dc2626;
+  --chip-status-rejected-border: #f87171;
+
+  --chip-status-withdrawn-bg:     var(--color-gray-100);
+  --chip-status-withdrawn-color:  var(--color-gray-600);
+  --chip-status-withdrawn-border: var(--color-gray-300);
+
+  // Shadows (light — soft and crisp)
+  --shadow-xs: 0 0 0 1px rgba(26, 141, 111, 0.06);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 2px 4px 0 rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(26, 141, 111, 0.06);
+  --shadow-lg: 0 4px 12px 0 rgba(0, 0, 0, 0.10), 0 0 0 1px rgba(26, 141, 111, 0.05);
+  --shadow-xl: 0 12px 24px 0 rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(26, 141, 111, 0.05);
+}
+
+
+// ========================================
+// MATERIAL DRAWER/SIDENAV TRANSPARENCY
+// — Lets the body gradient fill the whole screen
+// ========================================
+.mat-drawer-container,
+.mat-sidenav-container {
+  background: transparent !important;
+}
+
+.mat-drawer-content,
+.mat-sidenav-content {
+  background: transparent !important;
+}
 
 // ========================================
 // GLOBAL BASE STYLES
@@ -146,19 +274,42 @@ html, body {
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
-  background: var(--color-surface);
+  font-family: 'Bricolage Grotesque', 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   color: var(--color-text-primary);
   line-height: 1.6;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background var(--transition-slow), color var(--transition-slow);
+  min-height: 100vh;
+}
+
+// Dark mode — Deep Pine with teal ambient
+[data-theme="dark"] body {
+  background-color: #0D1F1A;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 15% 10%,  rgba(43, 184, 138, 0.10) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 40% at 85% 80%,  rgba(26, 141, 111, 0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 35% at 65% 25%,  rgba(43, 184, 138, 0.05) 0%, transparent 70%);
+  background-attachment: fixed;
+}
+
+// Light mode — Warm ivory with subtle teal wash
+[data-theme="light"] body {
+  background-color: #F3F1ED;
+  background-image:
+    radial-gradient(ellipse 70% 60% at 0%   0%,   rgba(43, 184, 138, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 100% 100%, rgba(26, 141, 111, 0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 100%  0%,  rgba(229, 245, 238, 0.60) 0%, transparent 55%),
+    radial-gradient(ellipse 40% 35% at 0%  100%,  rgba(43, 184, 138, 0.06) 0%, transparent 55%);
+  background-attachment: fixed;
 }
 
 // ========================================
-// PREMIUM TYPOGRAPHY
+// TYPOGRAPHY
 // ========================================
 h1, h2, h3, h4, h5, h6 {
+  font-family: 'Bricolage Grotesque', 'DM Sans', sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: var(--color-text-primary);
@@ -166,34 +317,12 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.3;
 }
 
-h1 {
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-}
-
-h2 {
-  font-size: 1.625rem;
-  font-weight: 600;
-}
-
-h3 {
-  font-size: 1.375rem;
-}
-
-h4 {
-  font-size: 1.125rem;
-}
-
-h5 {
-  font-size: 1rem;
-  font-weight: 600;
-}
-
-h6 {
-  font-size: 0.875rem;
-  font-weight: 600;
-}
+h1 { font-size: 2rem;     font-weight: 700; letter-spacing: -0.025em; }
+h2 { font-size: 1.625rem; }
+h3 { font-size: 1.375rem; }
+h4 { font-size: 1.125rem; }
+h5 { font-size: 1rem;     font-weight: 600; }
+h6 { font-size: 0.875rem; font-weight: 600; }
 
 p {
   margin: 0;
@@ -203,39 +332,60 @@ p {
 }
 
 a {
-  color: var(--color-accent-600);
+  color: var(--color-accent-500);
   text-decoration: none;
   transition: color var(--transition-fast);
 
-  &:hover {
-    color: var(--color-accent-700);
-  }
+  &:hover { color: var(--color-accent-600); }
+}
+
+// Italic serif — used for tagline / brand moments
+.brand-tagline {
+  font-family: 'Instrument Serif', Georgia, serif;
+  font-style: italic;
+  color: var(--color-accent-600);
 }
 
 // ========================================
-// MATERIAL COMPONENTS - PREMIUM OVERRIDES
+// MATERIAL COMPONENT OVERRIDES
 // ========================================
 
-// Cards - Premium style
+// Cards — frosted glass
 .mat-mdc-card {
   border-radius: var(--radius-lg) !important;
-  box-shadow: var(--shadow-sm) !important;
-  border: 1px solid var(--color-border) !important;
-  background: var(--color-background) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   transition: all var(--transition-base) !important;
+}
+
+[data-theme="dark"] .mat-mdc-card {
+  background: rgba(15, 36, 30, 0.60) !important;
+  border: 1px solid rgba(43, 184, 138, 0.10) !important;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(43, 184, 138, 0.06) !important;
 
   &:hover {
-    box-shadow: var(--shadow-md) !important;
-    border-color: var(--color-gray-300) !important;
+    background: rgba(22, 45, 38, 0.70) !important;
+    border-color: rgba(43, 184, 138, 0.18) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(43, 184, 138, 0.10) !important;
+  }
+}
+
+[data-theme="light"] .mat-mdc-card {
+  background: rgba(255, 255, 255, 0.60) !important;
+  border: 1px solid rgba(255, 255, 255, 0.7) !important;
+  box-shadow: 0 4px 24px rgba(26, 141, 111, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.5) !important;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.75) !important;
+    border-color: rgba(43, 184, 138, 0.20) !important;
+    box-shadow: 0 8px 32px rgba(26, 141, 111, 0.10), 0 0 0 1px rgba(43, 184, 138, 0.12) !important;
   }
 }
 
 .mat-mdc-card-header {
   padding: var(--spacing-lg) var(--spacing-xl) var(--spacing-md) !important;
 
-  .mat-mdc-card-header-text {
-    margin: 0 !important;
-  }
+  .mat-mdc-card-header-text { margin: 0 !important; }
 }
 
 .mat-mdc-card-content {
@@ -244,13 +394,8 @@ a {
   font-size: 14px;
   line-height: 1.6;
 
-  &:first-child {
-    padding-top: var(--spacing-xl) !important;
-  }
-
-  &:last-child {
-    padding-bottom: var(--spacing-xl) !important;
-  }
+  &:first-child  { padding-top: var(--spacing-xl) !important; }
+  &:last-child   { padding-bottom: var(--spacing-xl) !important; }
 }
 
 .mat-mdc-card-actions {
@@ -261,6 +406,7 @@ a {
 }
 
 .mat-mdc-card-title {
+  font-family: 'Bricolage Grotesque', sans-serif !important;
   font-size: 1.125rem !important;
   font-weight: 600 !important;
   color: var(--color-text-primary) !important;
@@ -276,10 +422,11 @@ a {
   font-weight: 400 !important;
 }
 
-// Buttons - Premium style
+// Buttons
 .mat-mdc-raised-button,
 .mat-mdc-unelevated-button {
   border-radius: var(--radius-md) !important;
+  font-family: 'Bricolage Grotesque', sans-serif !important;
   font-weight: 500 !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
@@ -295,22 +442,19 @@ a {
     transform: translateY(-1px);
   }
 
-  &:active {
-    transform: translateY(0);
-  }
+  &:active { transform: translateY(0); }
 
   &.mat-primary {
     background-color: var(--color-accent-600) !important;
     color: white !important;
 
-    &:hover {
-      background-color: var(--color-accent-700) !important;
-    }
+    &:hover { background-color: var(--color-accent-700) !important; }
   }
 }
 
 .mat-mdc-outlined-button {
   border-radius: var(--radius-md) !important;
+  font-family: 'Bricolage Grotesque', sans-serif !important;
   font-weight: 500 !important;
   letter-spacing: 0 !important;
   text-transform: none !important;
@@ -318,11 +462,12 @@ a {
   padding: 0 var(--spacing-lg) !important;
   font-size: 14px !important;
   border: 1px solid var(--color-border) !important;
+  color: var(--color-text-primary) !important;
   transition: all var(--transition-fast) !important;
 
   &:hover {
-    background-color: var(--color-gray-50) !important;
-    border-color: var(--color-gray-400) !important;
+    background-color: var(--color-gray-100) !important;
+    border-color: var(--color-accent-500) !important;
   }
 }
 
@@ -330,13 +475,13 @@ a {
   height: 36px !important;
   padding: 0 var(--spacing-md) !important;
   font-size: 14px !important;
+  font-family: 'Bricolage Grotesque', sans-serif !important;
   font-weight: 500 !important;
   border-radius: var(--radius-md) !important;
+  color: var(--color-text-primary) !important;
   transition: all var(--transition-fast) !important;
 
-  &:hover {
-    background-color: var(--color-gray-100) !important;
-  }
+  &:hover { background-color: var(--color-gray-100) !important; }
 }
 
 .mat-mdc-icon-button {
@@ -344,26 +489,24 @@ a {
   height: 36px !important;
   padding: 0 !important;
   border-radius: var(--radius-md) !important;
+  color: var(--color-text-secondary) !important;
   transition: all var(--transition-fast) !important;
 
   &:hover {
     background-color: var(--color-gray-100) !important;
+    color: var(--color-text-primary) !important;
   }
 }
 
-// Chips - Consistent style across all chip variants
-// Covers: mat-chip (display), mat-chip-row (chip-grid input), mat-chip-option (listbox)
-// MDC chips render colour via CSS custom properties on the host element.
+// Chips
 .mat-mdc-chip,
 .mat-mdc-chip-row,
 .mat-mdc-chip-option {
-  // MDC internal CSS custom properties (what actually drives the rendered colour)
   --mdc-chip-elevated-container-color: var(--color-gray-100);
   --mdc-chip-elevated-selected-container-color: var(--color-gray-100);
   --mdc-chip-label-text-color: var(--color-text-secondary);
   --mdc-chip-selected-label-text-color: var(--color-text-secondary);
   --mdc-chip-outline-color: var(--color-border);
-  // Fallback for any non-MDC overrides
   border-radius: var(--radius-sm) !important;
   font-size: 12px !important;
   font-weight: 500 !important;
@@ -381,21 +524,20 @@ a {
   &.mat-accent {
     --mdc-chip-elevated-container-color: var(--color-success-50);
     --mdc-chip-elevated-selected-container-color: var(--color-success-50);
-    --mdc-chip-label-text-color: var(--color-success-600);
-    --mdc-chip-selected-label-text-color: var(--color-success-600);
+    --mdc-chip-label-text-color: var(--color-success-500);
+    --mdc-chip-selected-label-text-color: var(--color-success-500);
     --mdc-chip-outline-color: transparent;
   }
 
   &.mat-warn {
     --mdc-chip-elevated-container-color: var(--color-error-50);
     --mdc-chip-elevated-selected-container-color: var(--color-error-50);
-    --mdc-chip-label-text-color: var(--color-error-600);
-    --mdc-chip-selected-label-text-color: var(--color-error-600);
+    --mdc-chip-label-text-color: var(--color-error-500);
+    --mdc-chip-selected-label-text-color: var(--color-error-500);
     --mdc-chip-outline-color: transparent;
   }
 }
 
-// Skill chip utility — apply on mat-chip elements to show skill tags
 .chip-skill {
   --mdc-chip-elevated-container-color: var(--chip-skill-bg);
   --mdc-chip-elevated-selected-container-color: var(--chip-skill-bg);
@@ -407,36 +549,12 @@ a {
   border-color: var(--chip-skill-border) !important;
 }
 
-// Status chip utilities — consistent semantic colours throughout the app
-.status-pending,
-.chip-status-pending {
-  background: var(--chip-status-pending-bg) !important;
-  color: var(--chip-status-pending-color) !important;
-  border: 1px solid var(--chip-status-pending-border) !important;
-}
+.status-pending,  .chip-status-pending  { background: var(--chip-status-pending-bg)  !important; color: var(--chip-status-pending-color)  !important; border: 1px solid var(--chip-status-pending-border)  !important; }
+.status-accepted, .chip-status-accepted { background: var(--chip-status-accepted-bg) !important; color: var(--chip-status-accepted-color) !important; border: 1px solid var(--chip-status-accepted-border) !important; }
+.status-rejected, .chip-status-rejected { background: var(--chip-status-rejected-bg) !important; color: var(--chip-status-rejected-color) !important; border: 1px solid var(--chip-status-rejected-border) !important; }
+.status-withdrawn,.chip-status-withdrawn{ background: var(--chip-status-withdrawn-bg)!important; color: var(--chip-status-withdrawn-color)!important; border: 1px solid var(--chip-status-withdrawn-border)!important; }
 
-.status-accepted,
-.chip-status-accepted {
-  background: var(--chip-status-accepted-bg) !important;
-  color: var(--chip-status-accepted-color) !important;
-  border: 1px solid var(--chip-status-accepted-border) !important;
-}
-
-.status-rejected,
-.chip-status-rejected {
-  background: var(--chip-status-rejected-bg) !important;
-  color: var(--chip-status-rejected-color) !important;
-  border: 1px solid var(--chip-status-rejected-border) !important;
-}
-
-.status-withdrawn,
-.chip-status-withdrawn {
-  background: var(--chip-status-withdrawn-bg) !important;
-  color: var(--chip-status-withdrawn-color) !important;
-  border: 1px solid var(--chip-status-withdrawn-border) !important;
-}
-
-// Skill badge — pill-shaped tag used outside of mat-chip contexts (e.g. profile view)
+// Badges
 .skill-badge {
   display: inline-block;
   padding: 0.375rem 0.875rem;
@@ -448,7 +566,6 @@ a {
   border: 1px solid var(--chip-skill-border);
 }
 
-// Tech/secondary badge — neutral label for technologies, categories, etc.
 .tech-badge {
   display: inline-block;
   padding: 0.25rem 0.75rem;
@@ -460,17 +577,15 @@ a {
   border: 1px solid var(--color-border);
 }
 
-// Form fields - Premium clean style
+// Form fields
 .mat-mdc-form-field {
   font-size: 14px !important;
 
-  .mat-mdc-text-field-wrapper {
-    padding: 0 !important;
-  }
+  .mat-mdc-text-field-wrapper { padding: 0 !important; }
 
   .mat-mdc-form-field-flex {
     border-radius: var(--radius-md) !important;
-    background: var(--color-background) !important;
+    background: var(--color-surface-raised) !important;
   }
 
   .mat-mdc-form-field-infix {
@@ -486,9 +601,7 @@ a {
     padding: 0 var(--spacing-md) !important;
   }
 
-  .mat-mdc-form-field-subscript-wrapper {
-    font-size: 12px !important;
-  }
+  .mat-mdc-form-field-subscript-wrapper { font-size: 12px !important; }
 
   .mat-mdc-floating-label {
     font-size: 14px !important;
@@ -512,10 +625,8 @@ a {
     align-items: center !important;
   }
 
-  &.mat-mdc-form-field-has-text-prefix {
-    .mat-mdc-input-element {
-      padding-left: var(--spacing-xs) !important;
-    }
+  &.mat-mdc-form-field-has-text-prefix .mat-mdc-input-element {
+    padding-left: var(--spacing-xs) !important;
   }
 }
 
@@ -533,7 +644,7 @@ a {
     .mdc-notched-outline__leading,
     .mdc-notched-outline__notch,
     .mdc-notched-outline__trailing {
-      border-color: var(--color-gray-500) !important;
+      border-color: var(--color-accent-500) !important;
     }
   }
 
@@ -541,34 +652,26 @@ a {
     .mdc-notched-outline__leading,
     .mdc-notched-outline__notch,
     .mdc-notched-outline__trailing {
-      border-color: var(--color-accent-600) !important;
+      border-color: var(--color-accent-500) !important;
       border-width: 2px !important;
     }
   }
 }
 
-// Select dropdown
+// Select
 .mat-mdc-select {
   font-size: 14px !important;
 
-  .mat-mdc-select-value {
-    color: var(--color-text-primary) !important;
-  }
-
-  .mat-mdc-select-placeholder {
-    color: var(--color-text-tertiary) !important;
-  }
-
-  .mat-mdc-select-arrow {
-    color: var(--color-text-tertiary) !important;
-  }
+  .mat-mdc-select-value       { color: var(--color-text-primary) !important; }
+  .mat-mdc-select-placeholder { color: var(--color-text-tertiary) !important; }
+  .mat-mdc-select-arrow       { color: var(--color-text-tertiary) !important; }
 }
 
-// Select panel (dropdown)
 .mat-mdc-select-panel {
   border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-lg) !important;
   border: 1px solid var(--color-border) !important;
+  background: var(--color-surface-raised) !important;
   padding: var(--spacing-xs) !important;
   margin-top: var(--spacing-xs) !important;
 
@@ -578,49 +681,65 @@ a {
     min-height: 40px !important;
     padding: 0 var(--spacing-md) !important;
     margin: 2px 0 !important;
+    color: var(--color-text-primary) !important;
 
-    &:hover {
-      background-color: var(--color-gray-50) !important;
-    }
-
+    &:hover             { background-color: var(--color-gray-100) !important; }
     &.mat-mdc-option-active {
       background-color: var(--color-accent-50) !important;
-      color: var(--color-accent-700) !important;
+      color: var(--color-accent-500) !important;
     }
   }
 }
 
-// Toolbar - Premium style
+// Toolbar
 .mat-toolbar {
-  background: var(--color-background) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   color: var(--color-text-primary) !important;
   padding: var(--spacing-sm) var(--spacing-md) !important;
-  border-bottom: 1px solid var(--color-border) !important;
 }
 
-// Sidenav - Premium style
+[data-theme="dark"] .mat-toolbar {
+  background: rgba(13, 31, 26, 0.80) !important;
+  border-bottom: 1px solid rgba(43, 184, 138, 0.08) !important;
+}
+
+[data-theme="light"] .mat-toolbar {
+  background: rgba(247, 246, 243, 0.85) !important;
+  border-bottom: 1px solid rgba(26, 141, 111, 0.10) !important;
+}
+
+// Sidenav
 .mat-sidenav {
-  background: var(--color-background) !important;
+  backdrop-filter: blur(16px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   color: var(--color-text-primary) !important;
   padding: var(--spacing-md) !important;
-  border-right: 1px solid var(--color-border) !important;
 }
 
-// List items - Premium style
+[data-theme="dark"] .mat-sidenav {
+  background: rgba(13, 31, 26, 0.90) !important;
+  border-right: 1px solid rgba(43, 184, 138, 0.08) !important;
+}
+
+[data-theme="light"] .mat-sidenav {
+  background: rgba(247, 246, 243, 0.92) !important;
+  border-right: 1px solid rgba(26, 141, 111, 0.10) !important;
+}
+
+// List items
 .mat-list-item {
   padding: var(--spacing-sm) var(--spacing-md) !important;
   color: var(--color-text-primary) !important;
   font-size: 14px !important;
   transition: background var(--transition-fast) !important;
 
-  &:hover {
-    background: var(--color-gray-50) !important;
-  }
+  &:hover { background: var(--color-gray-100) !important; }
 }
 
-// Tabs - Premium style
+// Tabs
 .mat-tab-group {
-  background: var(--color-background) !important;
+  background: var(--color-surface-raised) !important;
   color: var(--color-text-primary) !important;
   border-bottom: 1px solid var(--color-border) !important;
 }
@@ -628,44 +747,38 @@ a {
 .mat-tab-label {
   font-size: 14px !important;
   font-weight: 500 !important;
-  color: var(--color-text-primary) !important;
+  color: var(--color-text-secondary) !important;
   padding: var(--spacing-sm) var(--spacing-md) !important;
   margin: 0 !important;
   transition: color var(--transition-fast) !important;
 
-  &.mat-tab-label-active {
-    color: var(--color-accent-600) !important;
-  }
-
-  &:hover {
-    color: var(--color-accent-700) !important;
-  }
+  &.mat-tab-label-active { color: var(--color-accent-500) !important; }
+  &:hover                { color: var(--color-accent-600) !important; }
 }
 
-// Menu - Premium style
+// Menu
 .mat-menu {
-  background: var(--color-background) !important;
+  background: var(--color-surface-raised) !important;
   color: var(--color-text-primary) !important;
   border: 1px solid var(--color-border) !important;
   border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-lg) !important;
 }
 
-// Dialog - Premium style
+// Dialog
 .mat-dialog-container {
-  background: var(--color-background) !important;
+  background: var(--color-surface-raised) !important;
   color: var(--color-text-primary) !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-lg) !important;
+  box-shadow: var(--shadow-xl) !important;
   padding: var(--spacing-md) !important;
 }
 
-// Snackbar - Premium style
+// Snackbar
 .mat-snack-bar {
-  background: var(--color-background) !important;
+  background: var(--color-surface-raised) !important;
   color: var(--color-text-primary) !important;
   padding: var(--spacing-sm) var(--spacing-md) !important;
   border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-md) !important;
 }
-

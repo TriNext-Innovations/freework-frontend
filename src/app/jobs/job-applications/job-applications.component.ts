@@ -12,6 +12,7 @@ import { ApplicationService } from '../application.service';
 import { JobService } from '../job.service';
 import { JobApplication, ApplicationStatus } from '../models/application.models';
 import { Job } from '../models';
+import { MessagingService } from '../../messaging/messaging.service';
 
 @Component({
   selector: 'app-job-applications',
@@ -41,6 +42,7 @@ export class JobApplicationsComponent implements OnInit {
     private router: Router,
     private applicationService: ApplicationService,
     private jobService: JobService,
+    private messagingService: MessagingService,
     private snackBar: MatSnackBar
   ) {}
 
@@ -81,9 +83,26 @@ export class JobApplicationsComponent implements OnInit {
     this.applicationService.updateApplicationStatus(application.id, status).subscribe({
       next: () => {
         application.status = status;
-        this.showSuccess(`Application ${status.toLowerCase()} successfully`);
+        if (status === ApplicationStatus.ACCEPTED) {
+          this.openChat(application);
+        } else {
+          this.showSuccess(`Application ${status.toLowerCase()} successfully`);
+        }
       },
       error: () => { this.showError('Failed to update application status'); }
+    });
+  }
+
+  openChat(application: JobApplication): void {
+    this.messagingService.getOrCreateConversation(application.freelancerId, application.jobId).subscribe({
+      next: (conversation) => {
+        this.showSuccess('Application accepted — conversation started');
+        this.router.navigate(['/messages', conversation.id]);
+      },
+      error: () => {
+        this.showSuccess('Application accepted successfully');
+        this.router.navigate(['/messages']);
+      }
     });
   }
 

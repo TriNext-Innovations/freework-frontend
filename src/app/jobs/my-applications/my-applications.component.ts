@@ -10,7 +10,9 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ApplicationService } from '../application.service';
+import { JobService } from '../job.service';
 import { JobApplication, ApplicationStatus } from '../models/application.models';
+import { MessagingService } from '../../messaging/messaging.service';
 
 @Component({
   selector: 'app-my-applications',
@@ -46,6 +48,8 @@ export class MyApplicationsComponent implements OnInit {
 
   constructor(
     private applicationService: ApplicationService,
+    private jobService: JobService,
+    private messagingService: MessagingService,
     private router: Router,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
@@ -107,6 +111,30 @@ export class MyApplicationsComponent implements OnInit {
 
   getStatusClass(status: ApplicationStatus): string {
     return `status-${status.toLowerCase()}`;
+  }
+
+  openChat(application: JobApplication): void {
+    const start = (customerId: string) => {
+      this.messagingService.getOrCreateConversation(customerId, application.jobId).subscribe({
+        next: (conversation) => this.router.navigate(['/messages', conversation.id]),
+        error: () => this.router.navigate(['/messages'])
+      });
+    };
+
+    if (application.customerId) {
+      start(application.customerId);
+    } else {
+      this.jobService.getJobById(application.jobId).subscribe({
+        next: (job) => {
+          if (job.customerId) {
+            start(job.customerId);
+          } else {
+            this.router.navigate(['/messages']);
+          }
+        },
+        error: () => this.router.navigate(['/messages'])
+      });
+    }
   }
 
   viewJobDetails(jobId: string): void {

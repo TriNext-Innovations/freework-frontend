@@ -152,6 +152,7 @@
               mat-raised-button
               color="primary"
               *ngIf="application.status === ApplicationStatus.ACCEPTED"
+              (click)="openChat(application)"
             >
               <mat-icon>message</mat-icon>
               Contact Client

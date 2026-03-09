@@ -1,0 +1,257 @@
+.setup-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2rem 1rem;
+  background: url('/assets/Login_page_dark_new.png') center center / cover no-repeat fixed;
+
+  :host-context([data-theme="light"]) & {
+    background: url('/assets/Login_page_light_new.png') center center / cover no-repeat fixed;
+  }
+}
+
+.setup-container {
+  width: 100%;
+  max-width: 680px;
+}
+
+// ── Header ─────────────────────────────────────────────────────────
+.setup-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  color: white;
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-primary);
+  }
+}
+
+.setup-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+
+  .logo-wordmark {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.375rem;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    color: rgba(255, 255, 255, 0.7);
+
+    strong {
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    :host-context([data-theme="light"]) & {
+      color: var(--color-text-secondary);
+      strong { color: var(--color-text-primary); }
+    }
+  }
+}
+
+.setup-header h1 {
+  margin: 0 0 0.75rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.setup-subtitle {
+  margin: 0 0 1.25rem;
+  font-size: 1rem;
+  opacity: 0.85;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.5;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 1rem;
+  border-radius: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(43, 184, 138, 0.20);
+  border: 1px solid rgba(43, 184, 138, 0.40);
+  color: #2BB88A;
+
+  mat-icon {
+    font-size: 1.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}
+
+// ── Card ───────────────────────────────────────────────────────────
+.setup-card {
+  background: rgba(13, 31, 26, 0.60) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: var(--radius-xl) !important;
+  border: 1px solid rgba(43, 184, 138, 0.20) !important;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35) !important;
+
+  :host-context([data-theme="light"]) & {
+    background: rgba(255, 255, 255, 0.70) !important;
+    border-color: rgba(43, 184, 138, 0.20) !important;
+    box-shadow: 0 8px 40px rgba(26, 141, 111, 0.12) !important;
+  }
+
+  mat-card-content {
+    padding: 2rem !important;
+  }
+}
+
+// ── Form sections ──────────────────────────────────────────────────
+.form-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(43, 184, 138, 0.15);
+
+  &:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.9);
+
+  mat-icon {
+    color: #2BB88A;
+    font-size: 1.25rem;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-primary);
+  }
+}
+
+.form-row {
+  display: flex;
+  gap: 1rem;
+
+  .half-width {
+    flex: 1;
+    min-width: 0;
+  }
+
+  @media (max-width: 599px) {
+    flex-direction: column;
+    gap: 0;
+  }
+}
+
+.full-width { width: 100%; }
+
+.optional {
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.85em;
+
+  :host-context([data-theme="light"]) & { color: #94a3b8; }
+}
+
+.required-marker {
+  color: #f87171;
+  margin-left: 0.25rem;
+}
+
+// ── Skills section ─────────────────────────────────────────────────
+.skills-section {
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 0.75rem;
+
+    mat-icon {
+      font-size: 1.125rem;
+      width: 1.125rem;
+      height: 1.125rem;
+      color: #2BB88A;
+    }
+
+    :host-context([data-theme="light"]) & { color: var(--color-text-primary); }
+  }
+
+  .skills-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    margin: 0.5rem 0 0;
+    font-size: 0.813rem;
+    color: #f59e0b;
+
+    mat-icon {
+      font-size: 1rem;
+      width: 1rem;
+      height: 1rem;
+    }
+  }
+}
+
+
+// ── Submit ─────────────────────────────────────────────────────────
+.form-actions {
+  margin-top: 1.5rem;
+  display: flex;
+  justify-content: center;
+
+  .submit-button {
+    height: 52px;
+    padding: 0 2.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: var(--radius-md) !important;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 280px;
+    justify-content: center;
+    background-color: var(--color-accent-600) !important;
+    color: white !important;
+
+    &:hover:not([disabled]) {
+      background-color: var(--color-accent-700) !important;
+    }
+
+    mat-icon {
+      font-size: 1.25rem;
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  }
+}
+
+@media (max-width: 599px) {
+  .setup-header h1 { font-size: 1.5rem; }
+
+  .setup-card mat-card-content { padding: 1.25rem !important; }
+
+  .form-actions .submit-button {
+    width: 100%;
+    min-width: unset;
+  }
+}

@@ -58,10 +58,10 @@
 // Job Summary Card
 .job-summary-card {
   margin-bottom: var(--spacing-xl);
-  background: linear-gradient(135deg, var(--color-accent-600) 0%, var(--color-accent-700) 100%);
-  color: white;
+  background: var(--color-surface-raised) !important;
+  border: 1px solid var(--color-border) !important;
   border-radius: var(--radius-lg) !important;
-  box-shadow: var(--shadow-md) !important;
+  box-shadow: var(--shadow-sm) !important;
 
   ::ng-deep {
     .mat-mdc-card-header {
@@ -69,13 +69,13 @@
     }
 
     .mat-mdc-card-title {
-      color: white !important;
+      color: var(--color-text-primary) !important;
       font-size: 1.25rem;
       font-weight: 600;
     }
 
     .mat-mdc-card-subtitle {
-      color: rgba(255, 255, 255, 0.9) !important;
+      color: var(--color-text-secondary) !important;
       margin-top: var(--spacing-xs);
     }
   }
@@ -93,7 +93,7 @@
     gap: var(--spacing-sm);
 
     mat-icon {
-      color: rgba(255, 255, 255, 0.9);
+      color: var(--color-accent-600);
       font-size: 1.25rem;
       width: 1.25rem;
       height: 1.25rem;
@@ -107,7 +107,7 @@
 
     .info-label {
       font-size: 0.75rem;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--color-text-tertiary);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-weight: 500;
@@ -116,13 +116,13 @@
     .info-value {
       font-size: 0.875rem;
       font-weight: 600;
-      color: white;
+      color: var(--color-text-primary);
     }
   }
 
   .skills-section {
     padding-top: var(--spacing-md);
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-top: 1px solid var(--color-border);
 
     .skills-label {
       display: block;
@@ -130,7 +130,7 @@
       text-transform: uppercase;
       letter-spacing: 0.05em;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.8);
+      color: var(--color-text-tertiary);
       margin-bottom: var(--spacing-sm);
     }
 
@@ -138,13 +138,6 @@
       display: flex;
       flex-wrap: wrap;
       gap: var(--spacing-xs);
-
-      mat-chip {
-        background: rgba(255, 255, 255, 0.2) !important;
-        color: white !important;
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        font-size: 0.75rem;
-      }
     }
   }
 }
@@ -152,8 +145,8 @@
 // Warning Card
 .warning-card {
   margin-bottom: var(--spacing-lg);
-  background: #fef3c7;
-  border: 1px solid #fbbf24;
+  background: var(--color-warning-50);
+  border: 1px solid var(--color-warning-500);
 
   .warning-content {
     display: flex;
@@ -162,7 +155,7 @@
     margin-bottom: var(--spacing-md);
 
     mat-icon {
-      color: #f59e0b;
+      color: var(--color-warning-500);
       font-size: 1.5rem;
       width: 1.5rem;
       height: 1.5rem;
@@ -170,13 +163,13 @@
 
     strong {
       display: block;
-      color: #78350f;
+      color: var(--color-text-primary);
       font-size: 0.875rem;
       margin-bottom: var(--spacing-xs);
     }
 
     p {
-      color: #92400e;
+      color: var(--color-text-secondary);
       font-size: 0.813rem;
       margin: 0;
     }
@@ -222,7 +215,7 @@
     gap: var(--spacing-sm);
     margin-top: var(--spacing-md);
     padding-top: var(--spacing-md);
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--color-border);
 
     button {
       display: flex;

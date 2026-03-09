@@ -263,7 +263,7 @@ $light-theme: mat.m2-define-light-theme((
 // ========================================
 * {
   box-sizing: border-box;
-  margin: 0;
+  margin-bottom: 0;
   padding: 0;
 }
 
@@ -580,6 +580,7 @@ a {
 // Form fields
 .mat-mdc-form-field {
   font-size: 14px !important;
+  margin-bottom: var(--spacing-md) !important;
 
   .mat-mdc-text-field-wrapper { padding: 0 !important; }
 

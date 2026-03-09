@@ -385,11 +385,16 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   loadParticipantAvatars(): void {
     const otherIds = new Set<string>();
+
+    // Include own avatar so sent-message bubbles show the correct picture
+    if (this.currentUserId && !this.avatarCache.has(this.currentUserId)) {
+      otherIds.add(this.currentUserId);
+    }
+
     this.conversations.forEach(conv => {
-      const otherId = conv.participantIds.find(id => id !== this.currentUserId);
-      if (otherId && !this.avatarCache.has(otherId)) {
-        otherIds.add(otherId);
-      }
+      conv.participantIds.forEach(id => {
+        if (!this.avatarCache.has(id)) otherIds.add(id);
+      });
     });
 
     otherIds.forEach(userId => {
@@ -423,6 +428,10 @@ export class ChatComponent implements OnInit, OnDestroy {
   getOtherParticipantAvatar(): string {
     const otherId = this.getOtherParticipantId();
     return this.avatarCache.get(otherId) || '';
+  }
+
+  getMessageAvatar(message: Message): string {
+    return this.avatarCache.get(message.senderId) || message.senderAvatar || '';
   }
 
   getConversationName(conversation: Conversation): string {

@@ -387,14 +387,14 @@
         gap: var(--spacing-xs);
       }
 
-      // Skills chips - Simple neutral style
+      // Skills chips — consistent with skill chip design tokens
       mat-chip {
         font-size: 11px;
         height: 24px;
         padding: 0 var(--spacing-sm);
-        background-color: var(--color-gray-100);
-        color: var(--color-text-secondary);
-        border: 1px solid var(--color-border-subtle);
+        background-color: var(--chip-skill-bg) !important;
+        color: var(--chip-skill-color) !important;
+        border-color: var(--chip-skill-border) !important;
       }
     }
 

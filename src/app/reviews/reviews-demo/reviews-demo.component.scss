@@ -17,7 +17,7 @@
     gap: 1rem;
     font-size: 2.5rem;
     font-weight: 700;
-    color: #1a202c;
+    color: var(--color-text-primary);
     margin: 0 0 0.5rem;
 
     mat-icon {
@@ -30,7 +30,7 @@
 
   .subtitle {
     font-size: 1.125rem;
-    color: #718096;
+    color: var(--color-text-secondary);
     margin: 0;
   }
 }
@@ -83,7 +83,7 @@
   h3 {
     font-size: 1.5rem;
     font-weight: 600;
-    color: #1a202c;
+    color: var(--color-text-primary);
     margin: 0 0 1.5rem;
     padding-bottom: 0.75rem;
     border-bottom: 2px solid #e2e8f0;
@@ -113,7 +113,7 @@
   background: #f7fafc;
   border: 2px dashed #cbd5e0;
   border-radius: 12px;
-  color: #718096;
+  color: var(--color-text-secondary);
 
   mat-icon {
     font-size: 3rem;
@@ -136,7 +136,7 @@
   h3 {
     font-size: 1.25rem;
     font-weight: 600;
-    color: #1a202c;
+    color: var(--color-text-primary);
     margin: 0 0 1rem;
   }
 
@@ -208,7 +208,7 @@
       gap: 0.5rem;
       font-size: 1.125rem;
       margin: 0 0 1rem;
-      color: #1a202c;
+      color: var(--color-text-primary);
 
       mat-icon {
         color: #667eea;
@@ -221,7 +221,7 @@
       color: #4a5568;
 
       strong {
-        color: #1a202c;
+        color: var(--color-text-primary);
       }
     }
 
@@ -232,7 +232,7 @@
       li {
         margin-bottom: 0.25rem;
         font-size: 0.875rem;
-        color: #718096;
+        color: var(--color-text-secondary);
       }
     }
 
@@ -253,12 +253,12 @@
   h4 {
     font-size: 1rem;
     font-weight: 600;
-    color: #1a202c;
+    color: var(--color-text-primary);
     margin: 1.5rem 0 0.75rem;
   }
 
   pre {
-    background: #1a202c;
+    background: var(--color-text-primary);
     color: #e2e8f0;
     padding: 1rem;
     border-radius: 8px;
@@ -283,7 +283,7 @@
   h3 {
     font-size: 1.25rem;
     margin: 0 0 1rem;
-    color: #1a202c;
+    color: var(--color-text-primary);
   }
 
   p {
@@ -306,7 +306,7 @@
 
     li {
       margin-bottom: 0.5rem;
-      color: #718096;
+      color: var(--color-text-secondary);
     }
   }
 }
@@ -350,7 +350,7 @@
       mat-card-title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #1a202c;
+        color: var(--color-text-primary);
       }
     }
 
@@ -369,7 +369,7 @@
 
         li {
           margin-bottom: 0.5rem;
-          color: #718096;
+          color: var(--color-text-secondary);
         }
       }
 

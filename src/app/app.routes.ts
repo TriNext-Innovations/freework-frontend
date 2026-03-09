@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard, roleGuard } from './auth/auth.guard';
+import { authGuard, guestGuard, roleGuard, profileSetupDeactivateGuard } from './auth/auth.guard';
 
 export const routes: Routes = [
   // Public routes
@@ -15,8 +15,8 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () => import('./auth/register/register.component').then(m => m.RegisterComponent),
-    canActivate: [guestGuard]
+    redirectTo: '/login',
+    pathMatch: 'full'
   },
 
   // Job routes
@@ -42,6 +42,11 @@ export const routes: Routes = [
     path: 'jobs/:id/apply',
     loadComponent: () => import('./jobs/job-application/job-application.component').then(m => m.JobApplicationComponent),
     canActivate: [authGuard, roleGuard(['FREELANCER'])]
+  },
+  {
+    path: 'jobs/:id/applications',
+    loadComponent: () => import('./jobs/job-applications/job-applications.component').then(m => m.JobApplicationsComponent),
+    canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
 
   // My Jobs & Applications
@@ -103,6 +108,21 @@ export const routes: Routes = [
   {
     path: 'reviews/demo',
     loadComponent: () => import('./reviews/reviews-demo/reviews-demo.component').then(m => m.ReviewsDemoComponent)
+  },
+
+  // Settings
+  {
+    path: 'settings',
+    loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+    canActivate: [authGuard]
+  },
+
+  // Profile setup (post-registration onboarding)
+  {
+    path: 'profile/setup',
+    loadComponent: () => import('./profile/profile-setup/profile-setup.component').then(m => m.ProfileSetupComponent),
+    canActivate: [authGuard],
+    canDeactivate: [profileSetupDeactivateGuard]
   },
 
   // Profile routes

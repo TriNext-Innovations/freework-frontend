@@ -12,10 +12,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, interval, takeUntil, switchMap } from 'rxjs';
 import { MessagingService } from '../messaging.service';
 import { WebSocketService } from '../websocket.service';
 import { Message, Conversation, TypingIndicator } from '../models';
+import { AuthService } from '../../auth/auth.service';
+import { ProfileService } from '../../profile/profile.service';
 
 @Component({
   selector: 'app-chat',
@@ -58,9 +60,11 @@ export class ChatComponent implements OnInit, OnDestroy {
   // Additional properties
   totalUnreadCount = 0;
   typingUsers = new Map<string, string>();
-  currentUserId = '1'; // This would come from auth service in production
+  currentUserId = '';
+  private avatarCache = new Map<string, string>();
 
   private destroy$ = new Subject<void>();
+  private stopPolling$ = new Subject<void>();
   private typingTimeout: any;
 
   constructor(
@@ -68,30 +72,45 @@ export class ChatComponent implements OnInit, OnDestroy {
     private router: Router,
     private messagingService: MessagingService,
     private webSocketService: WebSocketService,
+    private authService: AuthService,
+    private profileService: ProfileService,
     private snackBar: MatSnackBar
-  ) {}
+  ) {
+    this.currentUserId = this.authService.currentUserValue?.id || '';
+  }
+
+  private targetConversationId: string | null = null;
 
   ngOnInit(): void {
     this.checkMobileView();
     window.addEventListener('resize', () => this.checkMobileView());
     // Only initialize WebSocket if not using mock data
     // this.initializeWebSocket(); // Commented out for mock data testing
-    this.loadConversations();
     this.subscribeToMessages();
     this.subscribeToTypingIndicators();
     this.subscribeToNotifications();
 
-    // Check if conversation ID is provided in route
+    // Capture route param first, then load conversations so we can select the right one
     this.route.paramMap.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      const conversationId = params.get('id');
-      if (conversationId) {
-        this.selectConversationById(conversationId);
-      }
+      this.targetConversationId = params.get('conversationId');
+      this.loadConversations();
+    });
+
+    // Poll conversation list every minute to pick up new conversations and unread counts
+    interval(60000).pipe(takeUntil(this.destroy$)).subscribe(() => {
+      this.messagingService.getConversations().subscribe({
+        next: (response) => {
+          this.conversations = response.conversations;
+          this.totalUnreadCount = response.totalUnread;
+          this.loadParticipantAvatars();
+        }
+      });
     });
   }
 
   ngOnDestroy(): void {
     window.removeEventListener('resize', () => this.checkMobileView());
+    this.stopPolling$.next();
     this.destroy$.next();
     this.destroy$.complete();
     // Only disconnect if WebSocket was initialized
@@ -115,9 +134,25 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.conversations = response.conversations;
         this.totalUnreadCount = response.totalUnread;
         this.loadingConversations = false;
+        this.loadParticipantAvatars();
 
-        // Auto-select first conversation if none selected
-        if (!this.selectedConversation && this.conversations.length > 0) {
+        if (this.targetConversationId) {
+          const found = this.conversations.find(c => c.id === this.targetConversationId);
+          if (found) {
+            this.selectConversation(found);
+          } else {
+            // Conversation not in list yet — fetch it directly and prepend
+            this.messagingService.getConversation(this.targetConversationId).subscribe({
+              next: (conv) => {
+                this.conversations.unshift(conv);
+                this.selectConversation(conv);
+              },
+              error: () => {
+                if (this.conversations.length > 0) this.selectConversation(this.conversations[0]);
+              }
+            });
+          }
+        } else if (!this.selectedConversation && this.conversations.length > 0) {
           this.selectConversation(this.conversations[0]);
         }
       },
@@ -125,6 +160,35 @@ export class ChatComponent implements OnInit, OnDestroy {
         console.error('Error loading conversations:', error);
         this.showError('Failed to load conversations');
         this.loadingConversations = false;
+      }
+    });
+  }
+
+  startPolling(conversationId: string): void {
+    this.stopPolling$.next(); // stop any existing poll
+    interval(3000).pipe(
+      takeUntil(this.stopPolling$),
+      takeUntil(this.destroy$),
+      switchMap(() => this.messagingService.getMessages(conversationId))
+    ).subscribe({
+      next: (messages) => {
+        // Update read status on existing messages (coerce IDs to string for safe comparison)
+        messages.forEach(incoming => {
+          const existing = this.messages.find(m => String(m.id) === String(incoming.id));
+          if (existing && !existing.read && incoming.read) {
+            existing.read = true;
+          }
+        });
+
+        // Append any new messages
+        if (messages.length > this.messages.length) {
+          const newMessages = messages.slice(this.messages.length);
+          this.messages.push(...newMessages);
+          setTimeout(() => this.scrollToBottom(), 100);
+          if (this.selectedConversation) {
+            this.selectedConversation.lastMessage = messages[messages.length - 1];
+          }
+        }
       }
     });
   }
@@ -165,6 +229,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.messages = messages;
         this.loading = false;
         setTimeout(() => this.scrollToBottom(), 100);
+        this.startPolling(conversationId);
       },
       error: (error) => {
         console.error('Error loading messages:', error);
@@ -318,6 +383,37 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  loadParticipantAvatars(): void {
+    const otherIds = new Set<string>();
+
+    // Include own avatar so sent-message bubbles show the correct picture
+    if (this.currentUserId && !this.avatarCache.has(this.currentUserId)) {
+      otherIds.add(this.currentUserId);
+    }
+
+    this.conversations.forEach(conv => {
+      conv.participantIds.forEach(id => {
+        if (!this.avatarCache.has(id)) otherIds.add(id);
+      });
+    });
+
+    otherIds.forEach(userId => {
+      this.profileService.getProfileByUserId(userId).subscribe({
+        next: (profile) => {
+          if (profile.profilePicture) {
+            this.avatarCache.set(userId, profile.profilePicture);
+          }
+        },
+        error: () => {}
+      });
+    });
+  }
+
+  private getOtherParticipantIndex(conversation: Conversation): number {
+    const idx = conversation.participantIds.findIndex(id => id !== this.currentUserId);
+    return idx >= 0 ? idx : 0;
+  }
+
   getOtherParticipantId(): string {
     if (!this.selectedConversation) return '';
     return this.selectedConversation.participantIds.find(id => id !== this.currentUserId) || '';
@@ -325,18 +421,27 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   getOtherParticipantName(): string {
     if (!this.selectedConversation) return '';
-    // participantNames array only contains other participants (not current user)
-    // So we can just return the first name
-    return this.selectedConversation.participantNames[0] || 'Unknown';
+    const idx = this.getOtherParticipantIndex(this.selectedConversation);
+    return this.selectedConversation.participantNames[idx] || 'Unknown';
   }
 
   getOtherParticipantAvatar(): string {
-    if (!this.selectedConversation || !this.selectedConversation.participantAvatars) {
-      return 'https://i.pravatar.cc/150?img=1';
-    }
-    // participantAvatars array only contains other participants (not current user)
-    // So we can just return the first avatar
-    return this.selectedConversation.participantAvatars[0] || 'https://i.pravatar.cc/150?img=1';
+    const otherId = this.getOtherParticipantId();
+    return this.avatarCache.get(otherId) || '';
+  }
+
+  getMessageAvatar(message: Message): string {
+    return this.avatarCache.get(message.senderId) || message.senderAvatar || '';
+  }
+
+  getConversationName(conversation: Conversation): string {
+    const idx = this.getOtherParticipantIndex(conversation);
+    return conversation.participantNames[idx] || 'Unknown';
+  }
+
+  getConversationAvatar(conversation: Conversation): string {
+    const otherId = conversation.participantIds.find(id => id !== this.currentUserId);
+    return (otherId && this.avatarCache.get(otherId)) || '';
   }
 
   isMyMessage(message: Message): boolean {

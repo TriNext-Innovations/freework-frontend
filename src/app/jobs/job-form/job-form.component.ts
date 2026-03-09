@@ -143,7 +143,7 @@ export class JobFormComponent implements OnInit {
       category: this.jobForm.value.category,
       budget: this.jobForm.value.budget,
       budgetType: this.jobForm.value.budgetType,
-      deadline: this.jobForm.value.deadline.toISOString(),
+      deadline: this.jobForm.value.deadline.toISOString().slice(0, 19),
       location: this.jobForm.value.location,
       locationType: this.jobForm.value.locationType,
       skills: this.selectedSkills

@@ -1,7 +1,11 @@
+// FIX #9: ApplicationStatus values changed from title-case to ALL_CAPS to match backend enum.
+// Backend returns: PENDING, ACCEPTED, REJECTED, WITHDRAWN
+// Previous incorrect values were: 'Pending', 'Accepted', 'Rejected', 'Withdrawn'
 export interface JobApplication {
   id?: string;
   jobId: string;
   freelancerId: string;
+  customerId?: string;
   message: string;
   portfolioLink?: string;
   coverLetter: string;
@@ -15,10 +19,10 @@ export interface JobApplication {
 }
 
 export enum ApplicationStatus {
-  PENDING = 'Pending',
-  ACCEPTED = 'Accepted',
-  REJECTED = 'Rejected',
-  WITHDRAWN = 'Withdrawn'
+  PENDING = 'PENDING',
+  ACCEPTED = 'ACCEPTED',
+  REJECTED = 'REJECTED',
+  WITHDRAWN = 'WITHDRAWN'
 }
 
 export interface CreateApplicationDto {
@@ -35,4 +39,3 @@ export interface ApplicationResponse {
   message: string;
   application?: JobApplication;
 }
-

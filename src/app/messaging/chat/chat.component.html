@@ -22,31 +22,33 @@
         (click)="selectConversation(conversation)"
       >
         <div class="conversation-avatar">
-          <img [src]="conversation.participantAvatars?.[0] || 'https://i.pravatar.cc/150?img=1'" alt="Avatar">
+          <img *ngIf="getConversationAvatar(conversation)" [src]="getConversationAvatar(conversation)" alt="Avatar">
+          <mat-icon *ngIf="!getConversationAvatar(conversation)">account_circle</mat-icon>
           <span class="unread-indicator" *ngIf="conversation.unreadCount > 0"></span>
         </div>
 
         <div class="conversation-info">
           <div class="conversation-header">
-            <h3 class="conversation-name">{{ conversation.participantNames[0] }}</h3>
+            <h3 class="conversation-name">{{ getConversationName(conversation) }}</h3>
             <span class="conversation-time" *ngIf="conversation.lastMessage">
               {{ formatTime(conversation.lastMessage.timestamp) }}
             </span>
           </div>
 
           <div class="conversation-preview">
-            <p class="last-message" *ngIf="conversation.lastMessage">
-              {{ conversation.lastMessage.content }}
-            </p>
+            <div class="preview-row">
+              <p class="last-message" *ngIf="conversation.lastMessage">
+                {{ conversation.lastMessage.content }}
+              </p>
+              <span class="unread-count" *ngIf="conversation.unreadCount > 0">
+                {{ conversation.unreadCount }}
+              </span>
+            </div>
             <p class="job-title" *ngIf="conversation.jobTitle">
               <mat-icon>work</mat-icon>
               {{ conversation.jobTitle }}
             </p>
           </div>
-
-          <span class="unread-count" *ngIf="conversation.unreadCount > 0">
-            {{ conversation.unreadCount }}
-          </span>
         </div>
       </div>
 
@@ -76,7 +78,8 @@
       </button>
 
       <div class="chat-header-info">
-        <img [src]="getOtherParticipantAvatar()" alt="Avatar" class="header-avatar">
+        <img *ngIf="getOtherParticipantAvatar()" [src]="getOtherParticipantAvatar()" alt="Avatar" class="header-avatar">
+        <mat-icon *ngIf="!getOtherParticipantAvatar()" class="header-avatar-icon">account_circle</mat-icon>
         <div class="header-details">
           <h3>{{ getOtherParticipantName() }}</h3>
           <p class="job-context" *ngIf="selectedConversation.jobTitle">
@@ -115,7 +118,8 @@
           [class.other-message]="!isMyMessage(message)"
         >
           <div class="message-avatar" *ngIf="!isMyMessage(message)">
-            <img [src]="message.senderAvatar || 'https://i.pravatar.cc/150?img=1'" alt="Avatar">
+            <img *ngIf="getMessageAvatar(message)" [src]="getMessageAvatar(message)" alt="Avatar">
+            <mat-icon *ngIf="!getMessageAvatar(message)">account_circle</mat-icon>
           </div>
 
           <div class="message-bubble">
@@ -129,7 +133,8 @@
           </div>
 
           <div class="message-avatar" *ngIf="isMyMessage(message)">
-            <img [src]="message.senderAvatar || 'https://i.pravatar.cc/150?img=2'" alt="Avatar">
+            <img *ngIf="getMessageAvatar(message)" [src]="getMessageAvatar(message)" alt="Avatar">
+            <mat-icon *ngIf="!getMessageAvatar(message)">account_circle</mat-icon>
           </div>
         </div>
 
@@ -163,34 +168,26 @@
           [disabled]="sendingMessage"
           #messageInput
         >
-        <button
-          mat-icon-button
-          matSuffix
-          matTooltip="Attach File"
-          [disabled]="sendingMessage"
-        >
-          <mat-icon>attach_file</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          matSuffix
-          matTooltip="Add Emoji"
-          [disabled]="sendingMessage"
-        >
-          <mat-icon>emoji_emotions</mat-icon>
-        </button>
       </mat-form-field>
 
-      <button
-        mat-fab
-        color="primary"
-        (click)="sendMessage()"
-        [disabled]="!messageText.trim() || sendingMessage"
-        class="send-button"
-      >
-        <mat-spinner *ngIf="sendingMessage" diameter="24"></mat-spinner>
-        <mat-icon *ngIf="!sendingMessage">send</mat-icon>
-      </button>
+      <div class="input-actions">
+        <button mat-icon-button matTooltip="Attach File" [disabled]="sendingMessage">
+          <mat-icon>attach_file</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Add Emoji" [disabled]="sendingMessage">
+          <mat-icon>emoji_emotions</mat-icon>
+        </button>
+        <button
+          mat-fab
+          color="primary"
+          (click)="sendMessage()"
+          [disabled]="!messageText.trim() || sendingMessage"
+          class="send-button"
+        >
+          <mat-spinner *ngIf="sendingMessage" diameter="24"></mat-spinner>
+          <mat-icon *ngIf="!sendingMessage">send</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 </div>

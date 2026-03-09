@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Observable, Subject, BehaviorSubject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { Message, TypingIndicator, MessageNotification } from './models';
+import { WS_BASE_URL } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
@@ -34,7 +35,7 @@ export class WebSocketService {
       return;
     }
 
-    const wsUrl = `wss://api.freework.co.za/ws?token=${token}`;
+    const wsUrl = `${WS_BASE_URL}/ws?token=${token}`;
 
     try {
       this.socket = new WebSocket(wsUrl);

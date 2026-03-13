@@ -63,7 +63,7 @@
             <mat-option value="FIXED">Fixed Price</mat-option>
             <mat-option value="HOURLY">Hourly Rate</mat-option>
           </mat-select>
-          <mat-icon matPrefix>attach_money</mat-icon>
+          <mat-icon matPrefix>business_center</mat-icon>
         </mat-form-field>
 
         <!-- Clear Filters Button -->
@@ -78,13 +78,13 @@
         <mat-form-field appearance="outline" class="budget-field">
           <mat-label>Min Budget</mat-label>
           <input matInput type="number" formControlName="minBudget" placeholder="0">
-          <span matTextPrefix>$&nbsp;</span>
+          <span matTextPrefix>R&nbsp;</span>
         </mat-form-field>
         <span class="range-separator">to</span>
         <mat-form-field appearance="outline" class="budget-field">
           <mat-label>Max Budget</mat-label>
           <input matInput type="number" formControlName="maxBudget" placeholder="10000">
-          <span matTextPrefix>$&nbsp;</span>
+          <span matTextPrefix>R&nbsp;</span>
         </mat-form-field>
       </div>
     </form>
@@ -110,9 +110,9 @@
       <div class="job-card-header">
         <div class="job-title-section">
           <h3>{{ job.title }}</h3>
-          <span class="time-posted">{{ getTimeSincePosted(job.createdAt) }}</span>
+          <span class="time-posted">{{ getTimeSincePosted(job.createdAt || job.created_at) }}</span>
         </div>
-        <mat-chip [highlighted]="true" [color]="getLocationTypeColor(job.locationType)">
+        <mat-chip *ngIf="job.locationType" [highlighted]="true" [color]="getLocationTypeColor(job.locationType)">
           {{ getLocationTypeLabel(job.locationType) }}
         </mat-chip>
       </div>
@@ -125,10 +125,10 @@
       <!-- Job Meta Info -->
       <div class="job-meta">
         <div class="meta-item">
-          <mat-icon>{{ getCategoryIcon(job.category) }}</mat-icon>
-          <span>{{ getCategoryName(job.category) }}</span>
+          <mat-icon>category</mat-icon>
+          <span>{{ job.category }}</span>
         </div>
-        <div class="meta-item">
+        <div class="meta-item" *ngIf="job.location">
           <mat-icon>location_on</mat-icon>
           <span>{{ job.location }}</span>
         </div>
@@ -139,7 +139,7 @@
       </div>
 
       <!-- Skills -->
-      <div class="skills-section">
+      <div class="skills-section" *ngIf="job.skills && job.skills.length > 0">
         <mat-chip-set>
           <mat-chip *ngFor="let skill of job.skills.slice(0, 4)">
             {{ skill }}
@@ -153,14 +153,11 @@
       <!-- Card Footer -->
       <div class="job-card-footer">
         <div class="budget-section">
-          <mat-icon>attach_money</mat-icon>
           <span class="budget-amount">{{ formatBudget(job) }}</span>
         </div>
-        <div class="applications-badge" [matTooltip]="job.applicationsCount + ' application(s)'">
-          <mat-icon [matBadge]="job.applicationsCount" matBadgeColor="accent" matBadgeSize="small">
-            people
-          </mat-icon>
-          <span>{{ job.applicationsCount }} {{ job.applicationsCount === 1 ? 'Application' : 'Applications' }}</span>
+        <div class="applications-badge">
+          <span class="badge-icon">👥</span>
+          <span>{{ job.applicationsCount || 0 }} {{ (job.applicationsCount || 0) === 1 ? 'Application' : 'Applications' }}</span>
         </div>
       </div>
     </mat-card>

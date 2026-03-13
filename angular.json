@@ -24,7 +24,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "src/polyfills-safari.ts"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -34,14 +35,9 @@
                 "input": "public"
               },
               {
-                "glob": ".nojekyll",
-                "input": ".",
-                "output": "/"
-              },
-              {
-                "glob": "CNAME",
-                "input": ".",
-                "output": "/"
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
               }
             ],
             "styles": [

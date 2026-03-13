@@ -4,13 +4,14 @@ import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
 import { tap, catchError, delay } from 'rxjs/operators';
 import { Profile, UpdateProfileRequest, FreelancerProfile, CustomerProfile } from './models/profile.models';
 import { AuthService } from '../auth/auth.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
-  private readonly API_URL = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/profile';
-  private useMockData = true; // Toggle for testing
+  private readonly API_URL = buildApiEndpointUrl('/profile');
+  private useMockData = false; // Toggle for testing
 
   private currentProfileSubject = new BehaviorSubject<Profile | null>(null);
   public currentProfile$ = this.currentProfileSubject.asObservable();
@@ -28,7 +29,7 @@ export class ProfileService {
     // Load profile when user logs in
     this.authService.currentUser$.subscribe(user => {
       if (user) {
-        this.loadProfile(user.id).subscribe();
+        this.getMyProfile().subscribe();
       } else {
         this.currentProfileSubject.next(null);
       }
@@ -142,7 +143,7 @@ export class ProfileService {
       return this.getMockProfile(user.id);
     }
 
-    return this.http.get<Profile>(`${this.API_URL}/me`)
+    return this.http.get<Profile>(`${this.API_URL}`)
       .pipe(
         tap(profile => this.currentProfileSubject.next(profile)),
         catchError(error => {
@@ -177,7 +178,7 @@ export class ProfileService {
       return this.updateMockProfile(updates);
     }
 
-    return this.http.put<Profile>(`${this.API_URL}/me`, updates)
+    return this.http.put<Profile>(`${this.API_URL}`, updates)
       .pipe(
         tap(profile => this.currentProfileSubject.next(profile)),
         catchError(error => {
@@ -197,16 +198,23 @@ export class ProfileService {
         .pipe(delay(1000));
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.post<{ url: string }>(`${this.API_URL}/upload-picture`, formData)
-      .pipe(
-        catchError(error => {
-          console.error('Error uploading picture:', error);
-          return throwError(() => error);
-        })
-      );
+    // Convert the File to a data URL, then send the URL to the backend
+    return new Observable<{ url: string }>(observer => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        this.http.post<{ url: string }>(`${this.API_URL}/upload-picture`, { url: dataUrl })
+          .pipe(
+            catchError(error => {
+              console.error('Error uploading picture:', error);
+              return throwError(() => error);
+            })
+          )
+          .subscribe(observer);
+      };
+      reader.onerror = () => observer.error(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
   }
 
   /**
@@ -260,4 +268,3 @@ export class ProfileService {
     });
   }
 }
-

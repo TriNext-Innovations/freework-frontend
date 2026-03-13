@@ -1,0 +1,2328 @@
+openapi: 3.0.3
+info:
+  title: Freework API
+  description: |
+    Freework is a freelance marketplace platform connecting customers with freelancers.
+    This API specification covers all the backend endpoints required for the application.
+  version: 1.0.0
+  contact:
+    name: Freework Support
+    email: support@freework.co.za
+  license:
+    name: Proprietary
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+  - url: https://api.freework.co.za
+    description: Production server
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Jobs
+    description: Job posting and management
+  - name: Applications
+    description: Job application management
+  - name: Profiles
+    description: User profile management
+  - name: Reviews
+    description: Reviews and ratings system
+  - name: Payments
+    description: Payment and escrow management
+  - name: Messaging
+    description: Real-time messaging system
+
+security:
+  - BearerAuth: []
+
+paths:
+  # ==================== Authentication ====================
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login
+      description: Authenticate user with email and password
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/register:
+    post:
+      tags:
+        - Authentication
+      summary: User registration
+      description: Register a new user account (Customer or Freelancer)
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        '201':
+          description: Registration successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '400':
+          description: Invalid request or email already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh access token
+      description: Get a new access token using a refresh token
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshTokenRequest'
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          description: Invalid or expired refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/logout:
+    post:
+      tags:
+        - Authentication
+      summary: User logout
+      description: Invalidate the current session and refresh token
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Logout successful
+
+  # ==================== Jobs ====================
+  /jobs:
+    get:
+      tags:
+        - Jobs
+      summary: Get all jobs
+      description: Retrieve a paginated list of jobs with optional filtering
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: location
+          in: query
+          schema:
+            type: string
+        - name: locationType
+          in: query
+          schema:
+            type: string
+            enum: [REMOTE, ONSITE, HYBRID]
+        - name: minBudget
+          in: query
+          schema:
+            type: number
+        - name: maxBudget
+          in: query
+          schema:
+            type: number
+        - name: budgetType
+          in: query
+          schema:
+            type: string
+            enum: [FIXED, HOURLY]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [OPEN, IN_PROGRESS, COMPLETED, CANCELLED]
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: skills
+          in: query
+          schema:
+            type: string
+            description: Comma-separated list of skills
+        - name: customerId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Jobs retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobsResponse'
+
+    post:
+      tags:
+        - Jobs
+      summary: Create a new job
+      description: Post a new job (Customer only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateJobRequest'
+      responses:
+        '201':
+          description: Job created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: User is not a customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /jobs/{id}:
+    get:
+      tags:
+        - Jobs
+      summary: Get job by ID
+      description: Retrieve detailed information about a specific job
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Jobs
+      summary: Update a job
+      description: Update job details (Job owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateJobRequest'
+      responses:
+        '200':
+          description: Job updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+        '403':
+          description: Not authorized to update this job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Jobs
+      summary: Delete a job
+      description: Delete a job posting (Job owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Job deleted successfully
+        '403':
+          description: Not authorized to delete this job
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /jobs/my-jobs:
+    get:
+      tags:
+        - Jobs
+      summary: Get current user's jobs
+      description: Get all jobs posted by the authenticated user (Customer only)
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Jobs retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobsResponse'
+
+  /jobs/search:
+    get:
+      tags:
+        - Jobs
+      summary: Search jobs
+      description: Search jobs by keyword
+      parameters:
+        - name: search
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Search results retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobsResponse'
+
+  /jobs/category/{category}:
+    get:
+      tags:
+        - Jobs
+      summary: Get jobs by category
+      description: Retrieve jobs filtered by category
+      parameters:
+        - name: category
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Jobs retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobsResponse'
+
+  /jobs/{id}/status:
+    patch:
+      tags:
+        - Jobs
+      summary: Update job status
+      description: Update the status of a job (Job owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [OPEN, IN_PROGRESS, COMPLETED, CANCELLED]
+      responses:
+        '200':
+          description: Job status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Job'
+
+  # ==================== Applications ====================
+  /api/applications:
+    post:
+      tags:
+        - Applications
+      summary: Submit job application
+      description: Apply for a job (Freelancer only)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateApplicationDto'
+      responses:
+        '201':
+          description: Application submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+        '400':
+          description: Invalid request or already applied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/applications/my-applications:
+    get:
+      tags:
+        - Applications
+      summary: Get my applications
+      description: Get all applications submitted by the authenticated freelancer
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [Pending, Accepted, Rejected, Withdrawn]
+      responses:
+        '200':
+          description: Applications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobApplication'
+
+  /api/applications/{id}:
+    get:
+      tags:
+        - Applications
+      summary: Get application by ID
+      description: Retrieve details of a specific application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Application retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JobApplication'
+        '404':
+          description: Application not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/applications/check/{jobId}:
+    get:
+      tags:
+        - Applications
+      summary: Check if user has applied
+      description: Check if the authenticated user has already applied to a job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Check result
+          content:
+            application/json:
+              schema:
+                type: boolean
+
+  /api/applications/{id}/withdraw:
+    put:
+      tags:
+        - Applications
+      summary: Withdraw application
+      description: Withdraw a submitted application
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Application withdrawn successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+
+  /api/applications/job/{jobId}:
+    get:
+      tags:
+        - Applications
+      summary: Get applications for a job
+      description: Get all applications for a specific job (Job owner only)
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Applications retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/JobApplication'
+
+  /api/applications/{id}/status:
+    put:
+      tags:
+        - Applications
+      summary: Update application status
+      description: Accept or reject an application (Job owner only)
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum: [Pending, Accepted, Rejected]
+      responses:
+        '200':
+          description: Application status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApplicationResponse'
+
+  /api/applications/stats:
+    get:
+      tags:
+        - Applications
+      summary: Get application statistics
+      description: Get statistics about applications for the authenticated user
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: integer
+                  pending:
+                    type: integer
+                  accepted:
+                    type: integer
+                  rejected:
+                    type: integer
+
+  # ==================== Profiles ====================
+  /api/profiles/me:
+    get:
+      tags:
+        - Profiles
+      summary: Get current user's profile
+      description: Retrieve the authenticated user's profile
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/FreelancerProfile'
+                  - $ref: '#/components/schemas/CustomerProfile'
+
+    put:
+      tags:
+        - Profiles
+      summary: Update current user's profile
+      description: Update the authenticated user's profile information
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProfileRequest'
+      responses:
+        '200':
+          description: Profile updated successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/FreelancerProfile'
+                  - $ref: '#/components/schemas/CustomerProfile'
+
+  /api/profiles/user/{userId}:
+    get:
+      tags:
+        - Profiles
+      summary: Get profile by user ID
+      description: Retrieve a user's public profile information
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/FreelancerProfile'
+                  - $ref: '#/components/schemas/CustomerProfile'
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/profiles/upload-picture:
+    post:
+      tags:
+        - Profiles
+      summary: Upload profile picture
+      description: Upload a new profile picture
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Profile picture uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  url:
+                    type: string
+                    description: URL of the uploaded profile picture
+
+  # ==================== Reviews ====================
+  /api/reviews:
+    get:
+      tags:
+        - Reviews
+      summary: Get all reviews
+      description: Retrieve all reviews
+      responses:
+        '200':
+          description: Reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+
+    post:
+      tags:
+        - Reviews
+      summary: Create a review
+      description: Create a review for a freelancer or customer after job completion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateReviewRequest'
+      responses:
+        '201':
+          description: Review created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '400':
+          description: Invalid request or already reviewed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/reviews/{reviewId}:
+    get:
+      tags:
+        - Reviews
+      summary: Get review by ID
+      description: Retrieve a specific review
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Review retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+        '404':
+          description: Review not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Reviews
+      summary: Update a review
+      description: Update an existing review (Review owner only)
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateReviewRequest'
+      responses:
+        '200':
+          description: Review updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+
+    delete:
+      tags:
+        - Reviews
+      summary: Delete a review
+      description: Delete a review (Review owner or admin only)
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Review deleted successfully
+
+  /api/reviews/job/{jobId}:
+    get:
+      tags:
+        - Reviews
+      summary: Get reviews for a job
+      description: Retrieve all reviews for a specific job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+
+  /api/reviews/user/{userId}:
+    get:
+      tags:
+        - Reviews
+      summary: Get reviews for a user
+      description: Retrieve all reviews for a specific user (as reviewee)
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Reviews retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Review'
+
+  /api/reviews/summary/{type}/{targetId}:
+    get:
+      tags:
+        - Reviews
+      summary: Get review summary
+      description: Get aggregated review statistics for a job or user
+      parameters:
+        - name: type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [job, user]
+        - name: targetId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Review summary retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewSummary'
+
+  /api/reviews/stats/user/{userId}:
+    get:
+      tags:
+        - Reviews
+      summary: Get user review statistics
+      description: Get detailed review statistics for a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Statistics retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserReviewStats'
+
+  /api/reviews/{reviewId}/helpful:
+    post:
+      tags:
+        - Reviews
+      summary: Mark review as helpful
+      description: Mark a review as helpful or not helpful
+      parameters:
+        - name: reviewId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                helpful:
+                  type: boolean
+      responses:
+        '200':
+          description: Feedback recorded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Review'
+
+  # ==================== Payments ====================
+  /api/payments:
+    get:
+      tags:
+        - Payments
+      summary: Get all payments
+      description: Get all payments for the authenticated user
+      responses:
+        '200':
+          description: Payments retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+
+  /api/payments/{paymentId}:
+    get:
+      tags:
+        - Payments
+      summary: Get payment by ID
+      description: Retrieve details of a specific payment
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payment retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+        '404':
+          description: Payment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/payments/job/{jobId}:
+    get:
+      tags:
+        - Payments
+      summary: Get payments for a job
+      description: Retrieve all payments associated with a specific job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Payments retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payment'
+
+  /api/payments/intent:
+    post:
+      tags:
+        - Payments
+      summary: Create payment intent
+      description: Create a Stripe payment intent for processing payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+      responses:
+        '200':
+          description: Payment intent created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentIntent'
+
+  /api/payments/escrow:
+    post:
+      tags:
+        - Payments
+      summary: Create escrow payment
+      description: Create an escrow payment for a job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePaymentRequest'
+      responses:
+        '201':
+          description: Escrow payment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /api/payments/release:
+    post:
+      tags:
+        - Payments
+      summary: Release payment from escrow
+      description: Release payment from escrow to freelancer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReleasePaymentRequest'
+      responses:
+        '200':
+          description: Payment released successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /api/payments/refund:
+    post:
+      tags:
+        - Payments
+      summary: Refund payment
+      description: Refund a payment to the customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundPaymentRequest'
+      responses:
+        '200':
+          description: Payment refunded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /api/payments/{paymentId}/confirm:
+    post:
+      tags:
+        - Payments
+      summary: Confirm payment
+      description: Confirm a payment with Stripe
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paymentIntentId:
+                  type: string
+      responses:
+        '200':
+          description: Payment confirmed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+
+  /api/payments/milestones:
+    post:
+      tags:
+        - Payments
+      summary: Create milestone
+      description: Create a payment milestone for a job
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Milestone'
+      responses:
+        '201':
+          description: Milestone created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Milestone'
+
+  /api/payments/milestones/job/{jobId}:
+    get:
+      tags:
+        - Payments
+      summary: Get milestones for a job
+      description: Retrieve all milestones for a specific job
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Milestones retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Milestone'
+
+  # ==================== Messaging ====================
+  /api/messages/conversations:
+    get:
+      tags:
+        - Messaging
+      summary: Get all conversations
+      description: Retrieve all conversations for the authenticated user
+      responses:
+        '200':
+          description: Conversations retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversationListResponse'
+
+  /api/messages/conversations/{conversationId}:
+    get:
+      tags:
+        - Messaging
+      summary: Get conversation by ID
+      description: Retrieve a specific conversation
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Conversation retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+        '404':
+          description: Conversation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /api/messages/conversations/{conversationId}/messages:
+    get:
+      tags:
+        - Messaging
+      summary: Get messages in a conversation
+      description: Retrieve all messages in a conversation with pagination
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 0
+        - name: size
+          in: query
+          schema:
+            type: integer
+            default: 50
+      responses:
+        '200':
+          description: Messages retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+
+  /api/messages/send:
+    post:
+      tags:
+        - Messaging
+      summary: Send a message
+      description: Send a new message to a user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendMessageRequest'
+      responses:
+        '201':
+          description: Message sent successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+
+  /api/messages/conversations/{conversationId}/read:
+    put:
+      tags:
+        - Messaging
+      summary: Mark conversation as read
+      description: Mark all messages in a conversation as read
+      parameters:
+        - name: conversationId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Conversation marked as read
+
+  /api/messages/conversations/start/{userId}:
+    post:
+      tags:
+        - Messaging
+      summary: Start or get conversation
+      description: Create a new conversation or get existing one with a user
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: jobId
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Conversation retrieved or created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Conversation'
+
+  /api/messages/unread-count:
+    get:
+      tags:
+        - Messaging
+      summary: Get unread message count
+      description: Get total number of unread messages for the authenticated user
+      responses:
+        '200':
+          description: Unread count retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: integer
+
+  /api/messages/search:
+    get:
+      tags:
+        - Messaging
+      summary: Search messages
+      description: Search through all messages
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Message'
+
+  /api/messages/{messageId}:
+    delete:
+      tags:
+        - Messaging
+      summary: Delete a message
+      description: Delete a message (Message sender only)
+      parameters:
+        - name: messageId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Message deleted successfully
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # ==================== Auth Schemas ====================
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: john@example.com
+        password:
+          type: string
+          format: password
+          example: password123
+
+    RegisterRequest:
+      type: object
+      required:
+        - fullName
+        - email
+        - password
+        - role
+      properties:
+        fullName:
+          type: string
+          example: John Doe
+        email:
+          type: string
+          format: email
+          example: john@example.com
+        password:
+          type: string
+          format: password
+          example: password123
+        role:
+          type: string
+          enum: [CUSTOMER, FREELANCER]
+          example: FREELANCER
+
+    RefreshTokenRequest:
+      type: object
+      required:
+        - refreshToken
+      properties:
+        refreshToken:
+          type: string
+
+    AuthResponse:
+      type: object
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+        tokenType:
+          type: string
+          example: Bearer
+        expiresIn:
+          type: integer
+          example: 3600
+        user:
+          $ref: '#/components/schemas/User'
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+        email:
+          type: string
+          format: email
+        firstName:
+          type: string
+        lastName:
+          type: string
+        role:
+          type: string
+          enum: [CUSTOMER, FREELANCER, ADMIN]
+        profilePicture:
+          type: string
+          format: uri
+        createdAt:
+          type: string
+          format: date-time
+
+    # ==================== Job Schemas ====================
+    Job:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        category:
+          type: string
+        budget:
+          type: number
+          format: double
+        budgetType:
+          type: string
+          enum: [FIXED, HOURLY]
+        deadline:
+          type: string
+          format: date-time
+        location:
+          type: string
+        locationType:
+          type: string
+          enum: [REMOTE, ONSITE, HYBRID]
+        skills:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [OPEN, IN_PROGRESS, COMPLETED, CANCELLED]
+        customerId:
+          type: string
+        customerName:
+          type: string
+        customerAvatar:
+          type: string
+          format: uri
+        applicationsCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        postedById:
+          type: integer
+        postedByEmail:
+          type: string
+          format: email
+
+    CreateJobRequest:
+      type: object
+      required:
+        - title
+        - description
+        - category
+        - budget
+        - budgetType
+        - deadline
+        - location
+        - locationType
+        - skills
+      properties:
+        title:
+          type: string
+          example: Full Stack Developer Needed
+        description:
+          type: string
+          example: Looking for an experienced full stack developer...
+        category:
+          type: string
+          example: Web Development
+        budget:
+          type: number
+          format: double
+          example: 5000
+        budgetType:
+          type: string
+          enum: [FIXED, HOURLY]
+        deadline:
+          type: string
+          format: date-time
+        location:
+          type: string
+          example: Remote
+        locationType:
+          type: string
+          enum: [REMOTE, ONSITE, HYBRID]
+        skills:
+          type: array
+          items:
+            type: string
+          example: [Angular, Node.js, PostgreSQL]
+
+    UpdateJobRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateJobRequest'
+        - type: object
+          required:
+            - id
+          properties:
+            id:
+              type: string
+
+    JobsResponse:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Job'
+        totalElements:
+          type: integer
+        totalPages:
+          type: integer
+        size:
+          type: integer
+        number:
+          type: integer
+
+    # ==================== Application Schemas ====================
+    JobApplication:
+      type: object
+      properties:
+        id:
+          type: string
+        jobId:
+          type: string
+        freelancerId:
+          type: string
+        message:
+          type: string
+        portfolioLink:
+          type: string
+          format: uri
+        coverLetter:
+          type: string
+        proposedRate:
+          type: number
+          format: double
+        estimatedDuration:
+          type: string
+        status:
+          type: string
+          enum: [Pending, Accepted, Rejected, Withdrawn]
+        appliedAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        freelancerName:
+          type: string
+        jobTitle:
+          type: string
+
+    CreateApplicationDto:
+      type: object
+      required:
+        - jobId
+        - message
+        - coverLetter
+      properties:
+        jobId:
+          type: string
+        message:
+          type: string
+        portfolioLink:
+          type: string
+          format: uri
+        coverLetter:
+          type: string
+        proposedRate:
+          type: number
+          format: double
+        estimatedDuration:
+          type: string
+
+    ApplicationResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        application:
+          $ref: '#/components/schemas/JobApplication'
+
+    # ==================== Profile Schemas ====================
+    BaseProfile:
+      type: object
+      properties:
+        id:
+          type: string
+        userId:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        profilePicture:
+          type: string
+          format: uri
+        bio:
+          type: string
+        location:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    FreelancerProfile:
+      allOf:
+        - $ref: '#/components/schemas/BaseProfile'
+        - type: object
+          properties:
+            role:
+              type: string
+              enum: [FREELANCER]
+            title:
+              type: string
+            hourlyRate:
+              type: number
+              format: double
+            skills:
+              type: array
+              items:
+                type: string
+            experience:
+              type: string
+            education:
+              type: string
+            portfolio:
+              type: array
+              items:
+                $ref: '#/components/schemas/PortfolioItem'
+            languages:
+              type: array
+              items:
+                $ref: '#/components/schemas/Language'
+            availability:
+              type: string
+              enum: [FULL_TIME, PART_TIME, CONTRACT, NOT_AVAILABLE]
+            rating:
+              type: number
+              format: double
+            totalReviews:
+              type: integer
+            completedJobs:
+              type: integer
+            certifications:
+              type: array
+              items:
+                $ref: '#/components/schemas/Certification'
+            socialLinks:
+              $ref: '#/components/schemas/SocialLinks'
+
+    CustomerProfile:
+      allOf:
+        - $ref: '#/components/schemas/BaseProfile'
+        - type: object
+          properties:
+            role:
+              type: string
+              enum: [CUSTOMER]
+            company:
+              type: string
+            companySize:
+              type: string
+            industry:
+              type: string
+            website:
+              type: string
+              format: uri
+            rating:
+              type: number
+              format: double
+            totalReviews:
+              type: integer
+            totalJobsPosted:
+              type: integer
+            verifiedPayment:
+              type: boolean
+            socialLinks:
+              $ref: '#/components/schemas/SocialLinks'
+
+    PortfolioItem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+          format: uri
+        projectUrl:
+          type: string
+          format: uri
+        technologies:
+          type: array
+          items:
+            type: string
+        completedAt:
+          type: string
+          format: date
+
+    Language:
+      type: object
+      properties:
+        name:
+          type: string
+        proficiency:
+          type: string
+          enum: [BASIC, CONVERSATIONAL, FLUENT, NATIVE]
+
+    Certification:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        issuer:
+          type: string
+        issueDate:
+          type: string
+          format: date
+        expiryDate:
+          type: string
+          format: date
+        credentialUrl:
+          type: string
+          format: uri
+
+    SocialLinks:
+      type: object
+      properties:
+        linkedin:
+          type: string
+          format: uri
+        github:
+          type: string
+          format: uri
+        twitter:
+          type: string
+          format: uri
+        website:
+          type: string
+          format: uri
+        behance:
+          type: string
+          format: uri
+        dribbble:
+          type: string
+          format: uri
+
+    UpdateProfileRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        phone:
+          type: string
+        bio:
+          type: string
+        location:
+          type: string
+        title:
+          type: string
+        hourlyRate:
+          type: number
+          format: double
+        skills:
+          type: array
+          items:
+            type: string
+        experience:
+          type: string
+        education:
+          type: string
+        availability:
+          type: string
+          enum: [FULL_TIME, PART_TIME, CONTRACT, NOT_AVAILABLE]
+        languages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+        certifications:
+          type: array
+          items:
+            $ref: '#/components/schemas/Certification'
+        company:
+          type: string
+        companySize:
+          type: string
+        industry:
+          type: string
+        website:
+          type: string
+          format: uri
+        socialLinks:
+          $ref: '#/components/schemas/SocialLinks'
+
+    # ==================== Review Schemas ====================
+    Review:
+      type: object
+      properties:
+        id:
+          type: string
+        jobId:
+          type: string
+        jobTitle:
+          type: string
+        reviewerId:
+          type: string
+        reviewerName:
+          type: string
+        reviewerAvatar:
+          type: string
+          format: uri
+        revieweeId:
+          type: string
+        revieweeName:
+          type: string
+        reviewType:
+          type: string
+          enum: [FREELANCER_REVIEW, CUSTOMER_REVIEW]
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        title:
+          type: string
+        comment:
+          type: string
+        pros:
+          type: array
+          items:
+            type: string
+        cons:
+          type: array
+          items:
+            type: string
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED, FLAGGED]
+        isVerified:
+          type: boolean
+        helpfulCount:
+          type: integer
+        notHelpfulCount:
+          type: integer
+        response:
+          $ref: '#/components/schemas/ReviewResponse'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    ReviewResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        reviewId:
+          type: string
+        responderId:
+          type: string
+        responderName:
+          type: string
+        comment:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    CreateReviewRequest:
+      type: object
+      required:
+        - jobId
+        - revieweeId
+        - reviewType
+        - rating
+        - title
+        - comment
+      properties:
+        jobId:
+          type: string
+        revieweeId:
+          type: string
+        reviewType:
+          type: string
+          enum: [FREELANCER_REVIEW, CUSTOMER_REVIEW]
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        title:
+          type: string
+        comment:
+          type: string
+        pros:
+          type: array
+          items:
+            type: string
+        cons:
+          type: array
+          items:
+            type: string
+
+    UpdateReviewRequest:
+      type: object
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        title:
+          type: string
+        comment:
+          type: string
+        pros:
+          type: array
+          items:
+            type: string
+        cons:
+          type: array
+          items:
+            type: string
+
+    ReviewSummary:
+      type: object
+      properties:
+        totalReviews:
+          type: integer
+        averageRating:
+          type: number
+          format: double
+        ratingDistribution:
+          type: object
+          additionalProperties:
+            type: integer
+        recentReviews:
+          type: array
+          items:
+            $ref: '#/components/schemas/Review'
+
+    RatingBreakdown:
+      type: object
+      properties:
+        fiveStars:
+          type: integer
+        fourStars:
+          type: integer
+        threeStars:
+          type: integer
+        twoStars:
+          type: integer
+        oneStar:
+          type: integer
+
+    UserReviewStats:
+      type: object
+      properties:
+        userId:
+          type: string
+        userName:
+          type: string
+        totalReviews:
+          type: integer
+        averageRating:
+          type: number
+          format: double
+        ratingBreakdown:
+          $ref: '#/components/schemas/RatingBreakdown'
+        badges:
+          type: array
+          items:
+            type: string
+
+    # ==================== Payment Schemas ====================
+    Payment:
+      type: object
+      properties:
+        id:
+          type: string
+        jobId:
+          type: string
+        jobTitle:
+          type: string
+        customerId:
+          type: string
+        customerName:
+          type: string
+        freelancerId:
+          type: string
+        freelancerName:
+          type: string
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          example: ZAR
+        status:
+          type: string
+          enum: [PENDING, PROCESSING, COMPLETED, FAILED, REFUNDED, ESCROWED, RELEASED, CANCELLED]
+        paymentMethod:
+          type: string
+          enum: [STRIPE, PAYPAL, CREDIT_CARD, DEBIT_CARD]
+        paymentType:
+          type: string
+          enum: [JOB_ESCROW, MILESTONE, RELEASE, REFUND]
+        transactionId:
+          type: string
+        stripePaymentIntentId:
+          type: string
+        paypalOrderId:
+          type: string
+        escrowedAt:
+          type: string
+          format: date-time
+        releasedAt:
+          type: string
+          format: date-time
+        description:
+          type: string
+        metadata:
+          type: object
+          additionalProperties: true
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+
+    PaymentIntent:
+      type: object
+      properties:
+        id:
+          type: string
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+        clientSecret:
+          type: string
+        status:
+          type: string
+
+    CreatePaymentRequest:
+      type: object
+      required:
+        - jobId
+        - amount
+        - currency
+        - paymentMethod
+        - paymentType
+      properties:
+        jobId:
+          type: string
+        amount:
+          type: number
+          format: double
+        currency:
+          type: string
+          example: ZAR
+        paymentMethod:
+          type: string
+          enum: [STRIPE, PAYPAL, CREDIT_CARD, DEBIT_CARD]
+        paymentType:
+          type: string
+          enum: [JOB_ESCROW, MILESTONE, RELEASE, REFUND]
+        description:
+          type: string
+
+    ReleasePaymentRequest:
+      type: object
+      required:
+        - paymentId
+        - amount
+      properties:
+        paymentId:
+          type: string
+        amount:
+          type: number
+          format: double
+        reason:
+          type: string
+
+    RefundPaymentRequest:
+      type: object
+      required:
+        - paymentId
+        - amount
+        - reason
+      properties:
+        paymentId:
+          type: string
+        amount:
+          type: number
+          format: double
+        reason:
+          type: string
+
+    Milestone:
+      type: object
+      properties:
+        id:
+          type: string
+        jobId:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        amount:
+          type: number
+          format: double
+        dueDate:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [PENDING, IN_PROGRESS, COMPLETED, PAID]
+        paymentId:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+
+    # ==================== Messaging Schemas ====================
+    Message:
+      type: object
+      properties:
+        id:
+          type: string
+        conversationId:
+          type: string
+        senderId:
+          type: string
+        senderName:
+          type: string
+        senderAvatar:
+          type: string
+          format: uri
+        receiverId:
+          type: string
+        content:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        read:
+          type: boolean
+        type:
+          type: string
+          enum: [TEXT, IMAGE, FILE, SYSTEM]
+        attachments:
+          type: array
+          items:
+            $ref: '#/components/schemas/MessageAttachment'
+
+    MessageAttachment:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        url:
+          type: string
+          format: uri
+        type:
+          type: string
+        size:
+          type: integer
+
+    Conversation:
+      type: object
+      properties:
+        id:
+          type: string
+        participantIds:
+          type: array
+          items:
+            type: string
+        participantNames:
+          type: array
+          items:
+            type: string
+        participantAvatars:
+          type: array
+          items:
+            type: string
+            format: uri
+        lastMessage:
+          $ref: '#/components/schemas/Message'
+        unreadCount:
+          type: integer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        jobId:
+          type: string
+        jobTitle:
+          type: string
+
+    SendMessageRequest:
+      type: object
+      required:
+        - receiverId
+        - content
+      properties:
+        conversationId:
+          type: string
+        receiverId:
+          type: string
+        content:
+          type: string
+        type:
+          type: string
+          enum: [TEXT, IMAGE, FILE, SYSTEM]
+          default: TEXT
+        jobId:
+          type: string
+
+    ConversationListResponse:
+      type: object
+      properties:
+        conversations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Conversation'
+        totalUnread:
+          type: integer
+
+    # ==================== Error Schema ====================
+    ErrorResponse:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        error:
+          type: string
+        message:
+          type: string
+        path:
+          type: string
+

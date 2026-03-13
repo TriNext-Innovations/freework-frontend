@@ -64,6 +64,10 @@
   position: relative;
   margin-top: -80px;
   flex-shrink: 0;
+
+  @media (max-width: 768px) {
+    margin-top: -60px;
+  }
 }
 
 .profile-picture {
@@ -196,6 +200,7 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
+  min-width: 0;
 }
 
 .profile-section {
@@ -232,13 +237,13 @@
 }
 
 .skill-badge {
-  padding: 0.5rem 1rem;
-  background: #eff6ff;
-  color: #2563eb;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  padding: 0.375rem 0.875rem;
+  background: var(--chip-skill-bg);
+  color: var(--chip-skill-color);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
   font-weight: 500;
-  border: 1px solid #bfdbfe;
+  border: 1px solid var(--chip-skill-border);
 }
 
 .portfolio-grid {
@@ -248,7 +253,7 @@
 
 .portfolio-item {
   display: grid;
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: minmax(0, 300px) 1fr;
   gap: 1.5rem;
   padding: 1.5rem;
   border: 1px solid #e5e7eb;
@@ -289,10 +294,11 @@
 
 .tech-badge {
   padding: 0.25rem 0.75rem;
-  background: #f3f4f6;
-  color: #4b5563;
-  border-radius: 12px;
-  font-size: 0.85rem;
+  background: var(--color-gray-100);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-md);
+  font-size: 0.8125rem;
+  border: 1px solid var(--color-border);
 }
 
 .view-project {
@@ -353,27 +359,33 @@
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  width: 100%;
 }
 
 .stat-item {
   text-align: center;
-  padding: 1.5rem;
+  padding: 0.75rem;
   background: #f9fafb;
   border-radius: 8px;
+  min-width: 0;
+  box-sizing: border-box;
 
   .stat-value {
     display: block;
-    font-size: 2rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: #2563eb;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.25rem;
   }
 
   .stat-label {
     color: #6b7280;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
+    line-height: 1.2;
+    white-space: normal;
+    word-break: break-word;
   }
 }
 
@@ -525,4 +537,3 @@
     grid-template-columns: 1fr;
   }
 }
-

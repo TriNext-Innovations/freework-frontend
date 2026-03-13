@@ -23,8 +23,8 @@
             <mat-chip [highlighted]="true" [color]="getStatusColor(job.status)">
               {{ getStatusLabel(job.status) }}
             </mat-chip>
-            <mat-chip [highlighted]="true" color="accent">
-              {{ getLocationTypeLabel(job.locationType) }}
+            <mat-chip *ngIf="job.locationType" [highlighted]="true" color="accent">
+              {{ getLocationTypeLabel(job.locationType!) }}
             </mat-chip>
           </div>
         </div>
@@ -68,7 +68,7 @@
           </div>
 
           <div class="meta-card">
-            <mat-icon>attach_money</mat-icon>
+            <mat-icon>money</mat-icon>
             <div class="meta-content">
               <span class="meta-label">Budget</span>
               <span class="meta-value">{{ formatBudget(job) }}</span>
@@ -103,7 +103,7 @@
             <mat-icon>schedule</mat-icon>
             <div class="meta-content">
               <span class="meta-label">Posted</span>
-              <span class="meta-value">{{ job.createdAt | date: 'MMM d, yyyy' }}</span>
+              <span class="meta-value">{{ (job.createdAt || job.created_at) | date: 'MMM d, yyyy' }}</span>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@
           Required Skills
         </h2>
         <mat-chip-set>
-          <mat-chip *ngFor="let skill of job.skills" [highlighted]="true">
+          <mat-chip *ngFor="let skill of job.skills">
             {{ skill }}
           </mat-chip>
         </mat-chip-set>
@@ -150,7 +150,7 @@
           </div>
           <div class="customer-info">
             <h3>{{ job.customerName }}</h3>
-            <p>Member since {{ job.createdAt | date: 'MMMM yyyy' }}</p>
+            <p>Member since {{ (job.createdAt || job.created_at) | date: 'MMMM yyyy' }}</p>
           </div>
           <button mat-raised-button color="primary" (click)="contactCustomer()" *ngIf="!isOwner">
             <mat-icon>message</mat-icon>
@@ -219,7 +219,7 @@
       <mat-card>
         <h3>Apply for this job</h3>
         <div class="budget-highlight">
-          <mat-icon>attach_money</mat-icon>
+
           <div>
             <span class="budget-label">Project Budget</span>
             <span class="budget-amount">{{ formatBudget(job) }}</span>

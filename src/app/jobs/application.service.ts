@@ -3,13 +3,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { JobApplication, CreateApplicationDto, ApplicationResponse, ApplicationStatus } from './models/application.models';
 import { MockDataService } from './mock-data.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApplicationService {
-  private apiUrl = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/applications';
-  private useMockData = true; // Toggle this to switch between mock and real API
+  private apiUrl = buildApiEndpointUrl('/applications');
+  private useMockData = false; // Toggle this to switch between mock and real API
 
   constructor(
     private http: HttpClient,

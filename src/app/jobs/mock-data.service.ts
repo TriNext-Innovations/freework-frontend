@@ -362,8 +362,8 @@ export class MockDataService {
       filteredJobs = filteredJobs.filter(j =>
         j.title.toLowerCase().includes(search) ||
         j.description.toLowerCase().includes(search) ||
-        j.skills.some(skill => skill.toLowerCase().includes(search)) ||
-        j.location.toLowerCase().includes(search)
+        (j.skills && j.skills.some(skill => skill.toLowerCase().includes(search))) ||
+        (j.location && j.location.toLowerCase().includes(search))
       );
       console.log(`   ✓ After search filter: ${filteredJobs.length} jobs`);
     }
@@ -426,8 +426,8 @@ export class MockDataService {
     if (filters.skills && filters.skills.length > 0) {
       console.log(`🎯 Applying skills filter:`, filters.skills);
       filteredJobs = filteredJobs.filter(j =>
-        filters.skills.some((skill: string) =>
-          j.skills.some(jobSkill =>
+        j.skills && filters.skills!.some((skill: string) =>
+          j.skills!.some(jobSkill =>
             jobSkill.toLowerCase().includes(skill.toLowerCase())
           )
         )

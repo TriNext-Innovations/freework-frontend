@@ -1,9 +1,13 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
 .job-list-container {
   max-width: 1400px;
   margin: 0 auto;
   padding: var(--spacing-2xl);
-  background: var(--color-surface);
-  min-height: 100vh;
+  min-height: 100%;
 }
 
 // Header Section - Premium and clean
@@ -65,7 +69,7 @@
   }
 }
 
-// Filters Card - Premium and organized
+// Filters Card
 .filters-card {
   margin-bottom: var(--spacing-2xl);
   padding: var(--spacing-xl);
@@ -74,11 +78,9 @@
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
 
-  // Fix Material form field alignment
-  mat-form-field {
-    mat-label {
-      line-height: 1.2 !important;
-    }
+  // Uniform form field sizing — no subscript space, consistent 48px height
+  ::ng-deep .mat-mdc-form-field {
+    margin-bottom: 0 !important;
 
     .mat-mdc-text-field-wrapper {
       padding-bottom: 0 !important;
@@ -86,8 +88,8 @@
 
     .mat-mdc-form-field-infix {
       min-height: 48px !important;
-      padding-top: 12px !important;
-      padding-bottom: 12px !important;
+      padding-top: 10px !important;
+      padding-bottom: 10px !important;
       padding-right: 0 !important;
       display: flex !important;
       align-items: center !important;
@@ -101,9 +103,8 @@
       font-size: 14px !important;
     }
 
-    // Fix icon alignment
     .mat-mdc-form-field-icon-prefix {
-      padding: 0 12px 0 0 !important;
+      padding: 0 8px 0 0 !important;
       display: flex !important;
       align-items: center !important;
       align-self: center !important;
@@ -117,17 +118,16 @@
       }
     }
 
-    // Fix text prefix alignment
     .mat-mdc-form-field-text-prefix {
       padding-right: 4px !important;
       display: flex !important;
       align-items: center !important;
       align-self: center !important;
       font-size: 14px !important;
+      color: var(--color-text-secondary) !important;
       line-height: 1 !important;
     }
 
-    // Fix select alignment and dropdown arrow positioning
     .mat-mdc-select {
       display: flex !important;
       align-items: center !important;
@@ -150,8 +150,6 @@
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
-        height: 24px !important;
-        padding-left: 8px !important;
         transform: none !important;
 
         .mat-mdc-select-arrow {
@@ -163,46 +161,26 @@
           border-bottom: 0 !important;
           margin: 0 !important;
 
-          svg {
-            display: none !important;
-          }
+          svg { display: none !important; }
         }
       }
     }
 
-    // Fix outline padding for select fields
-    &.mat-mdc-form-field-has-icon-prefix {
-      .mat-mdc-select {
-        padding-left: 0 !important;
-      }
+    &.mat-mdc-form-field-has-icon-prefix .mat-mdc-select {
+      padding-left: 0 !important;
     }
 
-    // Ensure notched outline doesn't interfere
-    .mdc-notched-outline {
-      .mdc-notched-outline__leading {
-        width: 12px !important;
-      }
-
-      .mdc-notched-outline__trailing {
-        padding-right: 0 !important;
-      }
+    .mdc-notched-outline__leading {
+      width: 12px !important;
     }
 
-    // Fix floating label
     .mdc-floating-label {
       line-height: 1.2 !important;
       font-size: 14px !important;
     }
 
-    // Fix subscript wrapper
     .mat-mdc-form-field-subscript-wrapper {
-      height: 0 !important;
-      margin-top: 4px !important;
-    }
-
-    // Fix bottom line
-    .mat-mdc-form-field-bottom-align {
-      height: 0 !important;
+      display: none !important;
     }
   }
 
@@ -210,6 +188,7 @@
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr auto;
     gap: var(--spacing-md);
+    align-items: center;
     margin-bottom: var(--spacing-md);
 
     .search-field {
@@ -217,13 +196,14 @@
     }
 
     .clear-btn {
-      align-self: center;
       height: 48px;
       border-radius: var(--radius-md);
       font-weight: 500;
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: var(--spacing-xs);
+      white-space: nowrap;
 
       mat-icon {
         font-size: 18px;
@@ -235,7 +215,7 @@
 
   .budget-range {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     gap: var(--spacing-md);
 
     .budget-field {
@@ -245,9 +225,9 @@
 
     .range-separator {
       color: var(--color-text-tertiary);
-      font-weight: 400;
       font-size: 14px;
-      padding-top: 14px;
+      font-weight: 400;
+      flex-shrink: 0;
       line-height: 1;
     }
   }
@@ -354,28 +334,28 @@
       border-radius: var(--radius-sm) !important;
     }
 
-    // Remote - Blue
+    // Remote — Forest Teal
     mat-chip[color="primary"],
     .mat-mdc-chip.mat-primary {
-      background: linear-gradient(135deg, #0969da 0%, #0366d6 100%) !important;
+      background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%) !important;
       color: white !important;
-      box-shadow: 0 2px 4px rgba(9, 105, 218, 0.3) !important;
+      box-shadow: 0 2px 4px rgba(43, 184, 138, 0.30) !important;
     }
 
-    // On-site - Green
+    // On-site — Slate Blue
     mat-chip[color="accent"],
     .mat-mdc-chip.mat-accent {
-      background: linear-gradient(135deg, #2da44e 0%, #1a7f37 100%) !important;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
       color: white !important;
-      box-shadow: 0 2px 4px rgba(45, 164, 78, 0.3) !important;
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.30) !important;
     }
 
-    // Hybrid - Orange
+    // Hybrid — Warm Amber (kept warm for contrast)
     mat-chip[color="warn"],
     .mat-mdc-chip.mat-warn {
       background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
       color: white !important;
-      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3) !important;
+      box-shadow: 0 2px 4px rgba(245, 158, 11, 0.30) !important;
     }
   }
 
@@ -429,9 +409,9 @@
       font-size: 11px;
       height: 22px;
       padding: 0 8px;
-      background-color: var(--color-gray-100);
-      color: var(--color-text-secondary);
-      border: 1px solid var(--color-border);
+      background-color: var(--chip-skill-bg) !important;
+      color: var(--chip-skill-color) !important;
+      border-color: var(--chip-skill-border) !important;
     }
   }
 
@@ -450,17 +430,17 @@
       align-items: center;
       gap: var(--spacing-xs);
 
-      mat-icon {
-        font-size: 1.125rem;
-        width: 1.125rem;
-        height: 1.125rem;
-        color: var(--color-accent-600);
+      .budget-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: var(--color-text-secondary);
       }
 
       .budget-amount {
-        font-size: 1.125rem;
-        font-weight: 600;
-        color: var(--color-text-primary);
+        font-size: 1.25rem;
+        font-weight: 700;
+        color: var(--color-accent-600);
+        letter-spacing: -0.01em;
       }
     }
 
@@ -471,11 +451,9 @@
       font-size: 13px;
       color: var(--color-text-secondary);
 
-      mat-icon {
-        font-size: 1rem;
-        width: 1rem;
-        height: 1rem;
-        color: var(--color-text-tertiary);
+      .badge-icon {
+        font-size: 1.125rem;
+        line-height: 1;
       }
     }
   }
@@ -540,7 +518,7 @@
 
     .filters-row {
       grid-template-columns: 1fr 1fr;
-      gap: var(--spacing-sm);
+      gap: var(--spacing-md);
 
       .search-field {
         grid-column: 1 / -1; // Full width
@@ -563,8 +541,8 @@
       }
 
       .range-separator {
-        padding-top: 0;
-        padding-left: var(--spacing-sm);
+        padding-left: 0;
+        text-align: center;
       }
     }
   }
@@ -614,14 +592,14 @@
 
     .filters-row {
       grid-template-columns: 1fr;
-      gap: var(--spacing-sm);
+      gap: var(--spacing-md);
 
       .search-field {
         grid-column: auto;
       }
 
       .clear-btn {
-        margin-top: var(--spacing-xs);
+        margin-top: 0;
       }
     }
   }
@@ -756,7 +734,6 @@
     }
 
     .filters-row {
-      gap: var(--spacing-xs);
 
       .clear-btn {
         height: 44px;

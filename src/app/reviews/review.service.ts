@@ -9,13 +9,14 @@ import {
   UserReviewStats
 } from './models';
 import { MockReviewService } from './mock-review.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/reviews';
-  private useMockData = true; // Toggle this to switch between mock and real API
+  private apiUrl = buildApiEndpointUrl('/reviews');
+  private useMockData = false; // Toggle this to switch between mock and real API
 
   constructor(
     private http: HttpClient,

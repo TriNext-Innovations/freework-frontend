@@ -1,16 +1,17 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { tap, map } from 'rxjs/operators';
 import { Message, Conversation, SendMessageRequest, ConversationListResponse } from './models';
 import { MockMessagingService } from './mock-messaging.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessagingService {
-  private apiUrl = 'https://freework-dev-ecs-alb-391464293.af-south-1.elb.amazonaws.com/api/messages';
-  private useMockData = true; // Toggle this to switch between mock and real API
+  private apiUrl = buildApiEndpointUrl('/messages');
+  private useMockData = false; // Toggle this to switch between mock and real API
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
 
@@ -104,7 +105,8 @@ export class MessagingService {
       );
     }
 
-    return this.http.get<number>(`${this.apiUrl}/unread-count`).pipe(
+    return this.http.get<{ count: number }>(`${this.apiUrl}/unread-count`).pipe(
+      map(r => r.count),
       tap(count => this.unreadCountSubject.next(count))
     );
   }

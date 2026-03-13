@@ -133,7 +133,7 @@ export class JobApplicationComponent implements OnInit {
         this.submitting = false;
         this.showSuccess('Application submitted successfully!');
         setTimeout(() => {
-          this.router.navigate(['/jobs/my-applications']);
+          this.router.navigate(['/my-applications']);
         }, 1500);
       },
       error: (error) => {

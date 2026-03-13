@@ -6,18 +6,22 @@ export interface Job {
   description: string;
   category: string;
   budget: number;
-  budgetType: 'FIXED' | 'HOURLY';
+  budgetType?: 'FIXED' | 'HOURLY';
   deadline: string;
-  location: string;
-  locationType: 'REMOTE' | 'ONSITE' | 'HYBRID';
-  skills: string[];
+  location?: string;
+  locationType?: 'REMOTE' | 'ONSITE' | 'HYBRID';
+  skills?: string[];
   status: 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
-  customerId: string;
-  customerName: string;
+  customerId?: string;
+  customerName?: string;
   customerAvatar?: string;
-  applicationsCount: number;
-  createdAt: string;
-  updatedAt: string;
+  applicationsCount?: number;
+  createdAt?: string;  // Frontend camelCase
+  updatedAt?: string;  // Frontend camelCase
+  created_at?: string; // Backend snake_case
+  updated_at?: string; // Backend snake_case
+  postedById?: number;
+  postedByEmail?: string;
 }
 
 export interface CreateJobRequest {

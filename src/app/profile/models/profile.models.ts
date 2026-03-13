@@ -103,3 +103,4 @@ export interface UpdateProfileRequest {
 
 export type Profile = FreelancerProfile | CustomerProfile;
 
+

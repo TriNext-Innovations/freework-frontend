@@ -18,7 +18,17 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   if (token) {
     req = req.clone({
       setHeaders: {
-        Authorization: `Bearer ${token}`
+        Authorization: `Bearer ${token}`,
+        'Content-Type': req.headers.get('Content-Type') || 'application/json',
+        'Accept': 'application/json'
+      }
+    });
+  } else {
+    // Even without token, ensure proper headers for Safari
+    req = req.clone({
+      setHeaders: {
+        'Content-Type': req.headers.get('Content-Type') || 'application/json',
+        'Accept': 'application/json'
       }
     });
   }

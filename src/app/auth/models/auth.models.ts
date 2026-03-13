@@ -6,8 +6,8 @@ export interface LoginRequest {
 }
 
 export interface RegisterRequest {
-  firstName: string;
-  lastName: string;
+  fullName: string;
+  //lastName: string;
   email: string;
   password: string;
   role: 'CUSTOMER' | 'FREELANCER';
@@ -28,7 +28,9 @@ export interface User {
   lastName: string;
   role: 'CUSTOMER' | 'FREELANCER' | 'ADMIN';
   profilePicture?: string;
+  avatar?: string;
   createdAt: string;
+  profileCompleted?: boolean;
 }
 
 export interface RefreshTokenRequest {
@@ -41,5 +43,15 @@ export interface TokenPayload {
   role: string;
   exp: number;
   iat: number;
+  // Optional fields that might be in the token
+  userId?: string;
+  id?: string;
+  firstName?: string;
+  lastName?: string;
+  given_name?: string;
+  family_name?: string;
+  profilePicture?: string;
+  picture?: string;
+  avatar?: string;
+  authorities?: string[];
 }
-

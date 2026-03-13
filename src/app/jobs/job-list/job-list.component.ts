@@ -132,14 +132,30 @@ export class JobListComponent implements OnInit {
       filters.customerId = currentUser.id;
     }
 
+    // If user is a CUSTOMER, only show their posted jobs
+    if (currentUser?.role === 'CUSTOMER') {
+      filters.customerId = currentUser.id;
+    }
+
     console.log('✅ Final filters being applied:', filters);
 
     this.jobService.getJobs(this.pageIndex, this.pageSize, filters).subscribe({
       next: (response) => {
         this.jobs = response.content;
         this.totalElements = response.totalElements;
+        this.totalElements = response.totalElements;
         this.loading = false;
         console.log(`✅ Found ${response.totalElements} jobs matching filters`);
+        console.log(`✅ Found ${response.totalElements} jobs matching filters`);
+        console.log('📋 Full jobs data:', this.jobs);
+        if (this.jobs.length > 0) {
+          console.log('🔍 First job budget details:', {
+            id: this.jobs[0].id,
+            title: this.jobs[0].title,
+            budget: this.jobs[0].budget,
+            budgetType: this.jobs[0].budgetType
+          });
+        }
       },
       error: (error) => {
         console.error('❌ Error loading jobs:', error);
@@ -184,16 +200,28 @@ export class JobListComponent implements OnInit {
   }
 
   formatBudget(job: Job): string {
-    const amount = new Intl.NumberFormat('en-US', {
+    console.log('💰 formatBudget called with:', { budget: job.budget, budgetType: job.budgetType });
+
+    if (!job || !job.budget) {
+      console.warn('⚠️ No budget available for job');
+      return 'Not specified';
+    }
+
+    const amount = new Intl.NumberFormat('en-ZA', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'ZAR',
       minimumFractionDigits: 0
     }).format(job.budget);
 
-    return job.budgetType === 'HOURLY' ? `${amount}/hr` : amount;
+    const result = job.budgetType === 'HOURLY' ? `${amount}/hr` : amount;
+    console.log('✅ Formatted budget:', result);
+
+    return result;
   }
 
-  getTimeSincePosted(createdAt: string): string {
+  getTimeSincePosted(createdAt: string | undefined): string {
+    if (!createdAt) return 'Recently';
+
     const now = new Date();
     const posted = new Date(createdAt);
     const diffMs = now.getTime() - posted.getTime();

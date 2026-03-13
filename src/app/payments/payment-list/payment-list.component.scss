@@ -132,10 +132,15 @@
         }
 
         .payment-details {
+          min-width: 0;
+
           .payment-job {
             margin: 0 0 0.5rem 0;
             font-size: 1.1rem;
             color: rgba(0, 0, 0, 0.87);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
           }
 
           .payment-meta {
@@ -153,7 +158,8 @@
 
           .payment-participants {
             display: flex;
-            gap: 1.5rem;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
             font-size: 0.875rem;
             color: rgba(0, 0, 0, 0.6);
 

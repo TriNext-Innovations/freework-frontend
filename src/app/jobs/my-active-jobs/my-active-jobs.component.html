@@ -188,7 +188,7 @@
           <mat-icon>visibility</mat-icon>
           View Details
         </button>
-        <button mat-button (click)="messageClient(activeJob.job.customerId, activeJob.job.customerName, activeJob.job.title)">
+        <button mat-button *ngIf="activeJob.job.customerId" (click)="messageClient(activeJob.job.customerId!, activeJob.job.id)">
           <mat-icon>chat</mat-icon>
           Message Client
         </button>
@@ -299,7 +299,7 @@
               Posted On
             </div>
             <div class="info-value">
-              {{ formatDate(job.createdAt) }}
+              {{ formatDate(job.createdAt || job.created_at) }}
             </div>
           </div>
         </div>
@@ -331,11 +331,11 @@
         <button mat-button [routerLink]="['/jobs', job.id, 'applications']">
           <mat-icon>people</mat-icon>
           View Applications
-          <mat-chip *ngIf="job.applicationsCount > 0" [highlighted]="true" color="accent">
-            {{ job.applicationsCount }}
+          <mat-chip *ngIf="(job.applicationsCount || 0) > 0" [highlighted]="true" color="accent">
+            {{ job.applicationsCount || 0 }}
           </mat-chip>
         </button>
-        <button mat-button [routerLink]="['/jobs/edit', job.id]">
+        <button mat-button [routerLink]="['/jobs', job.id, 'edit']">
           <mat-icon>edit</mat-icon>
           Edit Job
         </button>

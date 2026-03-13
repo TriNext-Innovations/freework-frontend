@@ -4,7 +4,13 @@
     <mat-sidenav #sidenav [(opened)]="sidenavOpened" mode="over">
       <mat-nav-list>
         <div class="sidenav-header">
-          <h2>Freework</h2>
+          <div class="sidenav-logo">
+            <svg viewBox="0 0 64 52" width="28" height="23" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+              <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#1A8D6F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.75"/>
+            </svg>
+            <span class="sidenav-wordmark"><strong>free</strong>work</span>
+          </div>
           <button mat-icon-button (click)="closeSidenav()">
             <mat-icon>close</mat-icon>
           </button>
@@ -13,15 +19,25 @@
         <mat-divider></mat-divider>
 
         <!-- User Info if Logged In -->
-        <div class="sidenav-user-info" *ngIf="authService.isLoggedIn()">
-          <mat-icon>account_circle</mat-icon>
+        <div class="sidenav-user-info" *ngIf="currentUser$ | async as user">
+          <ng-container *ngIf="user.avatar || user.profilePicture; else sidenavDefaultAvatar">
+            <img
+              [src]="getAvatarUrl(user)"
+              [alt]="user.firstName"
+              class="sidenav-avatar"
+              (error)="onAvatarError($event)"
+            />
+          </ng-container>
+          <ng-template #sidenavDefaultAvatar>
+            <mat-icon>account_circle</mat-icon>
+          </ng-template>
           <div>
-            <strong>{{ authService.getCurrentUser()?.firstName }} {{ authService.getCurrentUser()?.lastName }}</strong>
-            <small>{{ authService.getCurrentUser()?.email }}</small>
+            <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+            <small>{{ user.email }}</small>
           </div>
         </div>
 
-        <mat-divider *ngIf="authService.isLoggedIn()"></mat-divider>
+        <mat-divider *ngIf="currentUser$ | async"></mat-divider>
 
         <!-- Navigation Links -->
         <a mat-list-item routerLink="/jobs" (click)="closeSidenav()">
@@ -30,14 +46,14 @@
         </a>
 
         <!-- Authenticated Links -->
-        <ng-container *ngIf="authService.isLoggedIn()">
+        <ng-container *ngIf="currentUser$ | async as user">
           <a mat-list-item routerLink="/messages" (click)="closeSidenav()">
             <mat-icon matListItemIcon>message</mat-icon>
             <span matListItemTitle>Messages</span>
           </a>
 
           <!-- Customer Only -->
-          <ng-container *ngIf="authService.getCurrentUser()?.role === 'CUSTOMER'">
+          <ng-container *ngIf="user.role === 'CUSTOMER'">
             <a mat-list-item routerLink="/jobs/new" (click)="closeSidenav()">
               <mat-icon matListItemIcon>add</mat-icon>
               <span matListItemTitle>Post Job</span>
@@ -50,7 +66,7 @@
           </ng-container>
 
           <!-- Freelancer Only -->
-          <ng-container *ngIf="authService.getCurrentUser()?.role === 'FREELANCER'">
+          <ng-container *ngIf="user.role === 'FREELANCER'">
             <a mat-list-item routerLink="/my-active-jobs" (click)="closeSidenav()">
               <mat-icon matListItemIcon>work</mat-icon>
               <span matListItemTitle>My Active Jobs</span>
@@ -88,7 +104,7 @@
         </ng-container>
 
         <!-- Not Logged In -->
-        <ng-container *ngIf="!authService.isLoggedIn()">
+        <ng-container *ngIf="!(currentUser$ | async)">
           <a mat-list-item routerLink="/login" (click)="closeSidenav()">
             <mat-icon matListItemIcon>login</mat-icon>
             <span matListItemTitle>Login</span>
@@ -110,17 +126,25 @@
 
             <!-- Logo -->
             <a routerLink="/" class="logo">
-              <mat-icon>work</mat-icon>
-              <span>Freework</span>
+              <svg viewBox="0 0 64 52" xmlns="http://www.w3.org/2000/svg" class="logo-mark">
+                <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+                <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#1A8D6F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.75"/>
+              </svg>
+              <span class="logo-wordmark"><strong>free</strong>work</span>
             </a>
 
             <!-- Spacer to push user menu to the right -->
             <span class="spacer"></span>
 
+            <!-- Theme Toggle -->
+            <button mat-icon-button (click)="themeService.toggle()" class="theme-toggle-button" [title]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+              <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+            </button>
+
             <!-- User Menu -->
             <div class="user-menu">
               <!-- Not Logged In -->
-              <ng-container *ngIf="!authService.isLoggedIn()">
+              <ng-container *ngIf="!(currentUser$ | async)">
                 <a mat-button routerLink="/login" class="login-button">
                   <mat-icon>login</mat-icon>
                   Login
@@ -128,24 +152,36 @@
               </ng-container>
 
               <!-- Logged In -->
-              <ng-container *ngIf="authService.isLoggedIn()">
+              <ng-container *ngIf="currentUser$ | async as user">
                 <button mat-icon-button [matMenuTriggerFor]="userMenu" class="profile-button">
-                  <img
-                    [src]="authService.getCurrentUser()?.profilePicture || 'https://via.placeholder.com/40'"
-                    [alt]="authService.getCurrentUser()?.firstName"
-                    class="profile-avatar"
-                  />
+                  <ng-container *ngIf="user.avatar || user.profilePicture; else defaultAvatar">
+                    <img
+                      [src]="getAvatarUrl(user)"
+                      [alt]="user.firstName"
+                      class="profile-avatar"
+                      (error)="onAvatarError($event)"
+                    />
+                  </ng-container>
+                  <ng-template #defaultAvatar>
+                    <mat-icon>account_circle</mat-icon>
+                  </ng-template>
                 </button>
                 <mat-menu #userMenu="matMenu">
                   <div class="user-info">
-                    <img
-                      [src]="authService.getCurrentUser()?.profilePicture || 'https://via.placeholder.com/60'"
-                      [alt]="authService.getCurrentUser()?.firstName"
-                      class="menu-avatar"
-                    />
+                    <ng-container *ngIf="user.avatar || user.profilePicture; else defaultMenuAvatar">
+                      <img
+                        [src]="getAvatarUrl(user)"
+                        [alt]="user.firstName"
+                        class="menu-avatar"
+                        (error)="onAvatarError($event)"
+                      />
+                    </ng-container>
+                    <ng-template #defaultMenuAvatar>
+                      <mat-icon>account_circle</mat-icon>
+                    </ng-template>
                     <div class="user-details">
-                      <strong>{{ authService.getCurrentUser()?.firstName }} {{ authService.getCurrentUser()?.lastName }}</strong>
-                      <small>{{ authService.getCurrentUser()?.email }}</small>
+                      <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+                      <small>{{ user.email }}</small>
                     </div>
                   </div>
                   <mat-divider></mat-divider>

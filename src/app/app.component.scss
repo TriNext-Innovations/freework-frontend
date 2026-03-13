@@ -12,7 +12,7 @@
 // Sidenav Container
 .sidenav-container {
   height: 100vh;
-  background: var(--color-surface);
+  background: transparent;
 }
 
 mat-sidenav {
@@ -22,30 +22,41 @@ mat-sidenav {
   box-shadow: none;
 }
 
-// Sidenav Header - Modern gradient
+// Sidenav Header — The Weave brand
 .sidenav-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-lg) var(--spacing-xl);
-  background: linear-gradient(135deg, var(--color-accent-600) 0%, var(--color-accent-700) 100%);
-  color: white;
+  background: linear-gradient(135deg, #0D1F1A 0%, #132E25 100%);
+  border-bottom: 1px solid rgba(43, 184, 138, 0.12);
 
-  h2 {
-    margin: 0;
-    font-size: 1.25rem;
-    font-weight: 600;
-    letter-spacing: -0.01em;
+  .sidenav-logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+  }
+
+  .sidenav-wordmark {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.125rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: -0.02em;
+
+    strong {
+      font-weight: 700;
+      color: #ffffff;
+    }
   }
 
   button {
-    color: white;
-    opacity: 0.9;
-    transition: opacity var(--transition-fast);
+    color: rgba(255, 255, 255, 0.6);
+    transition: color var(--transition-fast);
 
     &:hover {
-      opacity: 1;
-      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      background-color: rgba(43, 184, 138, 0.12);
     }
   }
 }
@@ -136,7 +147,7 @@ mat-nav-list {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: var(--color-surface);
+  background: transparent;
 }
 
 // Toolbar - Clean and minimal
@@ -172,27 +183,61 @@ mat-nav-list {
   }
 }
 
-// Logo
+// Logo — The Weave mark + wordmark
 .logo {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
   text-decoration: none;
-  color: var(--color-text-primary);
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
   transition: opacity var(--transition-fast);
 
-  mat-icon {
-    color: var(--color-accent-600);
-    font-size: 28px;
-    width: 28px;
-    height: 28px;
+  .logo-mark {
+    width: 32px;
+    height: 26px;
+    flex-shrink: 0;
+  }
+
+  .logo-wordmark {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+    color: var(--color-text-secondary);
+
+    strong {
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
   }
 
   &:hover {
     opacity: 0.8;
+  }
+}
+
+// Mobile logo — smaller
+@media (max-width: 480px) {
+  .logo {
+    .logo-mark {
+      width: 26px;
+      height: 21px;
+    }
+
+    .logo-wordmark {
+      font-size: 1.0625rem;
+    }
+  }
+}
+
+// Theme toggle
+.theme-toggle-button {
+  margin-right: var(--spacing-xs);
+  color: var(--color-text-secondary);
+  transition: color var(--transition-fast);
+
+  &:hover {
+    color: var(--color-text-primary);
+    background-color: var(--color-gray-100);
   }
 }
 
@@ -300,8 +345,8 @@ mat-nav-list {
 .main-content {
   flex: 1;
   overflow-y: auto;
-  background: var(--color-surface);
-  padding: var(--spacing-xl);
+  background: transparent;
+  //padding: var(--spacing-xl);
 
   @media (max-width: 768px) {
     padding: var(--spacing-lg);
@@ -389,13 +434,8 @@ mat-nav-list {
   }
 
   .logo {
-    font-size: 1.125rem;
-
-    mat-icon {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
-    }
+    .logo-wordmark { font-size: 1.0625rem; }
+    .logo-mark { width: 26px; height: 21px; }
   }
 
   .user-menu {
@@ -444,13 +484,8 @@ mat-nav-list {
   }
 
   .logo {
-    font-size: 1rem;
-
-    mat-icon {
-      font-size: 22px;
-      width: 22px;
-      height: 22px;
-    }
+    .logo-wordmark { font-size: 1rem; }
+    .logo-mark { width: 24px; height: 19px; }
   }
 
   mat-sidenav {

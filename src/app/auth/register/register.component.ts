@@ -83,8 +83,7 @@ export class RegisterComponent implements OnInit {
 
     this.loading = true;
     const userData: RegisterRequest = {
-      firstName: this.registerForm.value.firstName,
-      lastName: this.registerForm.value.lastName,
+      fullName: this.registerForm.value.firstName + ' ' + this.registerForm.value.lastName,
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
       role: this.registerForm.value.role
@@ -92,8 +91,8 @@ export class RegisterComponent implements OnInit {
 
     this.authService.register(userData).subscribe({
       next: (response) => {
-        this.showSuccess('Registration successful! Welcome to Freework.');
-        this.router.navigate(['/dashboard']);
+        this.showSuccess('Registration successful! Let\'s complete your profile.');
+        this.router.navigate(['/profile/setup']);
       },
       error: (error) => {
         this.loading = false;

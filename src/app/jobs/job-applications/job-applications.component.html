@@ -1,0 +1,84 @@
+<div class="job-applications-container">
+  <div class="page-header">
+    <button mat-button [routerLink]="['/jobs', job?.id]" class="back-button">
+      <mat-icon>arrow_back</mat-icon>
+      Back to Job
+    </button>
+    <h1>
+      <mat-icon>people</mat-icon>
+      Applications for: {{ job?.title || 'Loading...' }}
+    </h1>
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-container">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Loading applications...</p>
+  </div>
+
+  <!-- Empty state -->
+  <div *ngIf="!loading && applications.length === 0" class="empty-state">
+    <mat-icon>inbox</mat-icon>
+    <h2>No Applications Yet</h2>
+    <p>No one has applied to this job yet. Check back later.</p>
+  </div>
+
+  <!-- Applications list -->
+  <div *ngIf="!loading && applications.length > 0" class="applications-list">
+    <p class="summary">{{ applications.length }} application{{ applications.length !== 1 ? 's' : '' }} received</p>
+
+    <mat-card *ngFor="let app of applications" class="application-card">
+      <mat-card-header>
+        <mat-card-title>{{ app.freelancerName || 'Freelancer' }}</mat-card-title>
+        <mat-card-subtitle>Applied {{ formatDate(app.appliedAt) }}</mat-card-subtitle>
+        <div class="status-badge">
+          <mat-chip [highlighted]="true" [color]="getStatusColor(app.status)">
+            <mat-icon>{{ getStatusIcon(app.status) }}</mat-icon>
+            {{ app.status }}
+          </mat-chip>
+        </div>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="app-details">
+          <div *ngIf="app.proposedRate" class="detail-item">
+            <mat-icon>local_offer</mat-icon>
+            <strong>Proposed Rate:</strong> ${{ app.proposedRate }}
+          </div>
+          <div *ngIf="app.estimatedDuration" class="detail-item">
+            <mat-icon>schedule</mat-icon>
+            <strong>Estimated Duration:</strong> {{ app.estimatedDuration }}
+          </div>
+          <div *ngIf="app.portfolioLink" class="detail-item">
+            <mat-icon>link</mat-icon>
+            <strong>Portfolio:</strong>
+            <a [href]="app.portfolioLink" target="_blank" rel="noopener">{{ app.portfolioLink }}</a>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+
+        <div class="cover-letter">
+          <h4>Cover Letter</h4>
+          <p>{{ app.coverLetter }}</p>
+        </div>
+
+        <div *ngIf="app.message && app.message !== app.coverLetter" class="message-section">
+          <h4>Message</h4>
+          <p>{{ app.message }}</p>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions *ngIf="app.status === ApplicationStatus.PENDING">
+        <button mat-raised-button color="accent" (click)="updateStatus(app, ApplicationStatus.ACCEPTED)">
+          <mat-icon>check_circle</mat-icon>
+          Accept
+        </button>
+        <button mat-stroked-button color="warn" (click)="updateStatus(app, ApplicationStatus.REJECTED)">
+          <mat-icon>cancel</mat-icon>
+          Reject
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

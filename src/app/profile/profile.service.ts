@@ -4,12 +4,13 @@ import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
 import { tap, catchError, delay } from 'rxjs/operators';
 import { Profile, UpdateProfileRequest, FreelancerProfile, CustomerProfile } from './models/profile.models';
 import { AuthService } from '../auth/auth.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileService {
-  private readonly API_URL = 'https://api.freework.co.za/api/profile';
+  private readonly API_URL = buildApiEndpointUrl('/profile');
   private useMockData = false; // Toggle for testing
 
   private currentProfileSubject = new BehaviorSubject<Profile | null>(null);
@@ -197,16 +198,23 @@ export class ProfileService {
         .pipe(delay(1000));
     }
 
-    const formData = new FormData();
-    formData.append('file', file);
-
-    return this.http.post<{ url: string }>(`${this.API_URL}/upload-picture`, formData)
-      .pipe(
-        catchError(error => {
-          console.error('Error uploading picture:', error);
-          return throwError(() => error);
-        })
-      );
+    // Convert the File to a data URL, then send the URL to the backend
+    return new Observable<{ url: string }>(observer => {
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result as string;
+        this.http.post<{ url: string }>(`${this.API_URL}/upload-picture`, { url: dataUrl })
+          .pipe(
+            catchError(error => {
+              console.error('Error uploading picture:', error);
+              return throwError(() => error);
+            })
+          )
+          .subscribe(observer);
+      };
+      reader.onerror = () => observer.error(new Error('Failed to read file'));
+      reader.readAsDataURL(file);
+    });
   }
 
   /**

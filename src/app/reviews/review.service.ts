@@ -9,12 +9,13 @@ import {
   UserReviewStats
 } from './models';
 import { MockReviewService } from './mock-review.service';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = 'https://api.freework.co.za/api/reviews';
+  private apiUrl = buildApiEndpointUrl('/reviews');
   private useMockData = false; // Toggle this to switch between mock and real API
 
   constructor(

@@ -3,18 +3,37 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, var(--color-accent-600) 0%, var(--color-accent-700) 100%);
+  background-color: #0D1F1A;
+  background-image:
+    radial-gradient(ellipse 70% 60% at 10% 10%, rgba(43, 184, 138, 0.22) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 90% 90%, rgba(26, 141, 111, 0.18) 0%, transparent 60%);
+  background-attachment: fixed;
   padding: var(--spacing-xl) var(--spacing-lg);
+
+  :host-context([data-theme="light"]) & {
+    background-color: #E5F5EE;
+    background-image:
+      radial-gradient(ellipse 70% 60% at 10% 10%, rgba(43, 184, 138, 0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 90%, rgba(26, 141, 111, 0.12) 0%, transparent 60%);
+  }
 }
 
 .register-card {
   width: 100%;
   max-width: 500px;
   padding: var(--spacing-2xl);
-  background: var(--color-background);
-  border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-xl);
-  border: none;
+  background: rgba(13, 31, 26, 0.55) !important;
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border-radius: var(--radius-xl) !important;
+  border: 1px solid rgba(43, 184, 138, 0.20) !important;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35) !important;
+
+  :host-context([data-theme="light"]) & {
+    background: rgba(255, 255, 255, 0.65) !important;
+    border: 1px solid rgba(43, 184, 138, 0.20) !important;
+    box-shadow: 0 8px 40px rgba(26, 141, 111, 0.12) !important;
+  }
 }
 
 mat-card-header {
@@ -25,18 +44,66 @@ mat-card-header {
   text-align: center;
 }
 
+.brand-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.brand-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--spacing-xs);
+}
+
+.brand-wordmark {
+  font-family: 'Bricolage Grotesque', sans-serif;
+  font-size: 1.25rem;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  color: rgba(255, 255, 255, 0.55);
+
+  strong {
+    font-weight: 700;
+    color: #ffffff;
+  }
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-secondary);
+    strong { color: var(--color-text-primary); }
+  }
+}
+
 mat-card-title {
-  font-size: 1.75rem !important;
-  font-weight: 600;
+  font-family: 'Bricolage Grotesque', sans-serif !important;
+  font-size: 1.625rem !important;
+  font-weight: 700 !important;
   margin-bottom: var(--spacing-sm) !important;
-  color: var(--color-text-primary);
-  letter-spacing: -0.02em;
+  color: #ffffff !important;
+  letter-spacing: -0.025em !important;
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-primary) !important;
+  }
 }
 
 mat-card-subtitle {
   font-size: 14px !important;
-  color: var(--color-text-secondary);
-  font-weight: 400;
+  color: rgba(255, 255, 255, 0.65) !important;
+  font-weight: 400 !important;
+
+  em {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    color: #2BB88A;
+  }
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-secondary) !important;
+  }
 }
 
 .full-width {
@@ -103,7 +170,7 @@ mat-form-field {
   margin-left: 0.5rem;
 
   mat-icon {
-    color: #0ea5e9;
+    color: var(--color-accent-600);
     font-size: 1.75rem;
     width: 1.75rem;
     height: 1.75rem;
@@ -116,13 +183,13 @@ mat-form-field {
       display: block;
       font-size: 0.938rem;
       margin-bottom: 0.25rem;
-      color: #1a202c;
+      color: var(--color-text-primary);
     }
 
     p {
       margin: 0;
       font-size: 0.813rem;
-      color: #718096;
+      color: var(--color-text-secondary);
     }
   }
 }
@@ -147,21 +214,21 @@ mat-form-field {
   text-align: center;
   margin-top: 2rem;
   padding-top: 1.5rem;
-  border-top: 1px solid #e2e8f0;
+  border-top: 1px solid var(--color-border-subtle);
 
   p {
     margin: 0;
-    color: #718096;
+    color: var(--color-text-secondary);
     font-size: 0.938rem;
   }
 
   a {
-    color: #0ea5e9;
+    color: var(--color-accent-600);
     text-decoration: none;
     font-weight: 600;
 
     &:hover {
-      color: #0284c7;
+      color: var(--color-accent-700);
     }
   }
 }

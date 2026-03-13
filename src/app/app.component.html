@@ -3,7 +3,13 @@
   <mat-sidenav #sidenav [(opened)]="sidenavOpened" mode="over">
     <mat-nav-list>
       <div class="sidenav-header">
-        <h2>Freework</h2>
+        <div class="sidenav-logo">
+          <svg viewBox="0 0 64 52" width="28" height="23" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#1A8D6F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.75"/>
+          </svg>
+          <span class="sidenav-wordmark"><strong>free</strong>work</span>
+        </div>
         <button mat-icon-button (click)="closeSidenav()">
           <mat-icon>close</mat-icon>
         </button>
@@ -119,19 +125,20 @@
 
           <!-- Logo -->
           <a routerLink="/" class="logo">
-            <mat-icon>work</mat-icon>
-            <span>Freework</span>
+            <svg viewBox="0 0 64 52" xmlns="http://www.w3.org/2000/svg" class="logo-mark">
+              <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+              <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#1A8D6F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.75"/>
+            </svg>
+            <span class="logo-wordmark"><strong>free</strong>work</span>
           </a>
 
           <!-- Spacer to push user menu to the right -->
           <span class="spacer"></span>
 
-          <!-- DEBUG INFO (Remove after testing) -->
-          <div style="margin-right: 10px; font-size: 10px; color: #fff;">
-            <div>Auth: {{ authService.isAuthenticated ? 'YES' : 'NO' }}</div>
-            <div>User: {{ (currentUser$ | async)?.email || 'NONE' }}</div>
-            <div>Token: {{ authService.getAccessToken() ? 'YES' : 'NO' }}</div>
-          </div>
+          <!-- Theme Toggle -->
+          <button mat-icon-button (click)="themeService.toggle()" class="theme-toggle-button" [title]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+            <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
+          </button>
 
           <!-- User Menu -->
           <div class="user-menu">

@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { Router, CanActivateFn } from '@angular/router';
+import { Router, CanActivateFn, CanDeactivateFn } from '@angular/router';
 import { AuthService } from './auth.service';
 
 /**
@@ -46,6 +46,19 @@ export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
     router.navigate(['/']);
     return false;
   };
+};
+
+/**
+ * Guard to prevent leaving the profile setup page without saving
+ */
+export interface CanDeactivateProfileSetup {
+  isSaved: boolean;
+  confirmLeave(): boolean;
+}
+
+export const profileSetupDeactivateGuard: CanDeactivateFn<CanDeactivateProfileSetup> = (component) => {
+  if (component.isSaved) return true;
+  return component.confirmLeave();
 };
 
 /**

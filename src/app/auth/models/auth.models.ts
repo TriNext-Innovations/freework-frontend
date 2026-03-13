@@ -30,6 +30,7 @@ export interface User {
   profilePicture?: string;
   avatar?: string;
   createdAt: string;
+  profileCompleted?: boolean;
 }
 
 export interface RefreshTokenRequest {

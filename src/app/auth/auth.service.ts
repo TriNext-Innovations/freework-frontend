@@ -14,7 +14,7 @@ export class AuthService {
   private readonly PROFILE_API_URL = buildApiEndpointUrl('/profile');
   private readonly TOKEN_KEY = 'freework_access_token';
   private readonly REFRESH_TOKEN_KEY = 'freework_refresh_token';
-  private useMockData = false; // Toggle to switch between mock and real API
+  private useMockData = false; // Using real backend API
 
 
   private currentUserSubject: BehaviorSubject<User | null>;
@@ -31,6 +31,7 @@ export class AuthService {
       lastName: 'Doe',
       role: 'FREELANCER',
       profilePicture: 'https://i.pravatar.cc/150?img=12',
+      profileCompleted: true,
       createdAt: '2024-01-15T10:00:00Z'
     },
     {
@@ -40,6 +41,7 @@ export class AuthService {
       lastName: 'Chen',
       role: 'CUSTOMER',
       profilePicture: 'https://i.pravatar.cc/150?img=20',
+      profileCompleted: true,
       createdAt: '2024-03-20T14:30:00Z'
     }
   ];
@@ -107,6 +109,15 @@ export class AuthService {
           console.log('📥 Access token:', response.accessToken || response.token || 'MISSING');
           console.log('📥 Refresh token:', response.refreshToken || 'MISSING');
           console.log('📥 User data:', response.user || response.userDetails || 'MISSING');
+
+          // Extract user from response or token
+          let user = response.user || response.userDetails || this.extractUserFromToken(response.accessToken || response.token);
+
+          // If no user found, log error but continue
+          if (!user) {
+            console.error('⚠️ No user data in response, will fetch from profile API');
+            user = null as any; // Will be fetched by handleAuthResponse
+          }
 
           // Handle different possible API response formats
           const authResponse: AuthResponse = {
@@ -388,7 +399,27 @@ export class AuthService {
 
     const normalizedUser = this.normalizeUser(response.user, response.accessToken) || response.user;
     if (!normalizedUser) {
-      console.error('❌ No user data available after normalization');
+      console.error('⚠️ No user data in auth response, fetching from profile API...');
+
+      // Set tokens first so the profile API can use them
+      // Then fetch user profile
+      if (!this.useMockData) {
+        this.fetchUserProfile().subscribe({
+          next: (user) => {
+            console.log('✅ User profile fetched successfully:', user);
+            this.startRefreshTokenTimer();
+          },
+          error: (error) => {
+            console.error('❌ Failed to fetch user profile:', error);
+            // Set a minimal user from token as fallback
+            const tokenUser = this.extractUserFromToken(response.accessToken);
+            if (tokenUser) {
+              this.currentUserSubject.next(tokenUser);
+              this.storeUser(tokenUser);
+            }
+          }
+        });
+      }
       return;
     }
 
@@ -396,10 +427,11 @@ export class AuthService {
     this.storeUser(normalizedUser);
     this.startRefreshTokenTimer();
 
-    if (!this.useMockData && !normalizedUser.avatar) {
+    // Fetch full profile if using real API and missing avatar or profileCompleted
+    if (!this.useMockData && (!normalizedUser.avatar || normalizedUser.profileCompleted === undefined)) {
       this.fetchUserProfile().subscribe({
         error: (error) => {
-          console.error('❌ Error fetching profile for avatar:', error);
+          console.error('❌ Error fetching complete profile:', error);
         }
       });
     }
@@ -437,9 +469,41 @@ export class AuthService {
       role: (rawUser?.role || tokenUser?.role || 'FREELANCER') as 'CUSTOMER' | 'FREELANCER' | 'ADMIN',
       avatar: avatar,
       profilePicture: profilePicture,
-      createdAt: rawUser?.createdAt || tokenUser?.createdAt || new Date().toISOString(),
-      profileCompleted: rawUser?.profileCompleted ?? rawUser?.profile_completed
+      profileCompleted: rawUser?.profileCompleted ?? rawUser?.isProfileComplete ?? rawUser?.profile_completed,
+      createdAt: rawUser?.createdAt || tokenUser?.createdAt || new Date().toISOString()
     };
+  }
+
+  /**
+   * Get the appropriate redirect URL after login based on profile completion
+   */
+  getPostLoginRedirectUrl(): string {
+    const user = this.currentUserValue;
+    if (!user) {
+      return '/';
+    }
+
+    // If profile is not completed, redirect to profile setup
+    if (user.profileCompleted === false) {
+      return '/profile/setup';
+    }
+
+    // Default redirect based on role
+    if (user.role === 'CUSTOMER') {
+      return '/jobs';
+    } else if (user.role === 'FREELANCER') {
+      return '/jobs';
+    }
+
+    return '/';
+  }
+
+  /**
+   * Update current user (used by profile service to sync state)
+   */
+  updateCurrentUser(user: User): void {
+    this.currentUserSubject.next(user);
+    this.storeUser(user);
   }
 
   /**
@@ -515,6 +579,7 @@ export class AuthService {
         role: (decoded.role || decoded.authorities?.[0] || 'FREELANCER') as 'CUSTOMER' | 'FREELANCER' | 'ADMIN',
         avatar: decoded.avatar,
         profilePicture: decoded.profilePicture || decoded.picture,
+        profileCompleted: (decoded as any).profileCompleted ?? (decoded as any).isProfileComplete ?? true,
         createdAt: decoded.iat ? new Date(decoded.iat * 1000).toISOString() : new Date().toISOString()
       };
 

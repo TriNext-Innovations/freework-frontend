@@ -16,9 +16,18 @@
 
   <!-- Edit Form -->
   <div *ngIf="!isLoading && profile" class="edit-content">
+    <!-- First Time Profile Completion Banner -->
+    <div *ngIf="isFirstTime" class="alert alert-info first-time-banner">
+      <i class="fas fa-info-circle"></i>
+      <div>
+        <h3>Welcome to Freework! 🎉</h3>
+        <p>Please complete your profile to start {{ profile.role === 'FREELANCER' ? 'browsing and applying for jobs' : 'posting jobs and hiring freelancers' }}.</p>
+      </div>
+    </div>
+
     <div class="page-header">
-      <h1><i class="fas fa-user-edit"></i> Edit Profile</h1>
-      <p class="subtitle">Update your profile information</p>
+      <h1><i class="fas fa-user-edit"></i> {{ isFirstTime ? 'Complete Your Profile' : 'Edit Profile' }}</h1>
+      <p class="subtitle">{{ isFirstTime ? 'Tell us about yourself to get started' : 'Update your profile information' }}</p>
     </div>
 
     <!-- Success Message -->
@@ -369,12 +378,17 @@
 
       <!-- Action Buttons -->
       <div class="form-actions">
-        <button type="button" class="btn btn-secondary" (click)="cancel()" [disabled]="isSaving">
+        <button
+          *ngIf="!isFirstTime"
+          type="button"
+          class="btn btn-secondary"
+          (click)="cancel()"
+          [disabled]="isSaving">
           Cancel
         </button>
         <button type="submit" class="btn btn-primary" [disabled]="isSaving || profileForm.invalid">
           <i class="fas fa-save"></i>
-          {{ isSaving ? 'Saving...' : 'Save Changes' }}
+          {{ isSaving ? 'Saving...' : (isFirstTime ? 'Complete Profile' : 'Save Changes') }}
         </button>
       </div>
     </form>

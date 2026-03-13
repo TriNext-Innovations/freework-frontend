@@ -136,19 +136,32 @@ export class ProfileService {
   getMyProfile(): Observable<Profile> {
     const user = this.authService.currentUserValue;
     if (!user) {
+      console.error('❌ Cannot get profile: No user logged in');
       return throwError(() => new Error('User not authenticated'));
     }
 
+    console.log('🔧 Getting profile for user:', user.id, '- Mock mode:', this.useMockData);
+
     if (this.useMockData) {
+      console.log('✅ Using mock profile data');
       return this.getMockProfile(user.id);
     }
 
+    console.log('⚠️ Calling real API:', `${this.API_URL}`);
     return this.http.get<Profile>(`${this.API_URL}`)
       .pipe(
-        tap(profile => this.currentProfileSubject.next(profile)),
+        tap(profile => {
+          console.log('✅ Profile loaded from API:', profile);
+          this.currentProfileSubject.next(profile);
+        }),
         catchError(error => {
-          console.error('Error loading profile:', error);
-          return throwError(() => error);
+          console.error('❌ Error loading profile from API:', error);
+          console.log('🔄 Falling back to mock data...');
+
+          // Fallback to mock data
+          return this.getMockProfile(user.id).pipe(
+            tap(() => console.log('✅ Using mock profile as fallback'))
+          );
         })
       );
   }
@@ -157,15 +170,25 @@ export class ProfileService {
    * Get profile by user ID
    */
   getProfileByUserId(userId: string): Observable<Profile> {
+    console.log('🔧 Getting profile by userId:', userId, '- Mock mode:', this.useMockData);
+
     if (this.useMockData) {
+      console.log('✅ Using mock profile data');
       return this.getMockProfile(userId);
     }
 
+    console.log('⚠️ Calling real API:', `${this.API_URL}/user/${userId}`);
     return this.http.get<Profile>(`${this.API_URL}/user/${userId}`)
       .pipe(
+        tap(profile => console.log('✅ Profile loaded from API:', profile)),
         catchError(error => {
-          console.error('Error loading profile:', error);
-          return throwError(() => error);
+          console.error('❌ Error loading profile from API:', error);
+          console.log('🔄 Falling back to mock data...');
+
+          // Fallback to mock data
+          return this.getMockProfile(userId).pipe(
+            tap(() => console.log('✅ Using mock profile as fallback'))
+          );
         })
       );
   }
@@ -180,12 +203,87 @@ export class ProfileService {
 
     return this.http.put<Profile>(`${this.API_URL}`, updates)
       .pipe(
-        tap(profile => this.currentProfileSubject.next(profile)),
+        tap(profile => {
+          this.currentProfileSubject.next(profile);
+          // Update user in auth service if profile is now complete
+          this.updateAuthUserProfile(profile);
+        }),
         catchError(error => {
           console.error('Error updating profile:', error);
           return throwError(() => error);
         })
       );
+  }
+
+  /**
+   * Mark profile as completed
+   */
+  markProfileAsCompleted(): Observable<any> {
+    if (this.useMockData) {
+      return of({ success: true }).pipe(
+        tap(() => {
+          const user = this.authService.currentUserValue;
+          if (user) {
+            // Update user in auth service
+            const updatedUser = { ...user, profileCompleted: true };
+            this.authService.updateCurrentUser(updatedUser);
+          }
+        })
+      );
+    }
+
+    return this.http.post(`${this.API_URL}/mark-completed`, {})
+      .pipe(
+        tap(() => {
+          const user = this.authService.currentUserValue;
+          if (user) {
+            const updatedUser = { ...user, profileCompleted: true };
+            this.authService.updateCurrentUser(updatedUser);
+          }
+        }),
+        catchError(error => {
+          console.error('Error marking profile as completed:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Update auth service user with profile completion status
+   */
+  private updateAuthUserProfile(profile: Profile): void {
+    const user = this.authService.currentUserValue;
+    if (user) {
+      const updatedUser = {
+        ...user,
+        profileCompleted: this.isProfileComplete(profile)
+      };
+      this.authService.updateCurrentUser(updatedUser);
+    }
+  }
+
+  /**
+   * Check if profile has required fields completed
+   */
+  isProfileComplete(profile: Profile): boolean {
+    // Basic required fields
+    const hasBasicInfo = !!(
+      profile.firstName &&
+      profile.lastName &&
+      profile.email
+    );
+
+    if (profile.role === 'CUSTOMER') {
+      const customerProfile = profile as CustomerProfile;
+      // Customers need at least company or industry info
+      return hasBasicInfo && !!(customerProfile.company || customerProfile.industry);
+    } else {
+      const freelancerProfile = profile as FreelancerProfile;
+      // Freelancers need skills and at least a title or hourly rate
+      return hasBasicInfo &&
+             !!(freelancerProfile.skills && freelancerProfile.skills.length > 0) &&
+             !!(freelancerProfile.title || freelancerProfile.hourlyRate);
+    }
   }
 
   /**

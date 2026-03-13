@@ -112,6 +112,33 @@
     color: #991b1b;
     border: 1px solid #fecaca;
   }
+
+  &.alert-info {
+    background: #dbeafe;
+    color: #1e40af;
+    border: 1px solid #93c5fd;
+  }
+
+  &.first-time-banner {
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+
+    div {
+      flex: 1;
+    }
+
+    h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 0;
+      font-size: 0.95rem;
+      opacity: 0.9;
+    }
+  }
 }
 
 .profile-form {

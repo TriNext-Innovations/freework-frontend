@@ -29,6 +29,7 @@ export interface User {
   role: 'CUSTOMER' | 'FREELANCER' | 'ADMIN';
   profilePicture?: string;
   avatar?: string;
+  profileCompleted?: boolean;
   createdAt: string;
   profileCompleted?: boolean;
 }

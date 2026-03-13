@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { ProfileService } from '../profile.service';
 import { AuthService } from '../../auth/auth.service';
 import { Profile, FreelancerProfile, CustomerProfile, UpdateProfileRequest, Language } from '../models/profile.models';
@@ -22,6 +22,8 @@ export class ProfileEditComponent implements OnInit {
   successMessage: string | null = null;
   selectedFile: File | null = null;
   previewUrl: string | null = null;
+  isFirstTime = false;
+  returnUrl: string | null = null;
 
   availabilityOptions = [
     { value: 'FULL_TIME', label: 'Full Time' },
@@ -41,10 +43,17 @@ export class ProfileEditComponent implements OnInit {
     private fb: FormBuilder,
     private profileService: ProfileService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
+    // Check if this is first-time profile completion
+    this.route.queryParams.subscribe(params => {
+      this.isFirstTime = params['firstTime'] === 'true';
+      this.returnUrl = params['returnUrl'] || null;
+    });
+
     this.loadProfile();
   }
 
@@ -203,6 +212,7 @@ export class ProfileEditComponent implements OnInit {
   onSubmit() {
     if (this.profileForm.invalid) {
       this.markFormGroupTouched(this.profileForm);
+      this.error = 'Please fill in all required fields';
       return;
     }
 
@@ -226,15 +236,39 @@ export class ProfileEditComponent implements OnInit {
     this.profileService.updateProfile(updateRequest).subscribe({
       next: (profile) => {
         this.profile = profile;
-        this.successMessage = 'Profile updated successfully!';
-        this.isSaving = false;
 
-        setTimeout(() => {
-          this.router.navigate(['/profile']);
-        }, 1500);
+        // If this is first-time profile completion, mark it as completed
+        if (this.isFirstTime) {
+          this.profileService.markProfileAsCompleted().subscribe({
+            next: () => {
+              this.successMessage = 'Profile completed successfully! Welcome to Freework!';
+              this.isSaving = false;
+
+              setTimeout(() => {
+                // Redirect to jobs page or return URL
+                const redirectTo = this.returnUrl || '/jobs';
+                this.router.navigate([redirectTo]);
+              }, 1500);
+            },
+            error: (err) => {
+              console.error('Failed to mark profile as completed:', err);
+              // Still redirect even if marking failed
+              this.isSaving = false;
+              const redirectTo = this.returnUrl || '/jobs';
+              this.router.navigate([redirectTo]);
+            }
+          });
+        } else {
+          this.successMessage = 'Profile updated successfully!';
+          this.isSaving = false;
+
+          setTimeout(() => {
+            this.router.navigate(['/profile']);
+          }, 1500);
+        }
       },
       error: (err) => {
-        this.error = 'Failed to update profile';
+        this.error = 'Failed to update profile. Please try again.';
         this.isSaving = false;
         console.error(err);
       }
@@ -242,6 +276,11 @@ export class ProfileEditComponent implements OnInit {
   }
 
   cancel() {
+    // If first-time, don't allow cancel - they must complete profile
+    if (this.isFirstTime) {
+      this.error = 'Please complete your profile to continue using Freework.';
+      return;
+    }
     this.router.navigate(['/profile']);
   }
 

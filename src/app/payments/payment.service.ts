@@ -18,7 +18,7 @@ import { MockPaymentService } from './mock-payment.service';
 })
 export class PaymentService {
   private apiUrl = 'https://api.freework.co.za/api/payments';
-  private useMockData = true; // Toggle this to switch between mock and real API
+  private useMockData = false; // Toggle this to switch between mock and real API
 
   private paymentStatusSubject = new BehaviorSubject<PaymentStatusUpdate | null>(null);
   public paymentStatus$ = this.paymentStatusSubject.asObservable();

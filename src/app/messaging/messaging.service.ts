@@ -10,7 +10,7 @@ import { MockMessagingService } from './mock-messaging.service';
 })
 export class MessagingService {
   private apiUrl = 'https://api.freework.co.za/api/messages';
-  private useMockData = true; // Toggle this to switch between mock and real API
+  private useMockData = false; // Toggle this to switch between mock and real API
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
 

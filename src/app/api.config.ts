@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://localhost:8080';
+export const API_BASE_URL = 'https://api.freework.co.za';
 export const API_PREFIX = '/api';
 export const WS_BASE_URL = API_BASE_URL.replace(/^http/, 'ws');
 

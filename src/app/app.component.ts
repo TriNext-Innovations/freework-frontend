@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,12 +38,8 @@ export class AppComponent implements OnInit {
   sidenavOpened = false;
   currentUser$: Observable<User | null>;
 
-  constructor(public authService: AuthService, public themeService: ThemeService, private router: Router) {
+  constructor(public authService: AuthService, public themeService: ThemeService) {
     this.currentUser$ = this.authService.currentUser$;
-  }
-
-  get isNotFoundRoute(): boolean {
-    return this.router.url === '/404';
   }
 
   ngOnInit(): void {

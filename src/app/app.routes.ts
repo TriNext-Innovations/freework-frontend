@@ -1,15 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard, roleGuard, profileSetupDeactivateGuard } from './auth/auth.guard';
-import { requireCompleteProfile } from './profile/profile-completion.guard';
 
 export const routes: Routes = [
-  // 404 Not Found page
-  {
-    path: '404',
-    loadComponent: () => import('./not-found/not-found.component').then(m => m.NotFoundComponent)
-  },
-
-  // Redirect home to jobs
+  // Public routes
   {
     path: '',
     redirectTo: '/jobs',
@@ -34,7 +27,7 @@ export const routes: Routes = [
   {
     path: 'jobs/new',
     loadComponent: () => import('./jobs/job-form/job-form.component').then(m => m.JobFormComponent),
-    canActivate: [authGuard, requireCompleteProfile, roleGuard(['CUSTOMER'])]
+    canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
   {
     path: 'jobs/:id',
@@ -43,12 +36,12 @@ export const routes: Routes = [
   {
     path: 'jobs/:id/edit',
     loadComponent: () => import('./jobs/job-form/job-form.component').then(m => m.JobFormComponent),
-    canActivate: [authGuard, requireCompleteProfile]
+    canActivate: [authGuard]
   },
   {
     path: 'jobs/:id/apply',
     loadComponent: () => import('./jobs/job-application/job-application.component').then(m => m.JobApplicationComponent),
-    canActivate: [authGuard, requireCompleteProfile, roleGuard(['FREELANCER'])]
+    canActivate: [authGuard, roleGuard(['FREELANCER'])]
   },
   {
     path: 'jobs/:id/applications',
@@ -60,51 +53,51 @@ export const routes: Routes = [
   {
     path: 'my-jobs',
     loadComponent: () => import('./jobs/my-active-jobs/my-active-jobs.component').then(m => m.MyActiveJobsComponent),
-    canActivate: [authGuard, requireCompleteProfile, roleGuard(['CUSTOMER'])]
+    canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
   {
     path: 'my-applications',
     loadComponent: () => import('./jobs/my-applications/my-applications.component').then(m => m.MyApplicationsComponent),
-    canActivate: [authGuard, requireCompleteProfile, roleGuard(['FREELANCER'])]
+    canActivate: [authGuard, roleGuard(['FREELANCER'])]
   },
   {
     path: 'my-active-jobs',
     loadComponent: () => import('./jobs/my-active-jobs/my-active-jobs.component').then(m => m.MyActiveJobsComponent),
-    canActivate: [authGuard, requireCompleteProfile, roleGuard(['FREELANCER'])]
+    canActivate: [authGuard, roleGuard(['FREELANCER'])]
   },
 
   // Messaging routes
   {
     path: 'messages',
     loadComponent: () => import('./messaging/chat/chat.component').then(m => m.ChatComponent),
-    canActivate: [authGuard, requireCompleteProfile]
+    canActivate: [authGuard]
   },
   {
     path: 'messages/:conversationId',
     loadComponent: () => import('./messaging/chat/chat.component').then(m => m.ChatComponent),
-    canActivate: [authGuard, requireCompleteProfile]
+    canActivate: [authGuard]
   },
 
   // Payment routes
   {
     path: 'payments',
     loadComponent: () => import('./payments/payment-list/payment-list.component').then(m => m.PaymentListComponent),
-    canActivate: [authGuard, requireCompleteProfile]
+    canActivate: [authGuard]
   },
   {
     path: 'payments/:id',
     loadComponent: () => import('./payments/payment-status/payment-status.component').then(m => m.PaymentStatusComponent),
-    canActivate: [authGuard, requireCompleteProfile]
+    canActivate: [authGuard]
   },
   {
     path: 'payments/:id/escrow',
     loadComponent: () => import('./payments/payment-escrow/payment-escrow.component').then(m => m.PaymentEscrowComponent),
-    canActivate: [authGuard, requireCompleteProfile]
+    canActivate: [authGuard]
   },
   {
     path: 'payments/create/:jobId',
     loadComponent: () => import('./payments/stripe-payment/stripe-payment.component').then(m => m.StripePaymentComponent),
-    canActivate: [authGuard, requireCompleteProfile, roleGuard(['CUSTOMER'])]
+    canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
 
   // Review routes
@@ -148,9 +141,9 @@ export const routes: Routes = [
     loadComponent: () => import('./profile/profile-view/profile-view.component').then(m => m.ProfileViewComponent)
   },
 
-  // Wildcard route - catch all other paths and redirect to 404
+  // Fallback route
   {
     path: '**',
-    redirectTo: '/404'
+    redirectTo: '/jobs'
   }
 ];

@@ -1,181 +1,84 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { PaymentService } from '../payment.service';
-import { PaymentType } from '../models/payment.models';
-
-declare var Stripe: any; // Stripe.js library
+import { JobService } from '../../jobs/job.service';
+import { PaymentMethod, PaymentType } from '../models/payment.models';
+import { Job } from '../../jobs/models';
 
 @Component({
   selector: 'app-stripe-payment',
   standalone: true,
   imports: [
     CommonModule,
-    MatDialogModule,
+    RouterLink,
+    MatCardModule,
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
-    MatCardModule
+    MatDividerModule,
+    MatSnackBarModule
   ],
   templateUrl: './stripe-payment.component.html',
   styleUrls: ['./stripe-payment.component.scss']
 })
 export class StripePaymentComponent implements OnInit {
-  stripe: any;
-  elements: any;
-  cardElement: any;
-
-  processing = false;
-  paymentError: string | null = null;
-  paymentSuccess = false;
-
-  amount: number;
-  currency: string;
-  jobId: string;
-  jobTitle: string;
-  paymentType: PaymentType;
+  job: Job | null = null;
+  loading = true;
+  redirecting = false;
+  jobId = '';
+  currency = 'ZAR';
 
   constructor(
-    public dialogRef: MatDialogRef<StripePaymentComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private paymentService: PaymentService
-  ) {
-    this.amount = data.amount;
-    this.currency = data.currency;
-    this.jobId = data.jobId;
-    this.jobTitle = data.jobTitle;
-    this.paymentType = data.paymentType;
-  }
+    private route: ActivatedRoute,
+    private router: Router,
+    private paymentService: PaymentService,
+    private jobService: JobService,
+    private snackBar: MatSnackBar
+  ) {}
 
   ngOnInit(): void {
-    this.initializeStripe();
-  }
-
-  initializeStripe(): void {
-    // Load Stripe.js from CDN if not already loaded
-    if (typeof Stripe === 'undefined') {
-      const script = document.createElement('script');
-      script.src = 'https://js.stripe.com/v3/';
-      script.onload = () => {
-        this.setupStripe();
-      };
-      document.head.appendChild(script);
-    } else {
-      this.setupStripe();
+    this.jobId = this.route.snapshot.paramMap.get('jobId') || '';
+    if (!this.jobId) {
+      this.router.navigate(['/payments']);
+      return;
     }
+    this.jobService.getJobById(this.jobId).subscribe({
+      next: job => { this.job = job; this.loading = false; },
+      error: () => { this.router.navigate(['/payments']); }
+    });
   }
 
-  setupStripe(): void {
-    // Initialize Stripe with your publishable key
-    const publishableKey = this.paymentService.getStripePublishableKey();
-    this.stripe = Stripe(publishableKey);
+  proceedToPayment(): void {
+    if (!this.job) return;
+    this.redirecting = true;
 
-    // Create Elements instance
-    this.elements = this.stripe.elements();
-
-    // Create and mount Card Element
-    const style = {
-      base: {
-        fontSize: '16px',
-        color: '#32325d',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        '::placeholder': {
-          color: '#aab7c4'
-        }
-      },
-      invalid: {
-        color: '#fa755a',
-        iconColor: '#fa755a'
-      }
-    };
-
-    this.cardElement = this.elements.create('card', { style });
-
-    // Wait for the DOM to be ready
-    setTimeout(() => {
-      const cardElementContainer = document.getElementById('card-element');
-      if (cardElementContainer) {
-        this.cardElement.mount('#card-element');
-
-        // Handle real-time validation errors
-        this.cardElement.on('change', (event: any) => {
-          if (event.error) {
-            this.paymentError = event.error.message;
-          } else {
-            this.paymentError = null;
-          }
+    this.paymentService.createCheckout({
+      jobId: this.jobId,
+      amount: this.job.budget,
+      currency: this.currency,
+      paymentMethod: PaymentMethod.CARD,
+      paymentType: PaymentType.JOB_ESCROW,
+      description: `Escrow payment for: ${this.job.title}`
+    }).subscribe({
+      next: res => { window.location.href = res.checkoutUrl; },
+      error: () => {
+        this.redirecting = false;
+        this.snackBar.open('Failed to start payment. Please try again.', 'Close', {
+          duration: 4000,
+          panelClass: ['error-snackbar']
         });
       }
-    }, 100);
+    });
   }
 
-  async processPayment(): Promise<void> {
-    this.processing = true;
-    this.paymentError = null;
-
-    try {
-      // Step 1: Create payment intent
-      const paymentIntent = await this.paymentService.createPaymentIntent({
-        jobId: this.jobId,
-        amount: this.amount,
-        currency: this.currency,
-        paymentMethod: 'STRIPE' as any,
-        paymentType: this.paymentType,
-        description: `Payment for ${this.jobTitle}`
-      }).toPromise();
-
-      if (!paymentIntent) {
-        throw new Error('Failed to create payment intent');
-      }
-
-      // Step 2: Confirm payment with Stripe
-      const result = await this.stripe.confirmCardPayment(paymentIntent.clientSecret, {
-        payment_method: {
-          card: this.cardElement,
-          billing_details: {
-            name: 'Customer Name' // In production, get from auth service
-          }
-        }
-      });
-
-      if (result.error) {
-        // Show error to customer
-        this.paymentError = result.error.message;
-        this.processing = false;
-      } else {
-        // Payment succeeded
-        if (result.paymentIntent.status === 'succeeded') {
-          // Create escrow payment record
-          await this.paymentService.createEscrowPayment({
-            jobId: this.jobId,
-            amount: this.amount,
-            currency: this.currency,
-            paymentMethod: 'STRIPE' as any,
-            paymentType: this.paymentType,
-            description: `Payment for ${this.jobTitle}`
-          }).toPromise();
-
-          this.paymentSuccess = true;
-          this.processing = false;
-
-          // Close dialog after short delay
-          setTimeout(() => {
-            this.dialogRef.close({ success: true, paymentIntent: result.paymentIntent });
-          }, 2000);
-        }
-      }
-    } catch (error: any) {
-      console.error('Payment error:', error);
-      this.paymentError = error.message || 'Payment failed. Please try again.';
-      this.processing = false;
-    }
-  }
-
-  cancel(): void {
-    this.dialogRef.close({ success: false });
+  formatCurrency(amount: number): string {
+    return new Intl.NumberFormat('en-ZA', { style: 'currency', currency: this.currency }).format(amount);
   }
 }

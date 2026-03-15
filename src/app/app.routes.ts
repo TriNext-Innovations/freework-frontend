@@ -99,6 +99,18 @@ export const routes: Routes = [
     loadComponent: () => import('./payments/stripe-payment/stripe-payment.component').then(m => m.StripePaymentComponent),
     canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
+  {
+    path: 'payments/success',
+    loadComponent: () => import('./payments/payment-result/payment-result.component').then(m => m.PaymentResultComponent),
+    canActivate: [authGuard],
+    data: { success: true }
+  },
+  {
+    path: 'payments/cancel',
+    loadComponent: () => import('./payments/payment-result/payment-result.component').then(m => m.PaymentResultComponent),
+    canActivate: [authGuard],
+    data: { success: false }
+  },
 
   // Review routes
   {

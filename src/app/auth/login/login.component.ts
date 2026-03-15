@@ -40,6 +40,8 @@ export class LoginComponent implements OnInit {
   hideConfirmPassword = true;
   errorMessage = '';
   returnUrl = '/';
+  registrationComplete = false;
+  registeredEmail = '';
 
   constructor(
     private fb: FormBuilder,
@@ -120,10 +122,8 @@ export class LoginComponent implements OnInit {
       this.authService.register(userData).subscribe({
         next: () => {
           this.loading = false;
-          this.snackBar.open("Welcome to freework! Let's set up your profile.", 'Close', {
-            duration: 3000, horizontalPosition: 'end', verticalPosition: 'top'
-          });
-          this.router.navigate(['/profile/setup']);
+          this.registeredEmail = userData.email;
+          this.registrationComplete = true;
         },
         error: (err) => {
           this.loading = false;

@@ -18,6 +18,10 @@ export const routes: Routes = [
     redirectTo: '/login',
     pathMatch: 'full'
   },
+  {
+    path: 'verify',
+    loadComponent: () => import('./auth/email-verify/email-verify.component').then(m => m.EmailVerifyComponent)
+  },
 
   // Job routes
   {

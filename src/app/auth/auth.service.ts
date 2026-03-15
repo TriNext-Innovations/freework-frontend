@@ -581,6 +581,14 @@ export class AuthService {
   }
 
   /**
+   * Update the current user in state and storage
+   */
+  updateCurrentUser(user: User): void {
+    this.currentUserSubject.next(user);
+    this.storeUser(user);
+  }
+
+  /**
    * Check if user is logged in (alias for isAuthenticated)
    * Used by auth guards
    */

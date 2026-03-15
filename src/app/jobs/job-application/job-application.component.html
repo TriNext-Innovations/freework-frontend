@@ -66,6 +66,23 @@
         </mat-card-content>
       </mat-card>
 
+      <!-- Application Limit Reached -->
+      <mat-card *ngIf="atApplicationLimit" class="limit-card">
+        <mat-card-content>
+          <div class="warning-content">
+            <mat-icon>lock</mat-icon>
+            <div>
+              <strong>Monthly application limit reached</strong>
+              <p>You've used all 5 free applications this month. Upgrade to PRO for unlimited applications — and keep 100% of what you earn.</p>
+            </div>
+          </div>
+          <a mat-raised-button color="primary" routerLink="/settings/billing" class="upgrade-cta-btn">
+            <mat-icon>rocket_launch</mat-icon>
+            Upgrade to PRO
+          </a>
+        </mat-card-content>
+      </mat-card>
+
       <!-- Already Applied Warning -->
       <mat-card *ngIf="hasAlreadyApplied" class="warning-card">
         <mat-card-content>
@@ -83,7 +100,7 @@
       </mat-card>
 
       <!-- Application Form Card -->
-      <mat-card class="application-form-card" *ngIf="!hasAlreadyApplied">
+      <mat-card class="application-form-card" *ngIf="!hasAlreadyApplied && !atApplicationLimit">
         <mat-card-header>
           <mat-card-title>Your Application</mat-card-title>
           <mat-card-subtitle>Tell the client why you're the perfect fit</mat-card-subtitle>

@@ -513,6 +513,39 @@ mat-nav-list {
   }
 }
 
+// Sidenav PRO badge & upgrade link
+.sidenav-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidenav-pro-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  line-height: 1.6;
+}
+
+.sidenav-plan-link {
+  margin-top: 2px;
+}
+
+.upgrade-link {
+  font-size: 11px;
+  color: var(--color-accent-600);
+  text-decoration: none;
+  font-weight: 600;
+
+  &:hover { text-decoration: underline; }
+}
+
 // Touch-friendly improvements
 @media (hover: none) and (pointer: coarse) {
   mat-nav-list {

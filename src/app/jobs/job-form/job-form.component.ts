@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -17,6 +17,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { JobService } from '../job.service';
 import { CreateJobRequest, JOB_CATEGORIES, SKILLS_DATABASE } from '../models';
+import { SubscriptionService } from '../../subscription/subscription.service';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
@@ -26,6 +27,7 @@ import { map, startWith } from 'rxjs/operators';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
@@ -48,6 +50,7 @@ export class JobFormComponent implements OnInit {
   loading = false;
   isEditMode = false;
   jobId: string | null = null;
+  atJobLimit = false;
 
   categories = JOB_CATEGORIES;
   availableSkills = SKILLS_DATABASE;
@@ -61,7 +64,8 @@ export class JobFormComponent implements OnInit {
     private jobService: JobService,
     private router: Router,
     private route: ActivatedRoute,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public subscriptionService: SubscriptionService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +76,11 @@ export class JobFormComponent implements OnInit {
     if (this.jobId) {
       this.isEditMode = true;
       this.loadJob(this.jobId);
+    }
+
+    // Check job post limit for new jobs (not edits)
+    if (!this.jobId) {
+      this.atJobLimit = this.subscriptionService.atJobLimit;
     }
 
     // Setup skill autocomplete
@@ -125,6 +134,11 @@ export class JobFormComponent implements OnInit {
   }
 
   onSubmit(): void {
+    if (!this.isEditMode && this.atJobLimit) {
+      this.showError('Active job limit reached. Upgrade to PRO to post more jobs simultaneously.');
+      return;
+    }
+
     if (this.jobForm.invalid) {
       this.markFormGroupTouched(this.jobForm);
       this.showError('Please fill in all required fields correctly');

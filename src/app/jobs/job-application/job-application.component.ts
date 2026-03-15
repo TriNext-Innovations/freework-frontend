@@ -14,6 +14,7 @@ import { ApplicationService } from '../application.service';
 import { JobService } from '../job.service';
 import { Job } from '../models';
 import { CreateApplicationDto } from '../models/application.models';
+import { SubscriptionService } from '../../subscription/subscription.service';
 
 @Component({
   selector: 'app-job-application',
@@ -41,6 +42,7 @@ export class JobApplicationComponent implements OnInit {
   loading = false;
   submitting = false;
   hasAlreadyApplied = false;
+  atApplicationLimit = false;
 
   constructor(
     private fb: FormBuilder,
@@ -48,7 +50,8 @@ export class JobApplicationComponent implements OnInit {
     private router: Router,
     private applicationService: ApplicationService,
     private jobService: JobService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    public subscriptionService: SubscriptionService
   ) {}
 
   ngOnInit(): void {
@@ -63,6 +66,12 @@ export class JobApplicationComponent implements OnInit {
     this.initializeForm();
     this.loadJobDetails();
     this.checkIfAlreadyApplied();
+
+    // Check application limit for free-tier freelancers
+    this.atApplicationLimit = this.subscriptionService.atApplicationLimit;
+    if (this.atApplicationLimit) {
+      this.showError('You\'ve reached your 5 applications/month limit. Upgrade to PRO for unlimited applications.');
+    }
   }
 
   initializeForm(): void {
@@ -114,6 +123,11 @@ export class JobApplicationComponent implements OnInit {
 
     if (this.hasAlreadyApplied) {
       this.showError('You have already applied to this job');
+      return;
+    }
+
+    if (this.atApplicationLimit) {
+      this.showError('Application limit reached. Upgrade to PRO for unlimited applications.');
       return;
     }
 

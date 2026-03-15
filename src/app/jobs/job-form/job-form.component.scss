@@ -1,3 +1,46 @@
+.limit-banner {
+  margin-bottom: 20px;
+  background: #fef3c7 !important;
+  border: 1px solid #f59e0b !important;
+  border-radius: 12px !important;
+}
+
+.limit-banner-inner {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.limit-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  flex: 1;
+
+  mat-icon { color: #d97706; font-size: 24px; width: 24px; height: 24px; flex-shrink: 0; margin-top: 2px; }
+  strong { display: block; font-size: 15px; color: #92400e; margin-bottom: 4px; }
+  p { margin: 0; font-size: 13px; color: #92400e; line-height: 1.5; }
+}
+
+.limit-upgrade-btn {
+  background: linear-gradient(135deg, #2BB88A, #1a8d6f) !important;
+  color: #fff !important;
+  font-weight: 600;
+  border-radius: 8px !important;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  align-self: center;
+}
+
+.form-card--disabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
 .job-form-container {
   padding: var(--spacing-2xl) var(--spacing-lg);
   max-width: 900px;

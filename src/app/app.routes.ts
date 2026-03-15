@@ -116,6 +116,11 @@ export const routes: Routes = [
     loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
     canActivate: [authGuard]
   },
+  {
+    path: 'settings/billing',
+    loadComponent: () => import('./subscription/billing/billing.component').then(m => m.BillingComponent),
+    canActivate: [authGuard]
+  },
 
   // Profile setup (post-registration onboarding)
   {

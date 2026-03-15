@@ -11,7 +11,9 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { AuthService } from './auth/auth.service';
 import { ThemeService } from './theme.service';
+import { SubscriptionService } from './subscription/subscription.service';
 import { Observable } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 import { User } from './auth/models';
 
 @Component({
@@ -38,7 +40,11 @@ export class AppComponent implements OnInit {
   sidenavOpened = false;
   currentUser$: Observable<User | null>;
 
-  constructor(public authService: AuthService, public themeService: ThemeService) {
+  constructor(
+    public authService: AuthService,
+    public themeService: ThemeService,
+    public subscriptionService: SubscriptionService
+  ) {
     this.currentUser$ = this.authService.currentUser$;
   }
 
@@ -73,6 +79,17 @@ export class AppComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       console.log('👤 Auth state changed in navbar:', user);
     });
+
+    // Load subscription whenever user logs in
+    this.authService.currentUser$.pipe(
+      filter(user => !!user),
+      switchMap(() => this.subscriptionService.loadSubscription())
+    ).subscribe();
+
+    // Clear subscription on logout
+    this.authService.currentUser$.pipe(
+      filter(user => !user)
+    ).subscribe(() => this.subscriptionService.clearSubscription());
   }
 
   logout(): void {

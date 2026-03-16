@@ -15,6 +15,8 @@ import { SubscriptionInfo, FREE_TIER_APPLICATION_LIMIT, FREE_TIER_JOB_LIMIT } fr
 import { AuthService } from '../../auth/auth.service';
 import { User } from '../../auth/models';
 import { CancelConfirmDialogComponent } from './cancel-confirm-dialog.component';
+import { ProviderSelectDialogComponent } from './provider-select-dialog.component';
+import { PaymentProvider } from '../subscription.models';
 
 @Component({
   selector: 'app-billing',
@@ -105,24 +107,29 @@ export class BillingComponent implements OnInit, OnDestroy {
   }
 
   upgradeToProo(): void {
-    this.checkingOut = true;
-    this.subscriptionService.startCheckout().subscribe({
-      next: (res) => {
-        window.location.href = res.checkoutUrl;
-      },
-      error: () => {
-        this.checkingOut = false;
-        this.snackBar.open('Failed to start checkout. Please try again.', 'Close', {
-          duration: 4000,
-          panelClass: ['error-snackbar']
-        });
-      }
+    const ref = this.dialog.open(ProviderSelectDialogComponent, { width: '380px' });
+    ref.afterClosed().subscribe((provider: PaymentProvider | null) => {
+      if (!provider) return;
+      this.checkingOut = true;
+      this.subscriptionService.startCheckout(provider).subscribe({
+        next: (res) => {
+          window.location.href = res.checkoutUrl;
+        },
+        error: () => {
+          this.checkingOut = false;
+          this.snackBar.open('Failed to start checkout. Please try again.', 'Close', {
+            duration: 4000,
+            panelClass: ['error-snackbar']
+          });
+        }
+      });
     });
   }
 
   openCancelDialog(): void {
     const ref = this.dialog.open(CancelConfirmDialogComponent, {
-      width: '420px'
+      width: '420px',
+      data: { currentPeriodEnd: this.subscription?.currentPeriodEnd }
     });
 
     ref.afterClosed().subscribe(confirmed => {

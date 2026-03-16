@@ -20,6 +20,7 @@ export class AuthService {
   public currentUser$: Observable<User | null>;
 
   private refreshTokenTimeout?: number;
+  private authChannel = new BroadcastChannel('freework_auth');
 
   // Mock users for testing
   private mockUsers: User[] = [
@@ -63,6 +64,16 @@ export class AuthService {
         }
       });
     }
+
+    // Sync auth state across tabs (e.g. email verification opens a new tab)
+    this.authChannel.onmessage = (event) => {
+      if (event.data?.type === 'LOGIN') {
+        this.currentUserSubject.next(event.data.user);
+        this.router.navigate([event.data.redirectTo ?? '/jobs']);
+      } else if (event.data?.type === 'LOGOUT') {
+        this.currentUserSubject.next(null);
+      }
+    };
   }
 
   public get currentUserValue(): User | null {
@@ -247,6 +258,7 @@ export class AuthService {
     this.clearTokens();
     this.currentUserSubject.next(null);
     this.stopRefreshTokenTimer();
+    try { this.authChannel.postMessage({ type: 'LOGOUT' }); } catch { /* ignore */ }
     this.router.navigate(['/login']);
   }
 
@@ -419,7 +431,13 @@ export class AuthService {
     this.storeUser(normalizedUser);
     this.startRefreshTokenTimer();
 
-    if (!this.useMockData && !normalizedUser.avatar) {
+    // Notify other open tabs so they pick up the new auth state
+    try {
+      const redirectTo = normalizedUser.profileCompleted === false ? '/profile/setup' : '/jobs';
+      this.authChannel.postMessage({ type: 'LOGIN', user: normalizedUser, redirectTo });
+    } catch { /* BroadcastChannel unavailable */ }
+
+    if (!this.useMockData) {
       this.fetchUserProfile().subscribe({
         error: (error) => {
           console.error('❌ Error fetching profile for avatar:', error);

@@ -126,6 +126,26 @@ export const routes: Routes = [
     loadComponent: () => import('./reviews/reviews-demo/reviews-demo.component').then(m => m.ReviewsDemoComponent)
   },
 
+  // Pricing
+  {
+    path: 'pricing',
+    loadComponent: () => import('./subscription/pricing/pricing.component').then(m => m.PricingComponent)
+  },
+
+  // Subscription result pages (post-checkout redirects)
+  {
+    path: 'subscription/success',
+    loadComponent: () => import('./subscription/subscription-result/subscription-result.component').then(m => m.SubscriptionResultComponent),
+    canActivate: [authGuard],
+    data: { success: true }
+  },
+  {
+    path: 'subscription/cancel',
+    loadComponent: () => import('./subscription/subscription-result/subscription-result.component').then(m => m.SubscriptionResultComponent),
+    canActivate: [authGuard],
+    data: { success: false }
+  },
+
   // Settings
   {
     path: 'settings',

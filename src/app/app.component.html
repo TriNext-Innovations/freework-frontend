@@ -50,6 +50,11 @@
         <span matListItemTitle>Browse Jobs</span>
       </a>
 
+      <a mat-list-item routerLink="/pricing" (click)="closeSidenav()">
+        <mat-icon matListItemIcon>workspace_premium</mat-icon>
+        <span matListItemTitle>Pricing</span>
+      </a>
+
       <!-- Authenticated Links -->
       <ng-container *ngIf="currentUser$ | async as user">
         <a mat-list-item routerLink="/messages" (click)="closeSidenav()">

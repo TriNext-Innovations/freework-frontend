@@ -1,4 +1,5 @@
 export type SubscriptionPlan = 'FREE' | 'PRO';
+export type PaymentProvider = 'PAYFAST' | 'PAYPAL';
 export type SubscriptionStatus = 'ACTIVE' | 'CANCELLED' | 'PAST_DUE' | 'TRIALING' | 'INACTIVE';
 
 export interface SubscriptionInfo {

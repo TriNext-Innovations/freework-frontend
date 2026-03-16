@@ -6,6 +6,7 @@ import { buildApiEndpointUrl } from '../api.config';
 import {
   SubscriptionInfo,
   CheckoutResponse,
+  PaymentProvider,
   FREE_TIER_APPLICATION_LIMIT,
   FREE_TIER_JOB_LIMIT
 } from './subscription.models';
@@ -59,8 +60,8 @@ export class SubscriptionService {
     );
   }
 
-  startCheckout(): Observable<CheckoutResponse> {
-    return this.http.post<CheckoutResponse>(`${this.API_URL}/checkout`, {});
+  startCheckout(provider: PaymentProvider): Observable<CheckoutResponse> {
+    return this.http.post<CheckoutResponse>(`${this.API_URL}/checkout`, { provider });
   }
 
   cancelSubscription(): Observable<void> {

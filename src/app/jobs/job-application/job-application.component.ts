@@ -153,8 +153,13 @@ export class JobApplicationComponent implements OnInit {
       error: (error) => {
         console.error('Error submitting application:', error);
         this.submitting = false;
-        const errorMessage = error.error?.message || 'Failed to submit application. Please try again.';
-        this.showError(errorMessage);
+        if (error.status === 403) {
+          this.atApplicationLimit = true;
+          this.showError('Monthly application limit reached. Upgrade to PRO for unlimited applications.');
+        } else {
+          const errorMessage = error.error?.message || 'Failed to submit application. Please try again.';
+          this.showError(errorMessage);
+        }
       }
     });
   }

@@ -174,8 +174,13 @@ export class JobFormComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        const message = error.error?.message || 'Failed to save job. Please try again.';
-        this.showError(message);
+        if (error.status === 403) {
+          this.atJobLimit = true;
+          this.showError('Active job limit reached. Upgrade to PRO to post more jobs simultaneously.');
+        } else {
+          const message = error.error?.message || 'Failed to save job. Please try again.';
+          this.showError(message);
+        }
       },
       complete: () => {
         this.loading = false;

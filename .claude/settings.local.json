@@ -2,10 +2,7 @@
   "permissions": {
     "allow": [
       "Bash(git checkout:*)",
-      "Bash(do:*)",
-      "Bash(ls:*)",
-      "Bash(find:*)",
-      "Bash(cd:*)"
+      "Bash(do:*)"
     ]
   }
 }

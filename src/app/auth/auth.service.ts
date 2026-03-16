@@ -170,14 +170,38 @@ export class AuthService {
   }
 
   /**
-   * Register new user
+   * Register new user — backend sends verification email; no auto-login here.
    */
-  register(userData: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/register`, userData)
+  register(userData: RegisterRequest): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/register`, userData)
       .pipe(
-        tap(response => this.handleAuthResponse(response)),
         catchError(error => {
           console.error('Registration error:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Verify email address via token from verification email.
+   * On success the backend returns a JWT so we auto-login the user.
+   */
+  verifyEmail(token: string): Observable<AuthResponse> {
+    return this.http.get<any>(`${this.API_URL}/verify`, { params: { token } })
+      .pipe(
+        tap(response => {
+          const authResponse: AuthResponse = {
+            accessToken: response.accessToken || response.token,
+            refreshToken: response.refreshToken || response.refresh_token || '',
+            tokenType: response.tokenType || 'Bearer',
+            expiresIn: response.expiresIn || response.expires_in || 3600,
+            user: response.user || response.userDetails ||
+              this.extractUserFromToken(response.accessToken || response.token)
+          };
+          this.handleAuthResponse(authResponse);
+        }),
+        catchError(error => {
+          console.error('Email verification error:', error);
           return throwError(() => error);
         })
       );

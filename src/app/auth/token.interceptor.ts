@@ -7,9 +7,10 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
   const token = authService.getAccessToken();
 
-  // Skip adding token for auth endpoints
+  // Skip adding token for public auth endpoints
   if (req.url.includes('/auth/login') ||
       req.url.includes('/auth/register') ||
+      req.url.includes('/auth/verify') ||
       req.url.includes('/auth/refresh')) {
     return next(req);
   }

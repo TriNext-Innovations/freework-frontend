@@ -16,6 +16,7 @@ import { SubscriptionService } from './subscription/subscription.service';
 import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { User } from './auth/models';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -51,6 +52,8 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    (window as any).AIChatbotConfig = { apiKey: environment.chatbotApiKey };
+
     // Load subscription whenever user logs in
     this.authService.currentUser$.pipe(
       filter(user => !!user),

@@ -346,27 +346,6 @@ mat-form-field {
 }
 
 // ── Mock credentials helper ───────────────────────────────────────
-.mock-credentials {
-  padding: var(--spacing-md);
-  background: rgba(43, 184, 138, 0.06);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(43, 184, 138, 0.12);
-  margin-bottom: var(--spacing-md);
-
-  p {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
-    line-height: 1.7;
-    margin: 0;
-
-    strong { color: rgba(255, 255, 255, 0.7); }
-
-    :host-context([data-theme="light"]) & {
-      color: var(--color-text-tertiary);
-      strong { color: var(--color-text-secondary); }
-    }
-  }
-}
 
 // ── Toggle link (register/sign-in switch) ─────────────────────────
 .toggle-link {

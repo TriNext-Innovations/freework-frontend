@@ -172,13 +172,6 @@
           <span *ngIf="loading">{{ isRegister ? 'Creating account...' : 'Signing in...' }}</span>
         </button>
 
-        <!-- Mock Credentials Helper (login only) -->
-        <div class="mock-credentials" *ngIf="!isRegister">
-          <p><strong>Test Accounts:</strong></p>
-          <p>Freelancer: john&#64;example.com / password</p>
-          <p>Customer: emily&#64;example.com / password</p>
-        </div>
-
         <!-- Toggle Link -->
         <div class="toggle-link">
           <p *ngIf="!isRegister">Don't have an account? <a (click)="toggleMode()">Register here</a></p>

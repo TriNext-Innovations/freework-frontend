@@ -393,6 +393,65 @@ mat-form-field {
   }
 }
 
+// ── Check-inbox screen ────────────────────────────────────────────
+.inbox-check {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-xl) 0 var(--spacing-md);
+  gap: var(--spacing-md);
+}
+
+.inbox-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(43, 184, 138, 0.12);
+  border: 1px solid rgba(43, 184, 138, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-sm);
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: #2BB88A;
+  }
+}
+
+.inbox-message {
+  margin: 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+
+  strong {
+    color: #ffffff;
+    display: block;
+    margin-top: 4px;
+  }
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-secondary);
+    strong { color: var(--color-text-primary); }
+  }
+}
+
+.inbox-hint {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+  max-width: 320px;
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-tertiary);
+  }
+}
+
 // ── Responsive ────────────────────────────────────────────────────
 // Tablet — register collapses to single column
 @media (max-width: 860px) {

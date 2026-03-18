@@ -1,0 +1,48 @@
+<div class="verify-container">
+  <mat-card class="verify-card">
+
+    <mat-card-header>
+      <div class="brand-header">
+        <div class="brand-logo">
+          <svg viewBox="0 0 64 52" width="40" height="32" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+            <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.5"/>
+          </svg>
+          <span class="brand-wordmark"><strong>free</strong>work</span>
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+
+      <!-- Loading -->
+      <div class="state-block" *ngIf="state === 'loading'">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p class="state-text">Verifying your email…</p>
+      </div>
+
+      <!-- Success -->
+      <div class="state-block" *ngIf="state === 'success'">
+        <div class="state-icon success">
+          <mat-icon>check_circle</mat-icon>
+        </div>
+        <h2 class="state-heading">Email verified!</h2>
+        <p class="state-text">Taking you to freework now…</p>
+      </div>
+
+      <!-- Error -->
+      <div class="state-block" *ngIf="state === 'error'">
+        <div class="state-icon error">
+          <mat-icon>error_outline</mat-icon>
+        </div>
+        <h2 class="state-heading">Verification failed</h2>
+        <p class="state-text error-text">{{ errorMessage }}</p>
+        <button mat-raised-button color="primary" (click)="goToLogin()">
+          Back to sign in
+        </button>
+      </div>
+
+    </mat-card-content>
+
+  </mat-card>
+</div>

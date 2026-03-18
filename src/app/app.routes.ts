@@ -103,6 +103,18 @@ export const routes: Routes = [
     loadComponent: () => import('./payments/stripe-payment/stripe-payment.component').then(m => m.StripePaymentComponent),
     canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
+  {
+    path: 'payments/success',
+    loadComponent: () => import('./payments/payment-result/payment-result.component').then(m => m.PaymentResultComponent),
+    canActivate: [authGuard],
+    data: { success: true }
+  },
+  {
+    path: 'payments/cancel',
+    loadComponent: () => import('./payments/payment-result/payment-result.component').then(m => m.PaymentResultComponent),
+    canActivate: [authGuard],
+    data: { success: false }
+  },
 
   // Review routes
   {
@@ -114,10 +126,35 @@ export const routes: Routes = [
     loadComponent: () => import('./reviews/reviews-demo/reviews-demo.component').then(m => m.ReviewsDemoComponent)
   },
 
+  // Pricing
+  {
+    path: 'pricing',
+    loadComponent: () => import('./subscription/pricing/pricing.component').then(m => m.PricingComponent)
+  },
+
+  // Subscription result pages (post-checkout redirects)
+  {
+    path: 'subscription/success',
+    loadComponent: () => import('./subscription/subscription-result/subscription-result.component').then(m => m.SubscriptionResultComponent),
+    canActivate: [authGuard],
+    data: { success: true }
+  },
+  {
+    path: 'subscription/cancel',
+    loadComponent: () => import('./subscription/subscription-result/subscription-result.component').then(m => m.SubscriptionResultComponent),
+    canActivate: [authGuard],
+    data: { success: false }
+  },
+
   // Settings
   {
     path: 'settings',
     loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'settings/billing',
+    loadComponent: () => import('./subscription/billing/billing.component').then(m => m.BillingComponent),
     canActivate: [authGuard]
   },
 

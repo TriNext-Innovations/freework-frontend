@@ -1,79 +1,100 @@
-<div class="stripe-payment-dialog">
-  <h2 mat-dialog-title>
-    <mat-icon>credit_card</mat-icon>
-    Secure Payment
-  </h2>
+<div class="checkout-container container">
 
-  <mat-dialog-content>
-    <div class="payment-summary">
-      <h3>Payment Details</h3>
-      <div class="summary-row">
-        <span>Job:</span>
-        <span class="value">{{ jobTitle }}</span>
-      </div>
-      <div class="summary-row">
-        <span>Amount:</span>
-        <span class="value amount">${{ amount.toFixed(2) }} {{ currency }}</span>
-      </div>
-      <div class="summary-row">
-        <span>Type:</span>
-        <span class="value">{{ paymentType }}</span>
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading job details...</p>
+  </div>
+
+  <ng-container *ngIf="!loading && job">
+    <div class="checkout-header">
+      <a mat-icon-button routerLink="/payments" class="back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <div>
+        <h1>Secure Escrow Payment</h1>
+        <p class="subtitle">Funds are held safely until work is approved</p>
       </div>
     </div>
 
-    <mat-card class="card-section" *ngIf="!paymentSuccess">
-      <mat-card-content>
-        <div class="card-info">
-          <mat-icon>info</mat-icon>
-          <p>Your payment will be held in escrow until the work is completed and approved.</p>
-        </div>
+    <div class="checkout-layout">
 
-        <div class="stripe-card-element">
-          <label>Card Information</label>
-          <div id="card-element"></div>
-        </div>
+      <!-- Order Summary -->
+      <mat-card class="summary-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>receipt_long</mat-icon>
+          <mat-card-title>Order Summary</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="summary-row">
+            <span class="summary-label">Job</span>
+            <span class="summary-value">{{ job.title }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Type</span>
+            <span class="summary-value">{{ job.budgetType === 'HOURLY' ? 'Hourly' : 'Fixed Price' }}</span>
+          </div>
+          <div class="summary-row">
+            <span class="summary-label">Posted by</span>
+            <span class="summary-value">{{ job.customerName }}</span>
+          </div>
 
-        <div *ngIf="paymentError" class="error-message">
-          <mat-icon>error</mat-icon>
-          {{ paymentError }}
-        </div>
+          <mat-divider class="summary-divider"></mat-divider>
 
-        <div class="security-badges">
-          <div class="badge">
+          <div class="summary-row total-row">
+            <span class="summary-label">Total</span>
+            <span class="summary-total">{{ formatCurrency(job.budget) }}</span>
+          </div>
+
+          <div class="escrow-note">
             <mat-icon>lock</mat-icon>
-            <span>Secure Payment</span>
+            <p>Funds are held in escrow and only released to the freelancer once you approve the completed work.</p>
           </div>
-          <div class="badge">
-            <mat-icon>verified_user</mat-icon>
-            <span>256-bit SSL</span>
-          </div>
-        </div>
-      </mat-card-content>
-    </mat-card>
+        </mat-card-content>
+      </mat-card>
 
-    <div *ngIf="paymentSuccess" class="success-message">
-      <mat-icon color="primary">check_circle</mat-icon>
-      <h3>Payment Successful!</h3>
-      <p>Your payment has been processed and funds are now in escrow.</p>
+      <!-- Payment Action -->
+      <div class="payment-action">
+        <mat-card class="action-card">
+          <mat-card-content>
+            <div class="action-icon">
+              <mat-icon>payments</mat-icon>
+            </div>
+            <h2>{{ formatCurrency(job.budget) }}</h2>
+            <p class="action-desc">You'll be redirected to our secure payment page to complete your payment.</p>
+
+            <button
+              mat-raised-button
+              class="pay-btn"
+              (click)="proceedToPayment()"
+              [disabled]="redirecting"
+            >
+              <mat-spinner diameter="20" *ngIf="redirecting"></mat-spinner>
+              <mat-icon *ngIf="!redirecting">open_in_new</mat-icon>
+              {{ redirecting ? 'Redirecting...' : 'Proceed to Payment' }}
+            </button>
+
+            <div class="trust-row">
+              <div class="trust-item">
+                <mat-icon>shield</mat-icon>
+                <span>Secure & encrypted</span>
+              </div>
+              <div class="trust-item">
+                <mat-icon>lock_clock</mat-icon>
+                <span>Escrow protected</span>
+              </div>
+              <div class="trust-item">
+                <mat-icon>savings</mat-icon>
+                <span>0% commission</span>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+
+        <p class="cancel-hint">
+          <a routerLink="/payments">Cancel and go back</a>
+        </p>
+      </div>
+
     </div>
-
-    <div *ngIf="processing && !paymentSuccess" class="processing-message">
-      <mat-spinner diameter="40"></mat-spinner>
-      <p>Processing your payment...</p>
-      <span>Please do not close this window</span>
-    </div>
-  </mat-dialog-content>
-
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="cancel()" [disabled]="processing || paymentSuccess">
-      Cancel
-    </button>
-    <button mat-raised-button color="primary"
-            (click)="processPayment()"
-            [disabled]="processing || paymentSuccess">
-      <mat-icon>payment</mat-icon>
-      {{ processing ? 'Processing...' : 'Pay $' + amount.toFixed(2) }}
-    </button>
-  </mat-dialog-actions>
+  </ng-container>
 </div>
-

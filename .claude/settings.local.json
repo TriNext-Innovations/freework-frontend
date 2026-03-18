@@ -3,6 +3,10 @@
     "allow": [
       "Bash(git checkout:*)",
       "Bash(do:*)",
+      "Read(//mnt/c/Users/rynobotes/WebstormProjects/**)",
+      "Bash(gh issue:*)",
+      "Bash(cd:*)",
+      "Bash(find:*)"
       "Bash(npx ng:*)"
     ]
   }

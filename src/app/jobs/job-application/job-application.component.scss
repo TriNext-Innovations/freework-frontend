@@ -142,6 +142,35 @@
   }
 }
 
+// Limit Card
+.limit-card {
+  margin-bottom: var(--spacing-lg);
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 12px !important;
+
+  .warning-content {
+    display: flex;
+    align-items: flex-start;
+    gap: var(--spacing-md);
+    margin-bottom: var(--spacing-md);
+
+    mat-icon { color: #d97706; font-size: 1.5rem; width: 1.5rem; height: 1.5rem; flex-shrink: 0; }
+    strong { display: block; font-size: 0.9rem; margin-bottom: 4px; color: #92400e; }
+    p { color: #92400e; font-size: 0.813rem; margin: 0; line-height: 1.5; }
+  }
+
+  .upgrade-cta-btn {
+    background: linear-gradient(135deg, #2BB88A, #1a8d6f) !important;
+    color: #fff !important;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 8px !important;
+  }
+}
+
 // Warning Card
 .warning-card {
   margin-bottom: var(--spacing-lg);

@@ -31,8 +31,14 @@
           <mat-icon>account_circle</mat-icon>
         </ng-template>
         <div>
-          <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+          <div class="sidenav-name-row">
+            <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+            <span class="sidenav-pro-badge" *ngIf="subscriptionService.isProMember">PRO</span>
+          </div>
           <small>{{ user.email }}</small>
+          <div class="sidenav-plan-link" *ngIf="!subscriptionService.isProMember">
+            <a routerLink="/settings/billing" (click)="closeSidenav()" class="upgrade-link">Upgrade to PRO</a>
+          </div>
         </div>
       </div>
 
@@ -42,6 +48,11 @@
       <a mat-list-item routerLink="/jobs" (click)="closeSidenav()">
         <mat-icon matListItemIcon>search</mat-icon>
         <span matListItemTitle>Browse Jobs</span>
+      </a>
+
+      <a mat-list-item routerLink="/pricing" (click)="closeSidenav()">
+        <mat-icon matListItemIcon>workspace_premium</mat-icon>
+        <span matListItemTitle>Pricing</span>
       </a>
 
       <!-- Authenticated Links -->
@@ -92,6 +103,11 @@
         <a mat-list-item routerLink="/settings" (click)="closeSidenav()">
           <mat-icon matListItemIcon>settings</mat-icon>
           <span matListItemTitle>Settings</span>
+        </a>
+
+        <a mat-list-item routerLink="/settings/billing" (click)="closeSidenav()">
+          <mat-icon matListItemIcon>workspace_premium</mat-icon>
+          <span matListItemTitle>Plan &amp; Billing</span>
         </a>
 
         <mat-divider></mat-divider>
@@ -191,6 +207,10 @@
                 <button mat-menu-item routerLink="/settings">
                   <mat-icon>settings</mat-icon>
                   Settings
+                </button>
+                <button mat-menu-item routerLink="/settings/billing">
+                  <mat-icon>workspace_premium</mat-icon>
+                  Plan &amp; Billing
                 </button>
                 <mat-divider></mat-divider>
                 <button mat-menu-item (click)="logout()">

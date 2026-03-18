@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
+import { DOCUMENT } from '@angular/common';
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -11,8 +12,11 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { AuthService } from './auth/auth.service';
 import { ThemeService } from './theme.service';
+import { SubscriptionService } from './subscription/subscription.service';
 import { Observable } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 import { User } from './auth/models';
+import { environment } from '../environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -38,41 +42,28 @@ export class AppComponent implements OnInit {
   sidenavOpened = false;
   currentUser$: Observable<User | null>;
 
-  constructor(public authService: AuthService, public themeService: ThemeService) {
+  constructor(
+    public authService: AuthService,
+    public themeService: ThemeService,
+    public subscriptionService: SubscriptionService,
+    @Inject(DOCUMENT) private document: Document
+  ) {
     this.currentUser$ = this.authService.currentUser$;
   }
 
   ngOnInit(): void {
-    console.log('🚀 AppComponent initialized');
-    console.log('👤 Initial auth state:', {
-      isAuthenticated: this.authService.isAuthenticated,
-      currentUser: this.authService.currentUserValue
-    });
+    (window as any).AIChatbotConfig = { apiKey: environment.chatbotApiKey };
 
-    // Check localStorage
-    const storedToken = localStorage.getItem('freework_access_token');
-    const storedUser = localStorage.getItem('freework_user');
-    console.log('💾 LocalStorage check:', {
-      hasToken: !!storedToken,
-      tokenPreview: storedToken ? storedToken.substring(0, 20) + '...' : 'NONE',
-      hasUser: !!storedUser,
-      userPreview: storedUser ? storedUser.substring(0, 50) + '...' : 'NONE'
-    });
+    // Load subscription whenever user logs in
+    this.authService.currentUser$.pipe(
+      filter(user => !!user),
+      switchMap(() => this.subscriptionService.loadSubscription())
+    ).subscribe();
 
-    // Try to parse stored user
-    if (storedUser && storedUser !== 'undefined') {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        console.log('👤 Parsed stored user:', parsedUser);
-      } catch (e) {
-        console.error('❌ Error parsing stored user:', e);
-      }
-    }
-
-    // Subscribe to auth changes for debugging
-    this.authService.currentUser$.subscribe(user => {
-      console.log('👤 Auth state changed in navbar:', user);
-    });
+    // Clear subscription on logout
+    this.authService.currentUser$.pipe(
+      filter(user => !user)
+    ).subscribe(() => this.subscriptionService.clearSubscription());
   }
 
   logout(): void {

@@ -47,10 +47,20 @@ export class EmailVerifyComponent implements OnInit {
         // Brief pause so the user sees the success state, then redirect
         setTimeout(() => {
           const user = this.authService.currentUserValue;
-          // New users have no completed profile — send them to setup
-          this.router.navigate(
-            user?.profileCompleted === false ? ['/profile/setup'] : ['/jobs']
-          );
+          const targetPath = user?.profileCompleted === false ? '/profile/setup' : '/jobs';
+
+          // If this tab was opened by another (e.g. from the app), redirect the
+          // original tab and close this one so the user stays in their active tab.
+          try {
+            if (window.opener && !window.opener.closed) {
+              window.opener.location.href = window.location.origin + targetPath;
+              window.close();
+              return;
+            }
+          } catch { /* cross-origin opener — fall through */ }
+
+          this.router.navigate([targetPath]);
+
         }, 1500);
       },
       error: (err) => {

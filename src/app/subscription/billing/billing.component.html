@@ -1,0 +1,209 @@
+<div class="billing-container container">
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="loading-state">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading subscription info...</p>
+  </div>
+
+  <ng-container *ngIf="!loading && subscription">
+
+    <!-- Hero: Current Plan -->
+    <div class="plan-hero" [class.plan-hero--pro]="isPro">
+      <div class="plan-hero-content">
+        <div class="plan-label">
+          <span class="plan-tier" [class.plan-tier--pro]="isPro">
+            <mat-icon>{{ isPro ? 'workspace_premium' : 'person' }}</mat-icon>
+            {{ isPro ? 'PRO' : 'FREE' }}
+          </span>
+          <span class="plan-status" *ngIf="isPro && subscription.currentPeriodEnd">
+            Renews {{ subscription.currentPeriodEnd | date:'MMM d, y' }}
+          </span>
+          <span class="plan-status plan-status--cancelled" *ngIf="isPro && subscription.status === 'CANCELLED'">
+            Cancels {{ subscription.currentPeriodEnd | date:'MMM d, y' }}
+          </span>
+        </div>
+
+        <h1 class="plan-title">
+          <ng-container *ngIf="isPro">You're on Freework PRO</ng-container>
+          <ng-container *ngIf="!isPro">Your Free Plan</ng-container>
+        </h1>
+
+        <p class="plan-tagline">
+          <ng-container *ngIf="isPro">
+            Unlimited access. Zero commission. Every rand is yours.
+          </ng-container>
+          <ng-container *ngIf="!isPro">
+            Everything you earn goes straight to your pocket — upgrade for unlimited access.
+          </ng-container>
+        </p>
+      </div>
+
+      <div class="plan-actions" *ngIf="!isPro">
+        <button mat-raised-button class="upgrade-btn" (click)="upgradeToProo()" [disabled]="checkingOut">
+          <mat-spinner diameter="18" *ngIf="checkingOut"></mat-spinner>
+          <mat-icon *ngIf="!checkingOut">rocket_launch</mat-icon>
+          {{ checkingOut ? 'Starting checkout...' : 'Upgrade to PRO' }}
+        </button>
+      </div>
+
+      <div class="plan-actions" *ngIf="isPro && subscription.status !== 'CANCELLED'">
+        <button mat-stroked-button class="cancel-btn" (click)="openCancelDialog()" [disabled]="cancelling">
+          <mat-spinner diameter="16" *ngIf="cancelling"></mat-spinner>
+          {{ cancelling ? 'Cancelling...' : 'Cancel subscription' }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Usage Stats -->
+    <mat-card class="usage-card" *ngIf="!isPro">
+      <mat-card-header>
+        <mat-icon mat-card-avatar>bar_chart</mat-icon>
+        <mat-card-title>This month's usage</mat-card-title>
+        <mat-card-subtitle>Free plan limits reset on the 1st of each month</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+
+        <!-- Freelancer: Applications -->
+        <div class="usage-item" *ngIf="isFreelancer">
+          <div class="usage-header">
+            <span class="usage-label">
+              <mat-icon>send</mat-icon>
+              Applications sent
+            </span>
+            <span class="usage-count" [class.usage-count--warning]="applicationLimitPercent >= 80">
+              {{ subscription.applicationsThisMonth ?? 0 }} / {{ FREE_APPLICATION_LIMIT }}
+            </span>
+          </div>
+          <mat-progress-bar
+            [value]="applicationLimitPercent"
+            [color]="applicationLimitColor"
+            mode="determinate"
+          ></mat-progress-bar>
+          <p class="usage-hint" *ngIf="applicationLimitPercent >= 100">
+            Limit reached — upgrade to keep applying to jobs this month.
+          </p>
+          <p class="usage-hint" *ngIf="applicationLimitPercent >= 80 && applicationLimitPercent < 100">
+            Almost at your limit for this month.
+          </p>
+        </div>
+
+        <!-- Customer: Active Jobs -->
+        <div class="usage-item" *ngIf="isCustomer">
+          <div class="usage-header">
+            <span class="usage-label">
+              <mat-icon>work_outline</mat-icon>
+              Active job posts
+            </span>
+            <span class="usage-count" [class.usage-count--warning]="jobLimitPercent >= 80">
+              {{ subscription.activeJobsCount ?? 0 }} / {{ FREE_JOB_LIMIT }}
+            </span>
+          </div>
+          <mat-progress-bar
+            [value]="jobLimitPercent"
+            [color]="jobLimitColor"
+            mode="determinate"
+          ></mat-progress-bar>
+          <p class="usage-hint" *ngIf="jobLimitPercent >= 100">
+            Limit reached — upgrade to post more jobs simultaneously.
+          </p>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+
+    <!-- Why PRO / Value Prop -->
+    <div class="value-section" *ngIf="!isPro">
+      <div class="value-header">
+        <h2>Why upgrade to PRO?</h2>
+        <p class="value-sub">
+          Unlike Upwork or Fiverr — Freework <strong>never takes a cut</strong> of your earnings.
+          PRO just unlocks the full platform.
+        </p>
+      </div>
+
+      <div class="comparison-grid">
+        <!-- Free -->
+        <mat-card class="comparison-card comparison-card--free">
+          <mat-card-header>
+            <mat-card-title>Free</mat-card-title>
+            <mat-card-subtitle>Get started, no risk</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="feature-list">
+              <li><mat-icon class="check">check_circle</mat-icon> 0% commission — always</li>
+              <li><mat-icon class="check">check_circle</mat-icon> Full messaging</li>
+              <li><mat-icon class="check">check_circle</mat-icon> Secure escrow payments</li>
+              <li *ngIf="isFreelancer"><mat-icon class="limit">remove_circle_outline</mat-icon> {{ FREE_APPLICATION_LIMIT }} applications/month</li>
+              <li *ngIf="isCustomer"><mat-icon class="limit">remove_circle_outline</mat-icon> {{ FREE_JOB_LIMIT }} active job post</li>
+            </ul>
+          </mat-card-content>
+        </mat-card>
+
+        <!-- PRO -->
+        <mat-card class="comparison-card comparison-card--pro">
+          <div class="pro-ribbon">PRO</div>
+          <mat-card-header>
+            <mat-card-title>PRO</mat-card-title>
+            <mat-card-subtitle>For serious freelancers & clients</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <ul class="feature-list">
+              <li><mat-icon class="check">check_circle</mat-icon> 0% commission — always</li>
+              <li><mat-icon class="check">check_circle</mat-icon> Full messaging</li>
+              <li><mat-icon class="check">check_circle</mat-icon> Secure escrow payments</li>
+              <li *ngIf="isFreelancer"><mat-icon class="check">check_circle</mat-icon> Unlimited applications</li>
+              <li *ngIf="isCustomer"><mat-icon class="check">check_circle</mat-icon> Unlimited active job posts</li>
+              <li><mat-icon class="check">check_circle</mat-icon> PRO badge on your profile</li>
+              <li><mat-icon class="check">check_circle</mat-icon> Priority in search results</li>
+            </ul>
+            <button mat-raised-button class="upgrade-btn-inline" (click)="upgradeToProo()" [disabled]="checkingOut">
+              <mat-spinner diameter="16" *ngIf="checkingOut"></mat-spinner>
+              <mat-icon *ngIf="!checkingOut">rocket_launch</mat-icon>
+              {{ checkingOut ? 'Loading...' : 'Get PRO' }}
+            </button>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Commission callout -->
+      <mat-card class="commission-callout">
+        <mat-card-content>
+          <div class="callout-inner">
+            <div class="callout-icon">
+              <mat-icon>savings</mat-icon>
+            </div>
+            <div class="callout-text">
+              <h3>What you earn is yours. Period.</h3>
+              <p>
+                Upwork takes up to <strong>20%</strong>. Fiverr takes <strong>20%</strong>.
+                Freework takes <strong>0%</strong> — on every plan, forever.
+                PRO just removes the limits so you can work more.
+              </p>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- PRO Active: perks reminder -->
+    <div class="pro-perks" *ngIf="isPro">
+      <mat-card class="perks-card">
+        <mat-card-header>
+          <mat-icon mat-card-avatar>workspace_premium</mat-icon>
+          <mat-card-title>Your PRO perks</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul class="feature-list">
+            <li><mat-icon class="check">check_circle</mat-icon> 0% commission — what you earn is yours</li>
+            <li *ngIf="isFreelancer"><mat-icon class="check">check_circle</mat-icon> Unlimited job applications</li>
+            <li *ngIf="isCustomer"><mat-icon class="check">check_circle</mat-icon> Unlimited active job posts</li>
+            <li><mat-icon class="check">check_circle</mat-icon> PRO badge on your profile</li>
+            <li><mat-icon class="check">check_circle</mat-icon> Priority in freelancer search results</li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+  </ng-container>
+</div>

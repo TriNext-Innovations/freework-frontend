@@ -11,3 +11,4 @@ export function buildApiUrl(path: string): string {
 export function buildApiEndpointUrl(path: string): string {
   return buildApiUrl(`${API_PREFIX}${path.startsWith('/') ? path : `/${path}`}`);
 }
+

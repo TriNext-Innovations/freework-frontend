@@ -150,7 +150,6 @@ mat-form-field {
   flex: 1;
   min-width: 0;
   width: 100%;
-  overflow: hidden;
 }
 
 // Right column slides in — max-width + max-height collapse so it doesn't affect row height when hidden
@@ -473,4 +472,40 @@ mat-form-field {
   }
 
   .submit-button { height: 48px; }
+}
+
+.consent-section {
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+
+  mat-divider {
+    margin-bottom: 1rem;
+  }
+}
+
+.consent-heading {
+  font-size: 0.875rem;
+  color: var(--mat-app-on-surface-variant, #aaa);
+  margin: 0 0 0.75rem;
+}
+
+.consent-checkbox {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+
+  a {
+    color: #2BB88A;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.required-asterisk {
+  color: var(--mat-warn-default, #f44336);
+  margin-left: 2px;
 }

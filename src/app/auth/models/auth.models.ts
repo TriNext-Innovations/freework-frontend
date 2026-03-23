@@ -5,12 +5,18 @@ export interface LoginRequest {
   password: string;
 }
 
+export interface ConsentItemData {
+  consentType: string;
+  version: string;
+  consented: boolean;
+}
+
 export interface RegisterRequest {
   fullName: string;
-  //lastName: string;
   email: string;
   password: string;
   role: 'CUSTOMER' | 'FREELANCER';
+  consents?: ConsentItemData[];
 }
 
 export interface AuthResponse {

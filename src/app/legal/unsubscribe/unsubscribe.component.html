@@ -1,0 +1,40 @@
+<div class="unsubscribe-container">
+  <mat-card class="unsubscribe-card">
+
+    <!-- Loading -->
+    <mat-card-content *ngIf="loading" class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Processing your unsubscribe request...</p>
+    </mat-card-content>
+
+    <!-- Success -->
+    <mat-card-content *ngIf="!loading && success">
+      <div class="state-icon success-icon">
+        <mat-icon>unsubscribe</mat-icon>
+      </div>
+      <h2>Unsubscribed Successfully</h2>
+      <p><strong>{{ email }}</strong> has been removed from our marketing list.</p>
+      <p>You will continue to receive essential transactional emails such as payment confirmations and security alerts.</p>
+      <p>If you unsubscribed by mistake, you can re-subscribe in your account settings at any time.</p>
+      <div class="unsubscribe-actions">
+        <a mat-flat-button color="primary" routerLink="/login">Sign In to Re-subscribe</a>
+        <a mat-stroked-button routerLink="/">Go to Homepage</a>
+      </div>
+    </mat-card-content>
+
+    <!-- Error -->
+    <mat-card-content *ngIf="!loading && error">
+      <div class="state-icon error-icon">
+        <mat-icon>error_outline</mat-icon>
+      </div>
+      <h2>Unsubscribe Failed</h2>
+      <p>{{ errorMessage }}</p>
+      <p>This link may have expired or already been used. Please log in to manage your email preferences in Settings.</p>
+      <div class="unsubscribe-actions">
+        <a mat-flat-button color="primary" routerLink="/login">Sign In</a>
+        <a mat-stroked-button routerLink="/">Go to Homepage</a>
+      </div>
+    </mat-card-content>
+
+  </mat-card>
+</div>

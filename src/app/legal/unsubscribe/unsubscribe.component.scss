@@ -1,0 +1,68 @@
+.unsubscribe-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+  padding: 2rem 1rem;
+}
+
+.unsubscribe-card {
+  max-width: 500px;
+  width: 100%;
+  text-align: center;
+
+  mat-card-content {
+    padding: 2rem;
+  }
+}
+
+.loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.state-icon {
+  margin: 0 auto 1rem;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  mat-icon {
+    font-size: 2rem;
+    height: 2rem;
+    width: 2rem;
+  }
+
+  &.success-icon {
+    background: rgba(43, 184, 138, 0.15);
+    color: #2BB88A;
+  }
+
+  &.error-icon {
+    background: rgba(244, 67, 54, 0.15);
+    color: #f44336;
+  }
+}
+
+h2 {
+  margin: 0 0 1rem;
+}
+
+p {
+  color: var(--mat-app-on-surface-variant, #aaa);
+  margin: 0.5rem 0;
+  line-height: 1.6;
+}
+
+.unsubscribe-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}

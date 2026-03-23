@@ -18,6 +18,10 @@ export const routes: Routes = [
     redirectTo: '/login',
     pathMatch: 'full'
   },
+  {
+    path: 'verify',
+    loadComponent: () => import('./auth/email-verify/email-verify.component').then(m => m.EmailVerifyComponent)
+  },
 
   // Job routes
   {
@@ -99,6 +103,18 @@ export const routes: Routes = [
     loadComponent: () => import('./payments/stripe-payment/stripe-payment.component').then(m => m.StripePaymentComponent),
     canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
+  {
+    path: 'payments/success',
+    loadComponent: () => import('./payments/payment-result/payment-result.component').then(m => m.PaymentResultComponent),
+    canActivate: [authGuard],
+    data: { success: true }
+  },
+  {
+    path: 'payments/cancel',
+    loadComponent: () => import('./payments/payment-result/payment-result.component').then(m => m.PaymentResultComponent),
+    canActivate: [authGuard],
+    data: { success: false }
+  },
 
   // Review routes
   {
@@ -110,10 +126,35 @@ export const routes: Routes = [
     loadComponent: () => import('./reviews/reviews-demo/reviews-demo.component').then(m => m.ReviewsDemoComponent)
   },
 
+  // Pricing
+  {
+    path: 'pricing',
+    loadComponent: () => import('./subscription/pricing/pricing.component').then(m => m.PricingComponent)
+  },
+
+  // Subscription result pages (post-checkout redirects)
+  {
+    path: 'subscription/success',
+    loadComponent: () => import('./subscription/subscription-result/subscription-result.component').then(m => m.SubscriptionResultComponent),
+    canActivate: [authGuard],
+    data: { success: true }
+  },
+  {
+    path: 'subscription/cancel',
+    loadComponent: () => import('./subscription/subscription-result/subscription-result.component').then(m => m.SubscriptionResultComponent),
+    canActivate: [authGuard],
+    data: { success: false }
+  },
+
   // Settings
   {
     path: 'settings',
     loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'settings/billing',
+    loadComponent: () => import('./subscription/billing/billing.component').then(m => m.BillingComponent),
     canActivate: [authGuard]
   },
 
@@ -139,6 +180,47 @@ export const routes: Routes = [
   {
     path: 'profile/:userId',
     loadComponent: () => import('./profile/profile-view/profile-view.component').then(m => m.ProfileViewComponent)
+  },
+
+  // Legal pages (public)
+  {
+    path: 'legal/privacy-policy',
+    loadComponent: () => import('./legal/legal-page/legal-page.component').then(m => m.LegalPageComponent),
+    data: { documentKey: 'privacy-policy' }
+  },
+  {
+    path: 'legal/cookie-policy',
+    loadComponent: () => import('./legal/legal-page/legal-page.component').then(m => m.LegalPageComponent),
+    data: { documentKey: 'cookie-policy' }
+  },
+  {
+    path: 'legal/freelancer-terms',
+    loadComponent: () => import('./legal/legal-page/legal-page.component').then(m => m.LegalPageComponent),
+    data: { documentKey: 'freelancer-terms' }
+  },
+  {
+    path: 'legal/business-terms',
+    loadComponent: () => import('./legal/legal-page/legal-page.component').then(m => m.LegalPageComponent),
+    data: { documentKey: 'business-terms' }
+  },
+  {
+    path: 'legal/popia-request',
+    loadComponent: () => import('./legal/popia-request/popia-request.component').then(m => m.PopiaRequestComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'unsubscribe',
+    loadComponent: () => import('./legal/unsubscribe/unsubscribe.component').then(m => m.UnsubscribeComponent)
+  },
+  {
+    path: 'reconsent',
+    loadComponent: () => import('./legal/reconsent/reconsent.component').then(m => m.ReconsentComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin/popia-requests',
+    loadComponent: () => import('./admin/popia-admin/popia-admin.component').then(m => m.PopiaAdminComponent),
+    canActivate: [authGuard, roleGuard(['ADMIN'])]
   },
 
   // Fallback route

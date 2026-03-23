@@ -131,6 +131,29 @@
           </div>
         </div>
 
+        <!-- Register: Consent Checkboxes -->
+        <div class="extra-fields consent-section" [class.visible]="isRegister">
+          <mat-divider></mat-divider>
+          <p class="consent-heading">Before creating your account, please review and accept our terms:</p>
+
+          <mat-checkbox [(ngModel)]="termsAccepted" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
+            I have read and agree to the
+            <a routerLink="/legal/freelancer-terms" target="_blank" *ngIf="f['role'].value !== 'CUSTOMER'">Freelancer Terms and Conditions</a>
+            <a routerLink="/legal/business-terms" target="_blank" *ngIf="f['role'].value === 'CUSTOMER'">Business Terms and Conditions</a>
+            <span class="required-asterisk">*</span>
+          </mat-checkbox>
+
+          <mat-checkbox [(ngModel)]="privacyAccepted" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
+            I have read and agree to the
+            <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a>
+            <span class="required-asterisk">*</span>
+          </mat-checkbox>
+
+          <mat-checkbox [(ngModel)]="marketingConsented" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
+            I would like to receive product updates and promotional emails from Freework (optional)
+          </mat-checkbox>
+        </div>
+
         <!-- Error Message — full width below columns -->
         <div *ngIf="errorMessage" class="error-message">
           <mat-icon>error</mat-icon>
@@ -143,7 +166,7 @@
           color="primary"
           type="submit"
           class="full-width submit-button"
-          [disabled]="loading">
+          [disabled]="loading || (isRegister && !consentValid)">
           <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
           <span *ngIf="!loading">{{ isRegister ? 'Create Account' : 'Sign In' }}</span>
           <span *ngIf="loading">{{ isRegister ? 'Creating account...' : 'Signing in...' }}</span>

@@ -1,0 +1,79 @@
+<div class="legal-page" *ngIf="document; else notFound">
+
+  <!-- Header bar -->
+  <div class="legal-header">
+    <div class="legal-header-content">
+      <div class="legal-title-block">
+        <h1>{{ document.title }}</h1>
+        <div class="legal-meta">
+          <span>Version {{ document.version }}</span>
+          <span class="meta-sep">|</span>
+          <span>Effective: {{ document.effectiveDate }}</span>
+        </div>
+      </div>
+
+      <div class="legal-header-actions">
+        <!-- Language Toggle -->
+        <mat-button-toggle-group [(ngModel)]="language" (change)="onLanguageChange()" aria-label="Language">
+          <mat-button-toggle value="en">EN</mat-button-toggle>
+          <mat-button-toggle value="af">AF</mat-button-toggle>
+        </mat-button-toggle-group>
+
+        <!-- Print/Download -->
+        <button mat-stroked-button (click)="printDocument()" class="print-btn" aria-label="Print document">
+          <mat-icon>print</mat-icon>
+          Download PDF
+        </button>
+
+        <!-- Cookie Settings (only on cookie policy page) -->
+        <button *ngIf="isCookiePolicy" mat-flat-button color="primary" (click)="openCookieSettings()">
+          <mat-icon>cookie</mat-icon>
+          Update Cookie Preferences
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="legal-body">
+    <!-- Table of Contents -->
+    <aside class="legal-toc" role="navigation" aria-label="Table of contents">
+      <h3>Contents</h3>
+      <ul>
+        <li *ngFor="let section of document.sections">
+          <a (click)="scrollToSection(section.id)" class="toc-link">{{ section.heading }}</a>
+        </li>
+      </ul>
+    </aside>
+
+    <!-- Document Content -->
+    <article class="legal-content">
+      <ng-container *ngFor="let section of document.sections">
+        <section [id]="section.id" class="legal-section">
+          <h2>{{ section.heading }}</h2>
+          <div class="section-content" [innerHTML]="section.content"></div>
+
+          <!-- Callout box -->
+          <div *ngIf="section.callout" class="legal-callout" [class.callout-warning]="section.calloutType === 'warning'" [class.callout-info]="section.calloutType === 'info'">
+            <mat-icon>{{ section.calloutType === 'warning' ? 'warning' : 'info' }}</mat-icon>
+            <p>{{ section.callout }}</p>
+          </div>
+        </section>
+        <mat-divider></mat-divider>
+      </ng-container>
+
+      <div class="legal-footer-note">
+        <p>Last updated: {{ document.lastUpdated }} | Version {{ document.version }}</p>
+        <p>Freework (Pty) Ltd &middot; Registered in South Africa &middot; privacy&#64;freework.co.za</p>
+      </div>
+    </article>
+  </div>
+</div>
+
+<ng-template #notFound>
+  <div class="legal-not-found">
+    <mat-icon>description</mat-icon>
+    <h2>Document not found</h2>
+    <p>The requested legal document could not be found.</p>
+    <button mat-flat-button color="primary" routerLink="/">Go Home</button>
+  </div>
+</ng-template>

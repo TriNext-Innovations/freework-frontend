@@ -28,7 +28,7 @@
   border-radius: var(--radius-xl) !important;
   border: 1px solid rgba(43, 184, 138, 0.20) !important;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(43, 184, 138, 0.08) !important;
-  overflow: hidden;
+  overflow: visible;
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
 
   &.is-register {
@@ -150,7 +150,6 @@ mat-form-field {
   flex: 1;
   min-width: 0;
   width: 100%;
-  overflow: hidden;
 }
 
 // Right column slides in — max-width + max-height collapse so it doesn't affect row height when hidden
@@ -346,27 +345,6 @@ mat-form-field {
 }
 
 // ── Mock credentials helper ───────────────────────────────────────
-.mock-credentials {
-  padding: var(--spacing-md);
-  background: rgba(43, 184, 138, 0.06);
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(43, 184, 138, 0.12);
-  margin-bottom: var(--spacing-md);
-
-  p {
-    font-size: 12px;
-    color: rgba(255, 255, 255, 0.5);
-    line-height: 1.7;
-    margin: 0;
-
-    strong { color: rgba(255, 255, 255, 0.7); }
-
-    :host-context([data-theme="light"]) & {
-      color: var(--color-text-tertiary);
-      strong { color: var(--color-text-secondary); }
-    }
-  }
-}
 
 // ── Toggle link (register/sign-in switch) ─────────────────────────
 .toggle-link {
@@ -390,6 +368,65 @@ mat-form-field {
     transition: color var(--transition-fast);
 
     &:hover { color: #1A8D6F; }
+  }
+}
+
+// ── Check-inbox screen ────────────────────────────────────────────
+.inbox-check {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: var(--spacing-xl) 0 var(--spacing-md);
+  gap: var(--spacing-md);
+}
+
+.inbox-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: rgba(43, 184, 138, 0.12);
+  border: 1px solid rgba(43, 184, 138, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--spacing-sm);
+
+  mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
+    color: #2BB88A;
+  }
+}
+
+.inbox-message {
+  margin: 0;
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.6;
+
+  strong {
+    color: #ffffff;
+    display: block;
+    margin-top: 4px;
+  }
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-secondary);
+    strong { color: var(--color-text-primary); }
+  }
+}
+
+.inbox-hint {
+  margin: 0;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+  line-height: 1.6;
+  max-width: 320px;
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-tertiary);
   }
 }
 
@@ -435,4 +472,40 @@ mat-form-field {
   }
 
   .submit-button { height: 48px; }
+}
+
+.consent-section {
+  padding-top: 1rem;
+  margin-top: 0.5rem;
+
+  mat-divider {
+    margin-bottom: 1rem;
+  }
+}
+
+.consent-heading {
+  font-size: 0.875rem;
+  color: var(--mat-app-on-surface-variant, #aaa);
+  margin: 0 0 0.75rem;
+}
+
+.consent-checkbox {
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.5;
+
+  a {
+    color: #2BB88A;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.required-asterisk {
+  color: var(--mat-warn-default, #f44336);
+  margin-left: 2px;
 }

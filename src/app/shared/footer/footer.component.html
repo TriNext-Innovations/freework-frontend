@@ -1,0 +1,15 @@
+<footer class="app-footer">
+  <div class="footer-content">
+    <nav class="footer-links" aria-label="Legal links">
+      <a routerLink="/legal/privacy-policy">Privacy Policy</a>
+      <a routerLink="/legal/cookie-policy">Cookie Policy</a>
+      <a routerLink="/legal/freelancer-terms">Freelancer Terms</a>
+      <a routerLink="/legal/business-terms">Business Terms</a>
+      <a routerLink="/legal/popia-request">POPIA Request</a>
+      <button class="footer-link-btn" (click)="openCookieSettings()">Cookie Settings</button>
+    </nav>
+    <p class="footer-legal">
+      &copy; {{ currentYear }} Freework (Pty) Ltd. All rights reserved. Registered in South Africa. Payments powered by PayFast.
+    </p>
+  </div>
+</footer>

@@ -7,7 +7,6 @@
       "Bash(gh issue:*)",
       "Bash(cd:*)",
       "Bash(find:*)"
-      "Bash(npx ng:*)"
     ]
   }
 }

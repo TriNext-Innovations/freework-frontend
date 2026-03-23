@@ -22,6 +22,11 @@ export class SubscriptionService {
     return this.subscriptionSubject.value;
   }
 
+  get isProMember(): boolean {
+    const sub = this.subscriptionSubject.value;
+    return !!sub && sub.status === 'ACTIVE' && (sub.plan === 'GROWTH' || sub.plan === 'SCALE');
+  }
+
   loadSubscription(): Observable<Subscription | null> {
     return this.http.get<Subscription>('/api/subscription/current').pipe(
       tap(sub => this.subscriptionSubject.next(sub)),

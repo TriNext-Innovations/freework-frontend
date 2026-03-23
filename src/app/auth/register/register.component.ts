@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../auth.service';
 import { RegisterRequest } from '../models';
 
@@ -27,7 +28,8 @@ import { RegisterRequest } from '../models';
     MatIconModule,
     MatProgressSpinnerModule,
     MatSnackBarModule,
-    MatRadioModule
+    MatRadioModule,
+    MatCheckboxModule
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'
@@ -59,7 +61,9 @@ export class RegisterComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]],
-      role: ['FREELANCER', [Validators.required]]
+      role: ['FREELANCER', [Validators.required]],
+      acceptTerms: [false, [Validators.requiredTrue]],
+      marketingEmails: [false]
     }, {
       validators: this.passwordMatchValidator
     });

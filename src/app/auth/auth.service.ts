@@ -80,11 +80,6 @@ export class AuthService {
     return this.currentUserSubject.value;
   }
 
-  public updateCurrentUser(user: User): void {
-    this.currentUserSubject.next(user);
-    localStorage.setItem('freework_user', JSON.stringify(user));
-  }
-
   public get isAuthenticated(): boolean {
     const token = this.getAccessToken();
     return !!token && !this.isTokenExpired(token);

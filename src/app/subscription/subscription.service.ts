@@ -27,6 +27,16 @@ export class SubscriptionService {
     return !!sub && sub.status === 'ACTIVE' && (sub.plan === 'GROWTH' || sub.plan === 'SCALE');
   }
 
+  activeJobsCount = 0;
+
+  get atJobLimit(): boolean {
+    return !this.isProMember && this.activeJobsCount >= 1;
+  }
+
+  get atApplicationLimit(): boolean {
+    return false;
+  }
+
   loadSubscription(): Observable<Subscription | null> {
     return this.http.get<Subscription>('/api/subscription/current').pipe(
       tap(sub => this.subscriptionSubject.next(sub)),

@@ -20,6 +20,7 @@ export class AuthService {
   public currentUser$: Observable<User | null>;
 
   private refreshTokenTimeout?: number;
+  private authChannel = new BroadcastChannel('freework_auth');
 
   // Mock users for testing
   private mockUsers: User[] = [
@@ -63,6 +64,16 @@ export class AuthService {
         }
       });
     }
+
+    // Sync auth state across tabs (e.g. email verification opens a new tab)
+    this.authChannel.onmessage = (event) => {
+      if (event.data?.type === 'LOGIN') {
+        this.currentUserSubject.next(event.data.user);
+        this.router.navigate([event.data.redirectTo ?? '/jobs']);
+      } else if (event.data?.type === 'LOGOUT') {
+        this.currentUserSubject.next(null);
+      }
+    };
   }
 
   public get currentUserValue(): User | null {
@@ -175,14 +186,38 @@ export class AuthService {
   }
 
   /**
-   * Register new user
+   * Register new user — backend sends verification email; no auto-login here.
    */
-  register(userData: RegisterRequest): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/register`, userData)
+  register(userData: RegisterRequest): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/register`, userData)
       .pipe(
-        tap(response => this.handleAuthResponse(response)),
         catchError(error => {
           console.error('Registration error:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Verify email address via token from verification email.
+   * On success the backend returns a JWT so we auto-login the user.
+   */
+  verifyEmail(token: string): Observable<AuthResponse> {
+    return this.http.get<any>(`${this.API_URL}/verify`, { params: { token } })
+      .pipe(
+        tap(response => {
+          const authResponse: AuthResponse = {
+            accessToken: response.accessToken || response.token,
+            refreshToken: response.refreshToken || response.refresh_token || '',
+            tokenType: response.tokenType || 'Bearer',
+            expiresIn: response.expiresIn || response.expires_in || 3600,
+            user: response.user || response.userDetails ||
+              this.extractUserFromToken(response.accessToken || response.token)
+          };
+          this.handleAuthResponse(authResponse);
+        }),
+        catchError(error => {
+          console.error('Email verification error:', error);
           return throwError(() => error);
         })
       );
@@ -228,6 +263,7 @@ export class AuthService {
     this.clearTokens();
     this.currentUserSubject.next(null);
     this.stopRefreshTokenTimer();
+    try { this.authChannel.postMessage({ type: 'LOGOUT' }); } catch { /* ignore */ }
     this.router.navigate(['/login']);
   }
 
@@ -400,7 +436,13 @@ export class AuthService {
     this.storeUser(normalizedUser);
     this.startRefreshTokenTimer();
 
-    if (!this.useMockData && !normalizedUser.avatar) {
+    // Notify other open tabs so they pick up the new auth state
+    try {
+      const redirectTo = normalizedUser.profileCompleted === false ? '/profile/setup' : '/jobs';
+      this.authChannel.postMessage({ type: 'LOGIN', user: normalizedUser, redirectTo });
+    } catch { /* BroadcastChannel unavailable */ }
+
+    if (!this.useMockData) {
       this.fetchUserProfile().subscribe({
         error: (error) => {
           console.error('❌ Error fetching profile for avatar:', error);
@@ -583,6 +625,14 @@ export class AuthService {
       window.clearTimeout(this.refreshTokenTimeout);
       this.refreshTokenTimeout = undefined;
     }
+  }
+
+  /**
+   * Update the current user in state and storage
+   */
+  updateCurrentUser(user: User): void {
+    this.currentUserSubject.next(user);
+    this.storeUser(user);
   }
 
   /**

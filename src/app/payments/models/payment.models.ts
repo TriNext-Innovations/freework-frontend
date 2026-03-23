@@ -10,10 +10,9 @@ export enum PaymentStatus {
 }
 
 export enum PaymentMethod {
-  STRIPE = 'STRIPE',
-  PAYPAL = 'PAYPAL',
-  CREDIT_CARD = 'CREDIT_CARD',
-  DEBIT_CARD = 'DEBIT_CARD'
+  CARD = 'CARD',
+  EFT = 'EFT',
+  INSTANT_EFT = 'INSTANT_EFT'
 }
 
 export enum PaymentType {
@@ -37,8 +36,6 @@ export interface Payment {
   paymentMethod: PaymentMethod;
   paymentType: PaymentType;
   transactionId?: string;
-  stripePaymentIntentId?: string;
-  paypalOrderId?: string;
   escrowedAt?: Date;
   releasedAt?: Date;
   description?: string;
@@ -47,12 +44,9 @@ export interface Payment {
   updatedAt: Date;
 }
 
-export interface PaymentIntent {
-  id: string;
-  amount: number;
-  currency: string;
-  clientSecret: string;
-  status: string;
+export interface PaymentCheckoutResponse {
+  checkoutUrl: string;
+  paymentId: string;
 }
 
 export interface CreatePaymentRequest {
@@ -82,16 +76,6 @@ export interface PaymentStatusUpdate {
   transactionId?: string;
   message?: string;
   updatedAt: Date;
-}
-
-export interface StripeConfig {
-  publishableKey: string;
-  apiVersion: string;
-}
-
-export interface PayPalConfig {
-  clientId: string;
-  environment: 'sandbox' | 'production';
 }
 
 export interface Milestone {

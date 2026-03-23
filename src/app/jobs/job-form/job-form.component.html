@@ -1,5 +1,25 @@
 <div class="job-form-container">
-  <mat-card class="job-form-card">
+
+  <!-- Job Limit Reached Banner -->
+  <mat-card *ngIf="atJobLimit && !isEditMode" class="limit-banner">
+    <mat-card-content>
+      <div class="limit-banner-inner">
+        <div class="limit-info">
+          <mat-icon>lock</mat-icon>
+          <div>
+            <strong>Active job limit reached</strong>
+            <p>You already have {{ subscriptionService.activeJobsCount }} active job post on the free plan. Upgrade to PRO to post unlimited jobs simultaneously — and keep 100% of what you earn, always.</p>
+          </div>
+        </div>
+        <a mat-raised-button routerLink="/settings/billing" class="limit-upgrade-btn">
+          <mat-icon>rocket_launch</mat-icon>
+          Upgrade to PRO
+        </a>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="job-form-card" [class.form-card--disabled]="atJobLimit && !isEditMode">
     <mat-card-header>
       <mat-card-title>
         <mat-icon>{{ isEditMode ? 'edit' : 'add_circle' }}</mat-icon>

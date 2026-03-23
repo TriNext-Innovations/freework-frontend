@@ -11,11 +11,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatChipsModule } from '@angular/material/chips';
+import { Router } from '@angular/router';
 import { PaymentService } from '../payment.service';
 import { Payment, PaymentMethod, PaymentType, Milestone } from '../models/payment.models';
-import { StripePaymentComponent } from '../stripe-payment/stripe-payment.component';
 
 @Component({
   selector: 'app-payment-escrow',
@@ -33,7 +32,6 @@ import { StripePaymentComponent } from '../stripe-payment/stripe-payment.compone
     MatProgressSpinnerModule,
     MatSnackBarModule,
     MatDividerModule,
-    MatDialogModule,
     MatChipsModule
   ],
   templateUrl: './payment-escrow.component.html',
@@ -51,8 +49,8 @@ export class PaymentEscrowComponent implements OnInit {
 
   // Payment form
   amount = 0;
-  currency = 'USD';
-  paymentMethod = PaymentMethod.STRIPE;
+  currency = 'ZAR';
+  paymentMethod = PaymentMethod.CARD;
   paymentType = PaymentType.JOB_ESCROW;
   description = '';
 
@@ -69,7 +67,7 @@ export class PaymentEscrowComponent implements OnInit {
   constructor(
     private paymentService: PaymentService,
     private snackBar: MatSnackBar,
-    private dialog: MatDialog
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -115,32 +113,8 @@ export class PaymentEscrowComponent implements OnInit {
       this.showError('Please enter a valid amount');
       return;
     }
-
-    if (this.paymentMethod === PaymentMethod.STRIPE) {
-      this.openStripePaymentDialog();
-    } else {
-      this.processEscrowPayment();
-    }
-  }
-
-  openStripePaymentDialog(): void {
-    const dialogRef = this.dialog.open(StripePaymentComponent, {
-      width: '600px',
-      data: {
-        amount: this.amount,
-        currency: this.currency,
-        jobId: this.jobId,
-        jobTitle: this.jobTitle,
-        paymentType: this.paymentType
-      }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result.success) {
-        this.showSuccess('Payment successful! Funds are now in escrow.');
-        this.loadPayments();
-      }
-    });
+    // Navigate to the checkout page — backend redirects to payment provider
+    this.router.navigate(['/payments/create', this.jobId]);
   }
 
   processEscrowPayment(): void {

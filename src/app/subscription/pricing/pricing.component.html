@@ -1,0 +1,171 @@
+<div class="pricing-page">
+
+  <!-- Hero -->
+  <div class="pricing-hero">
+    <h1>Simple, honest pricing</h1>
+    <p class="hero-sub">
+      Unlike Upwork or Fiverr — Freework <strong>never takes a cut</strong> of your earnings.
+      PRO just unlocks the full platform.
+    </p>
+    <div class="commission-badge">
+      <mat-icon>savings</mat-icon>
+      0% commission on every plan, forever
+    </div>
+  </div>
+
+  <!-- Plan Cards -->
+  <div class="plans-grid container">
+
+    <!-- FREE -->
+    <mat-card class="plan-card plan-card--free">
+      <div class="plan-badge current-badge" *ngIf="currentUser && !isPro">Your plan</div>
+      <mat-card-header>
+        <mat-icon mat-card-avatar>person</mat-icon>
+        <mat-card-title>Free</mat-card-title>
+        <mat-card-subtitle>Get started, no risk</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="plan-price">
+          <span class="price-amount">R0</span>
+          <span class="price-period">/ month</span>
+        </div>
+
+        <ul class="feature-list">
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            0% commission — always
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            Full messaging &amp; chat
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            Secure escrow payments
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            Browse all job listings
+          </li>
+          <!-- Role-aware limits -->
+          <ng-container *ngIf="isFreelancer || !currentUser">
+            <li class="feature-item feature-item--limit">
+              <mat-icon>remove_circle_outline</mat-icon>
+              {{ FREE_APPLICATION_LIMIT }} applications per month
+            </li>
+          </ng-container>
+          <ng-container *ngIf="isCustomer || !currentUser">
+            <li class="feature-item feature-item--limit">
+              <mat-icon>remove_circle_outline</mat-icon>
+              {{ FREE_JOB_LIMIT }} active job post
+            </li>
+          </ng-container>
+          <ng-container *ngIf="!currentUser">
+            <li class="feature-item feature-item--limit">
+              <mat-icon>remove_circle_outline</mat-icon>
+              No PRO badge
+            </li>
+          </ng-container>
+        </ul>
+      </mat-card-content>
+      <mat-card-actions>
+        <a mat-stroked-button routerLink="/jobs" class="plan-cta">
+          Get Started
+        </a>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- PRO -->
+    <mat-card class="plan-card plan-card--pro">
+      <div class="plan-badge pro-ribbon">PRO</div>
+      <div class="plan-badge current-badge current-badge--pro" *ngIf="isPro">Your plan</div>
+      <mat-card-header>
+        <mat-icon mat-card-avatar>workspace_premium</mat-icon>
+        <mat-card-title>PRO</mat-card-title>
+        <mat-card-subtitle>For serious freelancers &amp; clients</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="plan-price">
+          <span class="price-amount">R199</span>
+          <span class="price-period">/ month</span>
+        </div>
+
+        <ul class="feature-list">
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            0% commission — always
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            Full messaging &amp; chat
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            Secure escrow payments
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            Browse all job listings
+          </li>
+          <ng-container *ngIf="isFreelancer || !currentUser">
+            <li class="feature-item feature-item--check">
+              <mat-icon>check_circle</mat-icon>
+              Unlimited applications
+            </li>
+          </ng-container>
+          <ng-container *ngIf="isCustomer || !currentUser">
+            <li class="feature-item feature-item--check">
+              <mat-icon>check_circle</mat-icon>
+              Unlimited active job posts
+            </li>
+          </ng-container>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            PRO badge on your profile
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>
+            Priority in search results
+          </li>
+        </ul>
+      </mat-card-content>
+      <mat-card-actions>
+        <button
+          *ngIf="!isPro"
+          mat-raised-button
+          class="plan-cta plan-cta--pro"
+          (click)="upgradeToProo()"
+          [disabled]="checkingOut">
+          <mat-spinner diameter="18" *ngIf="checkingOut"></mat-spinner>
+          <mat-icon *ngIf="!checkingOut">rocket_launch</mat-icon>
+          {{ checkingOut ? 'Starting checkout...' : 'Upgrade to PRO' }}
+        </button>
+        <div *ngIf="isPro" class="current-plan-note">
+          <mat-icon>check_circle</mat-icon>
+          You're already on PRO
+        </div>
+      </mat-card-actions>
+    </mat-card>
+
+  </div>
+
+  <!-- Commission callout -->
+  <div class="callout-section container">
+    <mat-card class="commission-callout">
+      <mat-card-content>
+        <div class="callout-inner">
+          <mat-icon class="callout-icon">savings</mat-icon>
+          <div>
+            <h3>What you earn is yours. Period.</h3>
+            <p>
+              Upwork takes up to <strong>20%</strong>. Fiverr takes <strong>20%</strong>.
+              Freework takes <strong>0%</strong> — on every plan, forever.
+              PRO just removes the limits so you can work more.
+            </p>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+</div>

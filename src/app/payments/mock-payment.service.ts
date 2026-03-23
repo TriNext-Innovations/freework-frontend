@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { Observable, of, delay } from 'rxjs';
 import {
   Payment,
-  PaymentIntent,
   CreatePaymentRequest,
   ReleasePaymentRequest,
   RefundPaymentRequest,
@@ -26,12 +25,11 @@ export class MockPaymentService {
       freelancerId: 'freelancer1',
       freelancerName: 'Emily Chen',
       amount: 5000.00,
-      currency: 'USD',
+      currency: 'ZAR',
       status: PaymentStatus.ESCROWED,
-      paymentMethod: PaymentMethod.STRIPE,
+      paymentMethod: PaymentMethod.CARD,
       paymentType: PaymentType.JOB_ESCROW,
       transactionId: 'txn_1234567890',
-      stripePaymentIntentId: 'pi_1234567890',
       escrowedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
       description: 'Full payment for e-commerce platform development',
       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5),
@@ -46,12 +44,11 @@ export class MockPaymentService {
       freelancerId: 'freelancer2',
       freelancerName: 'Sarah Miller',
       amount: 3000.00,
-      currency: 'USD',
+      currency: 'ZAR',
       status: PaymentStatus.RELEASED,
-      paymentMethod: PaymentMethod.STRIPE,
+      paymentMethod: PaymentMethod.CARD,
       paymentType: PaymentType.MILESTONE,
       transactionId: 'txn_0987654321',
-      stripePaymentIntentId: 'pi_0987654321',
       escrowedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 15),
       releasedAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 2),
       description: 'Milestone 1: UI Design Completion',
@@ -67,11 +64,10 @@ export class MockPaymentService {
       freelancerId: 'freelancer3',
       freelancerName: 'Mike Johnson',
       amount: 2500.00,
-      currency: 'USD',
+      currency: 'ZAR',
       status: PaymentStatus.PENDING,
-      paymentMethod: PaymentMethod.PAYPAL,
+      paymentMethod: PaymentMethod.INSTANT_EFT,
       paymentType: PaymentType.JOB_ESCROW,
-      paypalOrderId: 'ORDER123456789',
       description: 'Full payment for SaaS dashboard design',
       createdAt: new Date(Date.now() - 1000 * 60 * 30),
       updatedAt: new Date(Date.now() - 1000 * 60 * 30)
@@ -94,7 +90,7 @@ export class MockPaymentService {
       id: 'mile2',
       jobId: '1',
       title: 'Frontend Development',
-      description: 'Complete frontend implementation with React',
+      description: 'Complete frontend implementation',
       amount: 2000.00,
       dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
       status: 'IN_PROGRESS',
@@ -109,16 +105,6 @@ export class MockPaymentService {
       dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 21),
       status: 'PENDING',
       createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10)
-    },
-    {
-      id: 'mile4',
-      jobId: '1',
-      title: 'Testing & Deployment',
-      description: 'QA testing and production deployment',
-      amount: 500.00,
-      dueDate: new Date(Date.now() + 1000 * 60 * 60 * 24 * 28),
-      status: 'PENDING',
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10)
     }
   ];
 
@@ -128,26 +114,12 @@ export class MockPaymentService {
 
   getPayment(paymentId: string): Observable<Payment> {
     const payment = this.mockPayments.find(p => p.id === paymentId);
-    if (!payment) {
-      throw new Error('Payment not found');
-    }
+    if (!payment) throw new Error('Payment not found');
     return of(payment).pipe(delay(300));
   }
 
   getJobPayments(jobId: string): Observable<Payment[]> {
-    const payments = this.mockPayments.filter(p => p.jobId === jobId);
-    return of(payments).pipe(delay(400));
-  }
-
-  createPaymentIntent(request: CreatePaymentRequest): Observable<PaymentIntent> {
-    const intent: PaymentIntent = {
-      id: 'pi_' + Math.random().toString(36).substr(2, 9),
-      amount: request.amount,
-      currency: request.currency,
-      clientSecret: 'secret_' + Math.random().toString(36).substr(2, 20),
-      status: 'requires_payment_method'
-    };
-    return of(intent).pipe(delay(500));
+    return of(this.mockPayments.filter(p => p.jobId === jobId)).pipe(delay(400));
   }
 
   createEscrowPayment(request: CreatePaymentRequest): Observable<Payment> {
@@ -176,9 +148,7 @@ export class MockPaymentService {
 
   releasePayment(request: ReleasePaymentRequest): Observable<Payment> {
     const payment = this.mockPayments.find(p => p.id === request.paymentId);
-    if (!payment) {
-      throw new Error('Payment not found');
-    }
+    if (!payment) throw new Error('Payment not found');
     payment.status = PaymentStatus.RELEASED;
     payment.releasedAt = new Date();
     payment.updatedAt = new Date();
@@ -187,28 +157,14 @@ export class MockPaymentService {
 
   refundPayment(request: RefundPaymentRequest): Observable<Payment> {
     const payment = this.mockPayments.find(p => p.id === request.paymentId);
-    if (!payment) {
-      throw new Error('Payment not found');
-    }
+    if (!payment) throw new Error('Payment not found');
     payment.status = PaymentStatus.REFUNDED;
     payment.updatedAt = new Date();
     return of(payment).pipe(delay(700));
   }
 
-  confirmPayment(paymentId: string, paymentIntentId: string): Observable<Payment> {
-    const payment = this.mockPayments.find(p => p.id === paymentId);
-    if (!payment) {
-      throw new Error('Payment not found');
-    }
-    payment.status = PaymentStatus.COMPLETED;
-    payment.stripePaymentIntentId = paymentIntentId;
-    payment.updatedAt = new Date();
-    return of(payment).pipe(delay(500));
-  }
-
   getMilestones(jobId: string): Observable<Milestone[]> {
-    const milestones = this.mockMilestones.filter(m => m.jobId === jobId);
-    return of(milestones).pipe(delay(400));
+    return of(this.mockMilestones.filter(m => m.jobId === jobId)).pipe(delay(400));
   }
 
   createMilestone(milestone: Partial<Milestone>): Observable<Milestone> {

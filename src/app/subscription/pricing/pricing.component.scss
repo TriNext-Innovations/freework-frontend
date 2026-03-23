@@ -1,0 +1,195 @@
+.pricing-page {
+  padding-bottom: 64px;
+}
+
+// Hero
+.pricing-hero {
+  text-align: center;
+  padding: 56px 24px 40px;
+
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    margin: 0 0 12px;
+  }
+
+  .hero-sub {
+    font-size: 16px;
+    color: var(--mat-sys-on-surface-variant, #555);
+    max-width: 520px;
+    margin: 0 auto 20px;
+    line-height: 1.6;
+  }
+
+  .commission-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 18px;
+    border-radius: 24px;
+    background: var(--mat-sys-primary-container, #e8def8);
+    color: var(--mat-sys-on-primary-container, #21005d);
+    font-weight: 600;
+    font-size: 14px;
+
+    mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  }
+}
+
+// Plans Grid
+.plans-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 0 24px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.plan-card {
+  position: relative;
+  border-radius: 16px !important;
+  overflow: visible;
+
+  mat-card-header { padding-bottom: 0; }
+
+  mat-card-content { padding-top: 16px; }
+
+  mat-card-actions {
+    padding: 8px 16px 20px;
+    display: flex;
+    justify-content: center;
+  }
+
+  &.plan-card--pro {
+    border: 2px solid var(--mat-sys-primary, #6750a4);
+    box-shadow: 0 8px 32px rgba(103, 80, 164, 0.15);
+  }
+}
+
+// Badges
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  right: 16px;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.pro-ribbon {
+  background: var(--mat-sys-primary, #6750a4);
+  color: #fff;
+}
+
+.current-badge {
+  background: var(--mat-sys-secondary-container, #e8def8);
+  color: var(--mat-sys-on-secondary-container, #1d192b);
+  left: 16px;
+  right: auto;
+
+  &.current-badge--pro {
+    background: var(--mat-sys-primary, #6750a4);
+    color: #fff;
+    right: 16px;
+    left: auto;
+  }
+}
+
+// Price display
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin: 8px 0 20px;
+
+  .price-amount {
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--mat-sys-on-surface, #1c1b1f);
+  }
+
+  .price-period {
+    font-size: 14px;
+    color: var(--mat-sys-on-surface-variant, #49454f);
+  }
+}
+
+// Feature list
+.feature-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.feature-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; }
+
+  &.feature-item--check mat-icon { color: #22c55e; }
+  &.feature-item--limit { color: var(--mat-sys-on-surface-variant, #666); }
+  &.feature-item--limit mat-icon { color: var(--mat-sys-on-surface-variant, #999); }
+}
+
+// CTAs
+.plan-cta {
+  width: 100%;
+
+  &.plan-cta--pro {
+    background: var(--mat-sys-primary, #6750a4);
+    color: #fff;
+  }
+}
+
+.current-plan-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #22c55e;
+  font-weight: 600;
+  font-size: 14px;
+
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+// Commission callout
+.callout-section {
+  max-width: 760px;
+  margin: 32px auto 0;
+  padding: 0 24px;
+}
+
+.commission-callout {
+  border-radius: 16px !important;
+}
+
+.callout-inner {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+
+  .callout-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+    color: var(--mat-sys-primary, #6750a4);
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  h3 { margin: 0 0 8px; font-size: 18px; }
+  p { margin: 0; color: var(--mat-sys-on-surface-variant, #555); line-height: 1.6; }
+}

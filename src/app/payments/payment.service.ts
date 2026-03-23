@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import {
   Payment,
-  PaymentIntent,
+  PaymentCheckoutResponse,
   CreatePaymentRequest,
   ReleasePaymentRequest,
   RefundPaymentRequest,
@@ -59,13 +59,10 @@ export class PaymentService {
   }
 
   /**
-   * Create a payment intent for Stripe
+   * Initiate a checkout session — backend returns a redirect URL
    */
-  createPaymentIntent(request: CreatePaymentRequest): Observable<PaymentIntent> {
-    if (this.useMockData) {
-      return this.mockPaymentService.createPaymentIntent(request);
-    }
-    return this.http.post<PaymentIntent>(`${this.apiUrl}/intent`, request);
+  createCheckout(request: CreatePaymentRequest): Observable<PaymentCheckoutResponse> {
+    return this.http.post<PaymentCheckoutResponse>(`${this.apiUrl}/checkout`, request);
   }
 
   /**
@@ -98,15 +95,6 @@ export class PaymentService {
     return this.http.post<Payment>(`${this.apiUrl}/refund`, request);
   }
 
-  /**
-   * Confirm payment with Stripe
-   */
-  confirmPayment(paymentId: string, paymentIntentId: string): Observable<Payment> {
-    if (this.useMockData) {
-      return this.mockPaymentService.confirmPayment(paymentId, paymentIntentId);
-    }
-    return this.http.post<Payment>(`${this.apiUrl}/${paymentId}/confirm`, { paymentIntentId });
-  }
 
   /**
    * Get milestones for a job
@@ -135,10 +123,4 @@ export class PaymentService {
     this.paymentStatusSubject.next(status);
   }
 
-  /**
-   * Get Stripe publishable key
-   */
-  getStripePublishableKey(): string {
-    return 'pk_test_51234567890abcdef'; // Replace with your actual Stripe publishable key
-  }
 }

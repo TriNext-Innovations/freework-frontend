@@ -9,7 +9,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
-import { RouterLink } from '@angular/router';
 import { LegalService, PopiaRequestResponse } from '../legal.service';
 
 @Component({
@@ -18,7 +17,6 @@ import { LegalService, PopiaRequestResponse } from '../legal.service';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    RouterLink,
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,

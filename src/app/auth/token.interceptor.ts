@@ -37,7 +37,7 @@ export const tokenInterceptor: HttpInterceptorFn = (req, next) => {
   return next(req).pipe(
     catchError((error: HttpErrorResponse) => {
       // Handle 401 Unauthorized errors
-      if (error.status === 401 && !req.url.includes('/auth/refresh')) {
+      if (error.status === 401 && !req.url.includes('/auth/refresh') && !!token) {
         // Try to refresh the token
         return authService.refreshToken().pipe(
           switchMap(() => {

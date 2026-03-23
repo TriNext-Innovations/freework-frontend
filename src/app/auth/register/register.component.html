@@ -155,7 +155,7 @@
         <!-- Checkboxes -->
         <div class="checkbox-section">
           <mat-checkbox formControlName="acceptTerms" class="terms-checkbox">
-            I agree to the <a routerLink="/legal/terms" target="_blank">Terms of Service</a> and <a routerLink="/legal/privacy" target="_blank">Privacy Policy</a>
+            I agree to the <a routerLink="/legal/freelancer-terms" target="_blank">Terms of Service</a> and <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a>
           </mat-checkbox>
           <mat-error *ngIf="f['acceptTerms'].hasError('required') && f['acceptTerms'].touched" class="checkbox-error">
             You must accept the terms to continue
@@ -172,7 +172,7 @@
           color="primary"
           type="submit"
           class="full-width submit-btn"
-          [disabled]="loading">
+          [disabled]="loading || !f['acceptTerms'].value">
           <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
           <span *ngIf="!loading">Create Account</span>
         </button>

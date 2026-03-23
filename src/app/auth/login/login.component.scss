@@ -184,7 +184,7 @@ mat-form-field {
   pointer-events: none;
 
   &.visible {
-    max-height: 100px;
+    max-height: fit-content;
     opacity: 1;
     pointer-events: auto;
     padding-top: 4px; // room for the floating label to rise above the field border

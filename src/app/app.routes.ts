@@ -15,8 +15,8 @@ export const routes: Routes = [
   },
   {
     path: 'register',
-    loadComponent: () => import('./auth/register/register.component').then(m => m.RegisterComponent),
-    canActivate: [guestGuard]
+    redirectTo: '/login',
+    pathMatch: 'full'
   },
   {
     path: 'verify',

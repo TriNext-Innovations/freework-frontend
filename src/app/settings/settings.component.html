@@ -4,11 +4,7 @@
     Settings
   </h1>
 
-  <!-- Account Settings -->
   <mat-card>
-    <mat-card-header>
-      <mat-card-title>Account</mat-card-title>
-    </mat-card-header>
     <mat-card-content>
       <mat-nav-list>
         <a mat-list-item routerLink="/profile/edit">
@@ -22,82 +18,7 @@
           <span matListItemTitle>View Profile</span>
           <span matListItemLine>See how your profile looks to others</span>
         </a>
-        <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/settings/billing">
-          <mat-icon matListItemIcon>workspace_premium</mat-icon>
-          <span matListItemTitle>Plan &amp; Billing</span>
-          <span matListItemLine>Manage your subscription and usage</span>
-        </a>
       </mat-nav-list>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Notifications & Privacy -->
-  <mat-card class="privacy-card">
-    <mat-card-header>
-      <mat-card-title>Notifications &amp; Privacy</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="toggle-row">
-        <div class="toggle-info">
-          <strong>Marketing emails</strong>
-          <p>Receive product updates, tips, and promotional communications from Freework.</p>
-        </div>
-        <mat-slide-toggle
-          [checked]="marketingConsented"
-          [disabled]="marketingLoading"
-          (change)="onMarketingToggle($event.checked)"
-          color="primary"
-          aria-label="Marketing email preference">
-        </mat-slide-toggle>
-      </div>
-
-      <mat-divider></mat-divider>
-
-      <mat-nav-list>
-        <a mat-list-item routerLink="/legal/popia-request">
-          <mat-icon matListItemIcon>security</mat-icon>
-          <span matListItemTitle>POPIA Data Request</span>
-          <span matListItemLine>Access, correct, or delete your personal information</span>
-        </a>
-        <mat-divider></mat-divider>
-        <a mat-list-item routerLink="/legal/privacy-policy">
-          <mat-icon matListItemIcon>description</mat-icon>
-          <span matListItemTitle>Privacy Policy</span>
-          <span matListItemLine>Read how we handle your data</span>
-        </a>
-      </mat-nav-list>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Danger Zone -->
-  <mat-card class="danger-zone-card">
-    <mat-card-header>
-      <mat-card-title class="danger-title">
-        <mat-icon>warning</mat-icon>
-        Danger Zone
-      </mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="danger-row">
-        <div class="danger-info">
-          <strong>Delete My Account</strong>
-          <p>Permanently delete your account and anonymise your personal data. This action cannot be undone.</p>
-          <p *ngIf="blockingReason" class="blocking-reason">
-            <mat-icon>block</mat-icon>
-            {{ blockingReason }}
-          </p>
-        </div>
-        <button
-          mat-stroked-button
-          class="delete-account-btn"
-          [disabled]="!canDelete"
-          (click)="openDeleteDialog()"
-          aria-label="Delete my account">
-          <mat-icon>delete_forever</mat-icon>
-          Delete Account
-        </button>
-      </div>
     </mat-card-content>
   </mat-card>
 </div>

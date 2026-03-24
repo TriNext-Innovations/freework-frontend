@@ -16,7 +16,7 @@ import { buildApiEndpointUrl } from '../api.config';
 })
 export class ReviewService {
   private apiUrl = buildApiEndpointUrl('/reviews');
-  private useMockData = false; // Toggle this to switch between mock and real API
+  private useMockData = true; // Toggle this to switch between mock and real API
 
   constructor(
     private http: HttpClient,

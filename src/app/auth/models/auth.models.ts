@@ -37,6 +37,7 @@ export interface User {
   avatar?: string;
   profileCompleted?: boolean;
   createdAt: string;
+  profileCompleted?: boolean;
 }
 
 export interface RefreshTokenRequest {

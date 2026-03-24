@@ -8,39 +8,18 @@ import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-payment-result',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterLink],
-  template: `
-    <div class="result-container">
-      <mat-card class="result-card">
-        <mat-card-content>
-          <ng-container *ngIf="success">
-            <mat-icon class="success-icon">check_circle</mat-icon>
-            <h2>Payment Successful</h2>
-            <p>Your payment has been processed successfully.</p>
-          </ng-container>
-          <ng-container *ngIf="!success">
-            <mat-icon class="error-icon">cancel</mat-icon>
-            <h2>Payment Cancelled</h2>
-            <p>Your payment was cancelled. No charges were made.</p>
-          </ng-container>
-          <a mat-raised-button color="primary" routerLink="/payments">View Payments</a>
-        </mat-card-content>
-      </mat-card>
-    </div>
-  `,
-  styles: [`
-    .result-container { display: flex; justify-content: center; align-items: center; min-height: 60vh; }
-    .result-card { text-align: center; padding: 2rem; max-width: 400px; }
-    .success-icon { font-size: 4rem; width: 4rem; height: 4rem; color: #2BB88A; }
-    .error-icon { font-size: 4rem; width: 4rem; height: 4rem; color: #f44336; }
-  `]
+  imports: [CommonModule, RouterLink, MatCardModule, MatButtonModule, MatIconModule],
+  templateUrl: './payment-result.component.html',
+  styleUrl: './payment-result.component.scss'
 })
 export class PaymentResultComponent implements OnInit {
   success = false;
+  paymentId: string | null = null;
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.success = this.route.snapshot.data['success'] ?? false;
+    this.success = this.route.snapshot.data['success'] === true;
+    this.paymentId = this.route.snapshot.queryParamMap.get('paymentId');
   }
 }

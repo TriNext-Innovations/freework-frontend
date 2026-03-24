@@ -2,52 +2,98 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-
-export interface Subscription {
-  plan: 'FREE' | 'GROWTH' | 'SCALE';
-  status: 'ACTIVE' | 'CANCELLED' | 'EXPIRED';
-  currentPeriodEnd?: string;
-}
+import { buildApiEndpointUrl } from '../api.config';
+import {
+  SubscriptionInfo,
+  CheckoutResponse,
+  PaymentProvider,
+  FREE_TIER_APPLICATION_LIMIT,
+  FREE_TIER_JOB_LIMIT
+} from './subscription.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubscriptionService {
-  private subscriptionSubject = new BehaviorSubject<Subscription | null>(null);
+  private readonly API_URL = buildApiEndpointUrl('/subscriptions');
+
+  private subscriptionSubject = new BehaviorSubject<SubscriptionInfo | null>(null);
   public subscription$ = this.subscriptionSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  get currentSubscription(): Subscription | null {
+  get subscriptionValue(): SubscriptionInfo | null {
     return this.subscriptionSubject.value;
   }
 
   get isProMember(): boolean {
-    const sub = this.subscriptionSubject.value;
-    return !!sub && sub.status === 'ACTIVE' && (sub.plan === 'GROWTH' || sub.plan === 'SCALE');
+    return this.subscriptionSubject.value?.proMember === true;
   }
 
-  activeJobsCount = 0;
+  get applicationsThisMonth(): number {
+    return this.subscriptionSubject.value?.applicationsThisMonth ?? 0;
+  }
 
-  get atJobLimit(): boolean {
-    return !this.isProMember && this.activeJobsCount >= 1;
+  get activeJobsCount(): number {
+    return this.subscriptionSubject.value?.activeJobsCount ?? 0;
   }
 
   get atApplicationLimit(): boolean {
-    return false;
+    if (this.isProMember) return false;
+    return this.applicationsThisMonth >= FREE_TIER_APPLICATION_LIMIT;
   }
 
-  loadSubscription(): Observable<Subscription | null> {
-    return this.http.get<Subscription>('/api/subscription/current').pipe(
-      tap(sub => this.subscriptionSubject.next(sub)),
-      catchError(() => {
-        this.subscriptionSubject.next(null);
-        return of(null);
+  get atJobLimit(): boolean {
+    if (this.isProMember) return false;
+    return this.activeJobsCount >= FREE_TIER_JOB_LIMIT;
+  }
+
+  loadSubscription(): Observable<SubscriptionInfo> {
+    return this.http.get<SubscriptionInfo>(`${this.API_URL}/me`).pipe(
+      tap(info => this.subscriptionSubject.next(info)),
+      catchError(error => {
+        // On error (e.g. 404 for no sub), default to free
+        const defaultInfo: SubscriptionInfo = { plan: 'FREE', status: 'INACTIVE', proMember: false };
+        this.subscriptionSubject.next(defaultInfo);
+        return of(defaultInfo);
+      })
+    );
+  }
+
+  startCheckout(provider: PaymentProvider): Observable<CheckoutResponse> {
+    return this.http.post<CheckoutResponse>(`${this.API_URL}/checkout`, { provider });
+  }
+
+  cancelSubscription(): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}/cancel`, {}).pipe(
+      tap(() => {
+        const current = this.subscriptionSubject.value;
+        if (current) {
+          this.subscriptionSubject.next({ ...current, plan: 'FREE', proMember: false, status: 'CANCELLED' });
+        }
       })
     );
   }
 
   clearSubscription(): void {
     this.subscriptionSubject.next(null);
+  }
+
+  get applicationLimitDisplay(): string {
+    const used = this.applicationsThisMonth;
+    return `${used} / ${FREE_TIER_APPLICATION_LIMIT}`;
+  }
+
+  get jobLimitDisplay(): string {
+    const used = this.activeJobsCount;
+    return `${used} / ${FREE_TIER_JOB_LIMIT}`;
+  }
+
+  get applicationLimitPercent(): number {
+    return Math.min(100, (this.applicationsThisMonth / FREE_TIER_APPLICATION_LIMIT) * 100);
+  }
+
+  get jobLimitPercent(): number {
+    return Math.min(100, (this.activeJobsCount / FREE_TIER_JOB_LIMIT) * 100);
   }
 }

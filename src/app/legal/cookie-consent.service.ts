@@ -66,7 +66,8 @@ export class CookieConsentService {
   saveConsent(consent: CookieConsent): void {
     if (!isPlatformBrowser(this.platformId)) return;
     const encoded = encodeURIComponent(JSON.stringify(consent));
-    document.cookie = `${this.COOKIE_NAME}=${encoded}; max-age=${this.COOKIE_MAX_AGE}; path=/; SameSite=Strict`;
+    const secure = location.protocol === 'https:' ? '; Secure' : '';
+    document.cookie = `${this.COOKIE_NAME}=${encoded}; max-age=${this.COOKIE_MAX_AGE}; path=/; SameSite=Strict${secure}`;
     this.consentSubject.next(consent);
     this.bannerVisibleSubject.next(false);
     this.applyConsent(consent);

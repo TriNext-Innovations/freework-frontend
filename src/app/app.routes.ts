@@ -22,6 +22,10 @@ export const routes: Routes = [
     path: 'verify',
     loadComponent: () => import('./auth/email-verify/email-verify.component').then(m => m.EmailVerifyComponent)
   },
+  {
+    path: 'verify',
+    loadComponent: () => import('./auth/email-verify/email-verify.component').then(m => m.EmailVerifyComponent)
+  },
 
   // Job routes
   {

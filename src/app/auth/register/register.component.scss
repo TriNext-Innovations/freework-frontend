@@ -346,3 +346,40 @@ mat-form-field {
     height: 48px; // Larger touch target
   }
 }
+
+.consent-heading {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary, rgba(255,255,255,0.7));
+  margin: 12px 0 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.required-note {
+  font-weight: 400;
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+.consent-checkbox {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+
+  a {
+    color: var(--primary-color, #2BB88A);
+    text-decoration: underline;
+  }
+}
+
+.optional-checkbox {
+  margin-top: 4px;
+  opacity: 0.85;
+}
+
+.optional-label {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}

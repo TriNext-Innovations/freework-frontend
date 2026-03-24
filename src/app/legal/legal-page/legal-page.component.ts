@@ -1,12 +1,12 @@
 import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { FormsModule } from '@angular/forms';
-import { LEGAL_CONTENT, LegalDocument, LegalSection } from '../legal-content';
+import { LEGAL_CONTENT, LegalDocument } from '../legal-content';
 import { CookieConsentService } from '../cookie-consent.service';
 
 @Component({
@@ -32,11 +32,16 @@ export class LegalPageComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private cookieConsentService: CookieConsentService
   ) {}
 
   ngOnInit(): void {
     this.documentKey = this.route.snapshot.data['documentKey'] || '';
+    const langParam = this.route.snapshot.queryParamMap.get('lang');
+    if (langParam === 'af' || langParam === 'en') {
+      this.language = langParam;
+    }
     this.loadDocument();
   }
 
@@ -46,6 +51,12 @@ export class LegalPageComponent implements OnInit {
   }
 
   onLanguageChange(): void {
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: this.language === 'en' ? {} : { lang: this.language },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
     this.loadDocument();
   }
 

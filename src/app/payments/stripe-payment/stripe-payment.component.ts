@@ -67,7 +67,7 @@ export class StripePaymentComponent implements OnInit {
       paymentType: PaymentType.JOB_ESCROW,
       description: `Escrow payment for: ${this.job.title}`
     }).subscribe({
-      next: res => { window.location.href = res.checkoutUrl; },
+      next: res => { window.location.href = res.approvalUrl; },
       error: () => {
         this.redirecting = false;
         this.snackBar.open('Failed to start payment. Please try again.', 'Close', {

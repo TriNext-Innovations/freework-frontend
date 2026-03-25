@@ -61,7 +61,7 @@ export class SubscriptionService {
   }
 
   startCheckout(provider: PaymentProvider): Observable<CheckoutResponse> {
-    return this.http.post<CheckoutResponse>(`${this.API_URL}/checkout`, { provider });
+    return this.http.post<CheckoutResponse>(`${this.API_URL}/checkout?provider=${provider}`, {});
   }
 
   cancelSubscription(): Observable<void> {

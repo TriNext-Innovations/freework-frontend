@@ -2,108 +2,11 @@
   max-width: 700px;
   margin: 24px auto;
   padding: 0 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
 
   h1 {
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 0;
-  }
-}
-
-.privacy-card {
-  mat-card-content {
-    padding-top: 0.5rem;
-  }
-}
-
-.toggle-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.75rem 0;
-
-  .toggle-info {
-    strong {
-      display: block;
-      margin-bottom: 0.2rem;
-    }
-
-    p {
-      margin: 0;
-      font-size: 0.85rem;
-      color: var(--mat-app-on-surface-variant, #aaa);
-    }
-  }
-}
-
-.danger-zone-card {
-  border: 1px solid rgba(244, 67, 54, 0.3);
-
-  .danger-title {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: #f44336;
-
-    mat-icon {
-      color: #f44336;
-    }
-  }
-}
-
-.danger-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1rem;
-  flex-wrap: wrap;
-
-  .danger-info {
-    flex: 1;
-
-    strong {
-      display: block;
-      margin-bottom: 0.25rem;
-    }
-
-    p {
-      margin: 0.25rem 0 0;
-      font-size: 0.85rem;
-      color: var(--mat-app-on-surface-variant, #aaa);
-    }
-  }
-}
-
-.blocking-reason {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: #FF9800 !important;
-  font-size: 0.825rem !important;
-  margin-top: 0.5rem !important;
-
-  mat-icon {
-    font-size: 1rem;
-    height: 1rem;
-    width: 1rem;
-  }
-}
-
-.delete-account-btn {
-  border-color: rgba(244, 67, 54, 0.5) !important;
-  color: #f44336 !important;
-  white-space: nowrap;
-
-  mat-icon {
-    color: #f44336;
-  }
-
-  &:disabled {
-    opacity: 0.5;
+    margin-bottom: 24px;
   }
 }

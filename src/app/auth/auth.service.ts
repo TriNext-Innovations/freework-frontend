@@ -10,7 +10,7 @@ import { buildApiEndpointUrl, buildApiUrl } from '../api.config';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = buildApiUrl('/auth');
+  private readonly API_URL = buildApiEndpointUrl('/auth');
   private readonly PROFILE_API_URL = buildApiEndpointUrl('/profile');
   private readonly TOKEN_KEY = 'freework_access_token';
   private readonly REFRESH_TOKEN_KEY = 'freework_refresh_token';

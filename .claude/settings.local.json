@@ -9,6 +9,8 @@
       "Bash(find:*)",
       "Bash(git fetch:*)",
       "Bash(git stash:*)"
+      "Bash(git stash:*)",
+      "Bash(npx ng:*)"
     ]
   }
 }

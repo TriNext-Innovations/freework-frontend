@@ -28,7 +28,7 @@
   border-radius: var(--radius-xl) !important;
   border: 1px solid rgba(43, 184, 138, 0.20) !important;
   box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(43, 184, 138, 0.08) !important;
-  overflow: visible;
+  overflow: hidden;
   transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1) !important;
 
   &.is-register {
@@ -346,6 +346,27 @@ mat-form-field {
 }
 
 // ── Mock credentials helper ───────────────────────────────────────
+.mock-credentials {
+  padding: var(--spacing-md);
+  background: rgba(43, 184, 138, 0.06);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(43, 184, 138, 0.12);
+  margin-bottom: var(--spacing-md);
+
+  p {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.5);
+    line-height: 1.7;
+    margin: 0;
+
+    strong { color: rgba(255, 255, 255, 0.7); }
+
+    :host-context([data-theme="light"]) & {
+      color: var(--color-text-tertiary);
+      strong { color: var(--color-text-secondary); }
+    }
+  }
+}
 
 // ── Toggle link (register/sign-in switch) ─────────────────────────
 .toggle-link {

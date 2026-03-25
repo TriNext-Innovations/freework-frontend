@@ -45,8 +45,6 @@ export interface Payment {
 }
 
 export interface PaymentCheckoutResponse {
-  checkoutUrl: string;
-  paymentId: string;
   approvalUrl: string;
   paymentIntentId: string;
   status: string;

@@ -6,7 +6,6 @@
       "Read(//mnt/c/Users/rynobotes/WebstormProjects/**)",
       "Bash(gh issue:*)",
       "Bash(cd:*)",
-      "Bash(find:*)"
       "Bash(find:*)",
       "Bash(git fetch:*)",
       "Bash(git stash:*)"

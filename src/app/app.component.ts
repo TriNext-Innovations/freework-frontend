@@ -17,6 +17,8 @@ import { Observable } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { User } from './auth/models';
 import { environment } from '../environments/environment';
+import { CookieConsentBannerComponent } from './legal/cookie-consent-banner/cookie-consent-banner.component';
+import { FooterComponent } from './shared/footer/footer.component';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +34,9 @@ import { environment } from '../environments/environment';
     MatBadgeModule,
     MatDividerModule,
     MatSidenavModule,
-    MatListModule
+    MatListModule,
+    CookieConsentBannerComponent,
+    FooterComponent
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']

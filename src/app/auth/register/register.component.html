@@ -152,13 +152,67 @@
           </mat-radio-group>
         </div>
 
+        <!-- POPIA-compliant consent checkboxes — Freelancer -->
+        <div class="checkbox-section" *ngIf="isFreelancer">
+          <p class="consent-heading">Freelancer Terms &amp; Consents <span class="required-note">(all required)</span></p>
+
+          <mat-checkbox formControlName="freelancerTcsAccepted" class="consent-checkbox">
+            I have read and agree to the <a routerLink="/legal/freelancer-terms" target="_blank">Freelancer Terms and Conditions</a> — including the Independent Contractor clause confirming I am not an employee of Freework or any Client
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="freelancerPrivacyAccepted" class="consent-checkbox">
+            I have read and agree to the <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a> and consent to the collection and processing of my personal information as described therein
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="freelancerTaxAccepted" class="consent-checkbox">
+            I understand that I am solely responsible for my own tax obligations, including registering with SARS and declaring all income earned through Freework
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="freelancerAgeConfirmed" class="consent-checkbox">
+            I confirm that I am at least 18 years of age
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="marketingEmails" class="consent-checkbox optional-checkbox">
+            I agree to receive marketing communications from Freework. I understand I can unsubscribe at any time. <span class="optional-label">(Optional)</span>
+          </mat-checkbox>
+        </div>
+
+        <!-- POPIA-compliant consent checkboxes — Business/Customer -->
+        <div class="checkbox-section" *ngIf="!isFreelancer">
+          <p class="consent-heading">Business Terms &amp; Consents <span class="required-note">(all required)</span></p>
+
+          <mat-checkbox formControlName="businessTcsAccepted" class="consent-checkbox">
+            I have read and agree to the <a routerLink="/legal/business-terms" target="_blank">Business/Client Terms and Conditions</a> on behalf of my business
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="businessPrivacyAccepted" class="consent-checkbox">
+            I have read and agree to the <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a> and consent to the collection and processing of personal information as described therein
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="businessContractorAcknowledged" class="consent-checkbox">
+            I confirm that Freelancers engaged through Freework are independent contractors, not employees, and I will not treat them as employees
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="businessAuthorityConfirmed" class="consent-checkbox">
+            I confirm that I have the legal authority to bind my business to these Terms and Conditions
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="businessAgeConfirmed" class="consent-checkbox">
+            I confirm that I am at least 18 years of age
+          </mat-checkbox>
+
+          <mat-checkbox formControlName="marketingEmails" class="consent-checkbox optional-checkbox">
+            I agree to receive marketing communications from Freework. I understand I can unsubscribe at any time. <span class="optional-label">(Optional)</span>
+          </mat-checkbox>
+        </div>
+
         <!-- Submit Button -->
         <button
           mat-raised-button
           color="primary"
           type="submit"
           class="full-width submit-btn"
-          [disabled]="loading">
+          [disabled]="loading || !requiredConsentsSatisfied">
           <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
           <span *ngIf="!loading">Create Account</span>
         </button>

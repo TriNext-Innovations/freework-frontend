@@ -1,0 +1,98 @@
+<div class="popia-container">
+  <div class="popia-header">
+    <mat-icon>security</mat-icon>
+    <div>
+      <h1>POPIA Data Request</h1>
+      <p class="popia-subtitle">Exercise your rights under the Protection of Personal Information Act</p>
+    </div>
+  </div>
+
+  <!-- Submitted confirmation -->
+  <mat-card *ngIf="submitted && submittedRequest" class="success-card">
+    <mat-card-content>
+      <div class="success-message">
+        <mat-icon>check_circle</mat-icon>
+        <div>
+          <h3>Request Submitted Successfully</h3>
+          <p>Your reference number is <strong>#{{ submittedRequest.id }}</strong>. We will respond within 30 days as required by POPIA.</p>
+          <p>A confirmation email has been sent to your registered email address.</p>
+          <p class="regulator-note">
+            If you are not satisfied with our response, you may lodge a complaint with the
+            <strong>Information Regulator of South Africa</strong> at
+            <a href="mailto:inforeg&#64;justice.gov.za">inforeg&#64;justice.gov.za</a> or call 010 023 5207.
+          </p>
+        </div>
+      </div>
+      <button mat-stroked-button (click)="submitted = false" class="new-request-btn">Submit Another Request</button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Request Form -->
+  <mat-card *ngIf="!submitted" class="popia-form-card">
+    <mat-card-header>
+      <mat-card-title>Submit a Data Request</mat-card-title>
+      <mat-card-subtitle>Your request will be processed within 30 days as required by Section 23 of POPIA.</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Request Type</mat-label>
+          <mat-select formControlName="requestType">
+            <mat-option *ngFor="let type of requestTypes" [value]="type.value">
+              {{ type.label }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="form.get('requestType')?.hasError('required')">Please select a request type</mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Additional Details (optional)</mat-label>
+          <textarea
+            matInput
+            formControlName="details"
+            rows="5"
+            placeholder="Provide any additional context or specific information you require..."></textarea>
+          <mat-hint align="end">{{ form.get('details')?.value?.length || 0 }}/2000</mat-hint>
+          <mat-error *ngIf="form.get('details')?.hasError('maxlength')">Maximum 2000 characters</mat-error>
+        </mat-form-field>
+
+        <div *ngIf="errorMessage" class="error-box">
+          <mat-icon>error</mat-icon>
+          <span>{{ errorMessage }}</span>
+        </div>
+
+        <button mat-flat-button color="primary" type="submit" [disabled]="loading" class="submit-btn">
+          <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
+          <span *ngIf="!loading">Submit Request</span>
+          <span *ngIf="loading">Submitting...</span>
+        </button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Previous requests -->
+  <mat-card *ngIf="myRequests.length > 0" class="requests-card">
+    <mat-card-header>
+      <mat-card-title>My Previous Requests</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="request-list">
+        <div *ngFor="let req of myRequests" class="request-item">
+          <div class="request-header">
+            <span class="request-type">{{ req.requestType }}</span>
+            <span class="status-badge" [ngClass]="getStatusColor(req.status)">{{ getStatusLabel(req.status) }}</span>
+          </div>
+          <div class="request-meta">
+            <span>Ref #{{ req.id }}</span>
+            <span class="meta-sep">|</span>
+            <span>Submitted {{ req.submittedAt | date:'d MMM yyyy' }}</span>
+          </div>
+          <p *ngIf="req.responseNotes" class="response-notes">
+            <strong>Response:</strong> {{ req.responseNotes }}
+          </p>
+          <mat-divider></mat-divider>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

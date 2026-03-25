@@ -1,5 +1,5 @@
 <div class="login-container">
-  <mat-card class="login-card" [class.is-register]="isRegister && !registrationComplete">
+  <mat-card class="login-card" [class.is-register]="isRegister">
 
     <!-- Brand Header -->
     <mat-card-header>
@@ -11,38 +11,15 @@
           </svg>
           <span class="brand-wordmark"><strong>free</strong>work</span>
         </div>
-        <ng-container *ngIf="!registrationComplete">
-          <mat-card-title>{{ isRegister ? 'Join freework' : 'Welcome back' }}</mat-card-title>
-          <mat-card-subtitle>
-            <ng-container *ngIf="!isRegister"><em>doing what you love</em> — sign in to continue</ng-container>
-            <ng-container *ngIf="isRegister">Start <em>doing what you love</em> today</ng-container>
-          </mat-card-subtitle>
-        </ng-container>
-        <ng-container *ngIf="registrationComplete">
-          <mat-card-title>Check your inbox</mat-card-title>
-          <mat-card-subtitle>One step left to start <em>doing what you love</em></mat-card-subtitle>
-        </ng-container>
+        <mat-card-title>{{ isRegister ? 'Join freework' : 'Welcome back' }}</mat-card-title>
+        <mat-card-subtitle>
+          <ng-container *ngIf="!isRegister"><em>doing what you love</em> — sign in to continue</ng-container>
+          <ng-container *ngIf="isRegister">Start <em>doing what you love</em> today</ng-container>
+        </mat-card-subtitle>
       </div>
     </mat-card-header>
 
-    <!-- Check Your Inbox Screen -->
-    <mat-card-content *ngIf="registrationComplete">
-      <div class="inbox-check">
-        <div class="inbox-icon">
-          <mat-icon>mark_email_unread</mat-icon>
-        </div>
-        <p class="inbox-message">
-          We've sent a verification link to<br>
-          <strong>{{ registeredEmail }}</strong>
-        </p>
-        <p class="inbox-hint">Click the link in the email to verify your account and get started. Check your spam folder if you don't see it.</p>
-        <div class="toggle-link">
-          <p>Already verified? <a (click)="registrationComplete = false; isRegister = false">Sign in</a></p>
-        </div>
-      </div>
-    </mat-card-content>
-
-    <mat-card-content *ngIf="!registrationComplete">
+    <mat-card-content>
       <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
 
         <!-- Two-column body: left = login + extra fields, right = role selection -->
@@ -171,6 +148,13 @@
           <span *ngIf="!loading">{{ isRegister ? 'Create Account' : 'Sign In' }}</span>
           <span *ngIf="loading">{{ isRegister ? 'Creating account...' : 'Signing in...' }}</span>
         </button>
+
+        <!-- Mock Credentials Helper (login only) -->
+        <div class="mock-credentials" *ngIf="!isRegister">
+          <p><strong>Test Accounts:</strong></p>
+          <p>Freelancer: john&#64;example.com / password</p>
+          <p>Customer: emily&#64;example.com / password</p>
+        </div>
 
         <!-- Toggle Link -->
         <div class="toggle-link">

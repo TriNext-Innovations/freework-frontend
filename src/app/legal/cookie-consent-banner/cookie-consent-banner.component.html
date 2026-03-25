@@ -1,0 +1,91 @@
+<div class="cookie-banner" *ngIf="visible" role="dialog" aria-modal="true" aria-label="Cookie consent" aria-live="polite">
+  <div class="cookie-banner-inner">
+    <div class="cookie-banner-header">
+      <div class="cookie-logo">
+        <svg viewBox="0 0 64 52" width="28" height="23" xmlns="http://www.w3.org/2000/svg">
+          <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#1B3F8B" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#1B3F8B" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.75"/>
+        </svg>
+        <span class="cookie-wordmark"><strong>free</strong>work</span>
+      </div>
+    </div>
+
+    <p class="cookie-description">
+      We use cookies to improve your experience. Essential cookies are always active. You can manage your preferences below.
+      <a routerLink="/legal/cookie-policy" class="cookie-link">Cookie Policy</a> |
+      <a routerLink="/legal/privacy-policy" class="cookie-link">Privacy Policy</a>
+    </p>
+
+    <div class="cookie-categories" role="group" aria-label="Cookie categories">
+      <div class="cookie-category">
+        <div class="cookie-category-header">
+          <div>
+            <strong>Essential</strong>
+            <p class="cookie-category-desc">Required for the platform to function. Includes authentication and security.</p>
+          </div>
+          <span class="cookie-always-active" aria-label="Always active">Always Active</span>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="cookie-category">
+        <div class="cookie-category-header">
+          <div>
+            <strong>Functional</strong>
+            <p class="cookie-category-desc">Remember preferences, language, and display settings.</p>
+          </div>
+          <mat-slide-toggle [(ngModel)]="functional" aria-label="Functional cookies toggle" color="primary"></mat-slide-toggle>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="cookie-category">
+        <div class="cookie-category-header">
+          <div>
+            <strong>Analytics</strong>
+            <p class="cookie-category-desc">Google Analytics and usage tracking to improve the platform.</p>
+          </div>
+          <mat-slide-toggle [(ngModel)]="analytics" aria-label="Analytics cookies toggle" color="primary"></mat-slide-toggle>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="cookie-category">
+        <div class="cookie-category-header">
+          <div>
+            <strong>Performance</strong>
+            <p class="cookie-category-desc">Platform speed and uptime monitoring.</p>
+          </div>
+          <mat-slide-toggle [(ngModel)]="performance" aria-label="Performance cookies toggle" color="primary"></mat-slide-toggle>
+        </div>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div class="cookie-category">
+        <div class="cookie-category-header">
+          <div>
+            <strong>Marketing</strong>
+            <p class="cookie-category-desc">Targeted communications and campaign measurement.</p>
+          </div>
+          <mat-slide-toggle [(ngModel)]="marketing" aria-label="Marketing cookies toggle" color="primary"></mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+
+    <div class="cookie-actions">
+      <button mat-stroked-button (click)="rejectAll()" class="cookie-btn-reject" aria-label="Reject all non-essential cookies">
+        Reject All
+      </button>
+      <button mat-stroked-button (click)="savePreferences()" class="cookie-btn-save" aria-label="Save cookie preferences">
+        Save Preferences
+      </button>
+      <button mat-flat-button color="primary" (click)="acceptAll()" class="cookie-btn-accept" aria-label="Accept all cookies">
+        Accept All
+      </button>
+    </div>
+  </div>
+</div>

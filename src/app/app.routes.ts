@@ -22,6 +22,10 @@ export const routes: Routes = [
     path: 'verify',
     loadComponent: () => import('./auth/email-verify/email-verify.component').then(m => m.EmailVerifyComponent)
   },
+  {
+    path: 'verify',
+    loadComponent: () => import('./auth/email-verify/email-verify.component').then(m => m.EmailVerifyComponent)
+  },
 
   // Job routes
   {
@@ -180,6 +184,47 @@ export const routes: Routes = [
   {
     path: 'profile/:userId',
     loadComponent: () => import('./profile/profile-view/profile-view.component').then(m => m.ProfileViewComponent)
+  },
+
+  // Legal pages (public)
+  {
+    path: 'legal/privacy-policy',
+    loadComponent: () => import('./legal/legal-page/legal-page.component').then(m => m.LegalPageComponent),
+    data: { documentKey: 'privacy-policy' }
+  },
+  {
+    path: 'legal/cookie-policy',
+    loadComponent: () => import('./legal/legal-page/legal-page.component').then(m => m.LegalPageComponent),
+    data: { documentKey: 'cookie-policy' }
+  },
+  {
+    path: 'legal/freelancer-terms',
+    loadComponent: () => import('./legal/legal-page/legal-page.component').then(m => m.LegalPageComponent),
+    data: { documentKey: 'freelancer-terms' }
+  },
+  {
+    path: 'legal/business-terms',
+    loadComponent: () => import('./legal/legal-page/legal-page.component').then(m => m.LegalPageComponent),
+    data: { documentKey: 'business-terms' }
+  },
+  {
+    path: 'legal/popia-request',
+    loadComponent: () => import('./legal/popia-request/popia-request.component').then(m => m.PopiaRequestComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'unsubscribe',
+    loadComponent: () => import('./legal/unsubscribe/unsubscribe.component').then(m => m.UnsubscribeComponent)
+  },
+  {
+    path: 'reconsent',
+    loadComponent: () => import('./legal/reconsent/reconsent.component').then(m => m.ReconsentComponent),
+    canActivate: [authGuard]
+  },
+  {
+    path: 'admin/popia-requests',
+    loadComponent: () => import('./admin/popia-admin/popia-admin.component').then(m => m.PopiaAdminComponent),
+    canActivate: [authGuard, roleGuard(['ADMIN'])]
   },
 
   // Fallback route

@@ -1,0 +1,83 @@
+.dialog-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.danger-icon {
+  color: #f44336;
+}
+
+.warning-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3);
+  border-radius: 6px;
+  padding: 0.875rem 1rem;
+  margin-bottom: 1.25rem;
+
+  mat-icon {
+    color: #f44336;
+    flex-shrink: 0;
+  }
+
+  p {
+    margin: 0;
+    color: #ff8a80;
+  }
+}
+
+h4 {
+  font-size: 0.875rem;
+  margin: 0.75rem 0 0.4rem;
+  color: var(--mat-app-on-surface, #fff);
+}
+
+.deletion-list {
+  padding-left: 1.25rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.875rem;
+  line-height: 1.6;
+
+  &.deleted li {
+    color: var(--mat-app-on-surface-variant, #aaa);
+  }
+
+  &.retained li {
+    color: var(--mat-app-on-surface-variant, #aaa);
+  }
+}
+
+.confirm-instruction {
+  font-size: 0.875rem;
+  margin: 1rem 0 0.5rem;
+  color: var(--mat-app-on-surface-variant, #ccc);
+}
+
+.full-width {
+  width: 100%;
+}
+
+.error-msg {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #f44336;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.delete-btn {
+  background: #f44336 !important;
+  color: white !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  &:disabled {
+    background: rgba(244, 67, 54, 0.3) !important;
+    color: rgba(255,255,255,0.5) !important;
+  }
+}

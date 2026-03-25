@@ -1,0 +1,53 @@
+<h2 mat-dialog-title class="dialog-title">
+  <mat-icon class="danger-icon">delete_forever</mat-icon>
+  Permanently Delete Account
+</h2>
+
+<mat-dialog-content>
+  <div class="warning-box">
+    <mat-icon>warning</mat-icon>
+    <p><strong>This action is permanent and cannot be undone.</strong></p>
+  </div>
+
+  <h4>What will be deleted:</h4>
+  <ul class="deletion-list deleted">
+    <li>Your name, email address, and contact details</li>
+    <li>Your profile information and biography</li>
+    <li>Your avatar and social links</li>
+    <li>Your account access</li>
+  </ul>
+
+  <h4>What is retained for legal compliance:</h4>
+  <ul class="deletion-list retained">
+    <li>Financial transaction records (required by South African tax law for 5 years)</li>
+    <li>Anonymised deletion audit log</li>
+  </ul>
+
+  <p class="confirm-instruction">To confirm, type <strong>DELETE</strong> in the field below:</p>
+
+  <form [formGroup]="form">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Type DELETE to confirm</mat-label>
+      <input matInput formControlName="confirmation" placeholder="DELETE" autocomplete="off">
+      <mat-error *ngIf="form.get('confirmation')?.hasError('pattern')">Type exactly DELETE (uppercase)</mat-error>
+    </mat-form-field>
+  </form>
+
+  <div *ngIf="error" class="error-msg">
+    <mat-icon>error</mat-icon>
+    {{ error }}
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-stroked-button (click)="cancel()" [disabled]="loading">Cancel</button>
+  <button
+    mat-flat-button
+    class="delete-btn"
+    [disabled]="!canDelete"
+    (click)="delete()">
+    <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
+    <span *ngIf="!loading">Permanently Delete Account</span>
+    <span *ngIf="loading">Deleting...</span>
+  </button>
+</mat-dialog-actions>

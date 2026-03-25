@@ -60,6 +60,7 @@ export class EmailVerifyComponent implements OnInit {
           } catch { /* cross-origin opener — fall through */ }
 
           this.router.navigate([targetPath]);
+
         }, 1500);
       },
       error: (err) => {

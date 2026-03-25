@@ -1,0 +1,74 @@
+<div class="reconsent-container">
+  <mat-card class="reconsent-card">
+
+    <div *ngIf="loading" class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Checking your consent status...</p>
+    </div>
+
+    <ng-container *ngIf="!loading && reconsentCheck?.reconsentRequired">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>gavel</mat-icon>
+          Updated Terms Require Your Acceptance
+        </mat-card-title>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div *ngIf="accepted" class="accepted-state">
+          <mat-icon>check_circle</mat-icon>
+          <p>Thank you! Redirecting you now...</p>
+        </div>
+
+        <ng-container *ngIf="!accepted">
+          <p class="reconsent-intro">
+            We have updated our <strong>{{ getDocumentLabel(reconsentCheck!.documentType!) }}</strong>.
+            Version <strong>{{ reconsentCheck!.currentVersion }}</strong> is now in effect.
+            Please review and accept the updated terms to continue using Freework.
+          </p>
+
+          <div class="version-info">
+            <span *ngIf="reconsentCheck!.userConsentedVersion">
+              You previously accepted version {{ reconsentCheck!.userConsentedVersion }}.
+            </span>
+            <span>The current version is {{ reconsentCheck!.currentVersion }}.</span>
+          </div>
+
+          <div class="terms-link-block">
+            <a
+              [routerLink]="getDocumentRoute(reconsentCheck!.documentType!)"
+              target="_blank"
+              class="view-terms-link">
+              <mat-icon>open_in_new</mat-icon>
+              Read the updated {{ getDocumentLabel(reconsentCheck!.documentType!) }}
+            </a>
+          </div>
+
+          <mat-checkbox [(ngModel)]="termsAccepted" color="primary" class="accept-checkbox">
+            I have read and agree to the updated <strong>{{ getDocumentLabel(reconsentCheck!.documentType!) }}</strong>
+            version {{ reconsentCheck!.currentVersion }}
+          </mat-checkbox>
+
+          <div *ngIf="error" class="error-msg">
+            <mat-icon>error</mat-icon>
+            {{ error }}
+          </div>
+
+          <div class="reconsent-actions">
+            <button
+              mat-flat-button
+              color="primary"
+              [disabled]="!termsAccepted || accepting"
+              (click)="accept()"
+              class="accept-btn">
+              <mat-spinner *ngIf="accepting" diameter="18"></mat-spinner>
+              <span *ngIf="!accepting">Accept & Continue</span>
+              <span *ngIf="accepting">Saving...</span>
+            </button>
+          </div>
+        </ng-container>
+      </mat-card-content>
+    </ng-container>
+
+  </mat-card>
+</div>

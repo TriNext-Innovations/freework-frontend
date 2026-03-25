@@ -5,13 +5,13 @@ import { tap } from 'rxjs/operators';
 import { Job, CreateJobRequest, UpdateJobRequest, JobFilters, JobsResponse } from './models';
 import { MockDataService } from './mock-data.service';
 import { AuthService } from '../auth/auth.service';
-import { buildApiUrl } from '../api.config';
+import { buildApiEndpointUrl } from '../api.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JobService {
-  private readonly API_URL = buildApiUrl('/jobs');
+  private readonly API_URL = buildApiEndpointUrl('/jobs');
   private useMockData = false; // Toggle this to switch between mock and real API
 
   private jobsSubject = new BehaviorSubject<Job[]>([]);

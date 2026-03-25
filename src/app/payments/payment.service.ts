@@ -62,7 +62,7 @@ export class PaymentService {
    * Initiate a checkout session — backend returns a redirect URL
    */
   createCheckout(request: CreatePaymentRequest): Observable<PaymentCheckoutResponse> {
-    return this.http.post<PaymentCheckoutResponse>(`${this.apiUrl}/checkout`, request);
+    return this.http.post<PaymentCheckoutResponse>(`${this.apiUrl}/initiate`, request);
   }
 
   /**

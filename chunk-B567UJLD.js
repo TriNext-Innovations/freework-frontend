@@ -1,1 +1,0 @@
-var r="http://localhost:8080",o="/api",i=r.replace(/^http/,"ws");function n(t){return`${r}${t.startsWith("/")?t:`/${t}`}`}function e(t){return n(`${o}${t.startsWith("/")?t:`/${t}`}`)}export{i as a,n as b,e as c};

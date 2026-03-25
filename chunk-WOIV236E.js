@@ -1,0 +1,1 @@
+import{a as r}from"./chunk-M65QCLZM.js";var n=r.apiUrl,o="/api",p=n.replace(/^http/,"ws");function i(t){return`${n}${t.startsWith("/")?t:`/${t}`}`}function s(t){return i(`${o}${t.startsWith("/")?t:`/${t}`}`)}export{p as a,i as b,s as c};

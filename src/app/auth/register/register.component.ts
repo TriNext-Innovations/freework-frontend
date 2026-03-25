@@ -12,7 +12,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AuthService } from '../auth.service';
-import { RegisterRequest } from '../models';
+import { RegisterRequest, ConsentItemData } from '../models';
 
 @Component({
   selector: 'app-register',
@@ -48,13 +48,11 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Redirect if already logged in
     if (this.authService.isAuthenticated) {
       this.router.navigate(['/dashboard']);
       return;
     }
 
-    // Initialize registration form
     this.registerForm = this.formBuilder.group({
       firstName: ['', [Validators.required, Validators.minLength(2)]],
       lastName: ['', [Validators.required, Validators.minLength(2)]],
@@ -62,7 +60,18 @@ export class RegisterComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6), Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)]],
       confirmPassword: ['', [Validators.required]],
       role: ['FREELANCER', [Validators.required]],
-      acceptTerms: [false, [Validators.requiredTrue]],
+      // Freelancer-specific consents
+      freelancerTcsAccepted: [false],
+      freelancerPrivacyAccepted: [false],
+      freelancerTaxAccepted: [false],
+      freelancerAgeConfirmed: [false],
+      // Business-specific consents
+      businessTcsAccepted: [false],
+      businessPrivacyAccepted: [false],
+      businessContractorAcknowledged: [false],
+      businessAuthorityConfirmed: [false],
+      businessAgeConfirmed: [false],
+      // Common optional
       marketingEmails: [false]
     }, {
       validators: this.passwordMatchValidator
@@ -71,6 +80,26 @@ export class RegisterComponent implements OnInit {
 
   get f() {
     return this.registerForm.controls;
+  }
+
+  get selectedRole(): string {
+    return this.registerForm.get('role')?.value || 'FREELANCER';
+  }
+
+  get isFreelancer(): boolean {
+    return this.selectedRole === 'FREELANCER';
+  }
+
+  get requiredConsentsSatisfied(): boolean {
+    const v = this.registerForm.value;
+    if (this.isFreelancer) {
+      return v.freelancerTcsAccepted && v.freelancerPrivacyAccepted &&
+             v.freelancerTaxAccepted && v.freelancerAgeConfirmed;
+    } else {
+      return v.businessTcsAccepted && v.businessPrivacyAccepted &&
+             v.businessContractorAcknowledged && v.businessAuthorityConfirmed &&
+             v.businessAgeConfirmed;
+    }
   }
 
   passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
@@ -85,18 +114,26 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    if (!this.requiredConsentsSatisfied) {
+      this.showError('Please accept all required terms and conditions to continue.');
+      return;
+    }
+
     this.loading = true;
+    const v = this.registerForm.value;
+
     const userData: RegisterRequest = {
-      fullName: this.registerForm.value.firstName + ' ' + this.registerForm.value.lastName,
-      email: this.registerForm.value.email,
-      password: this.registerForm.value.password,
-      role: this.registerForm.value.role
+      fullName: v.firstName + ' ' + v.lastName,
+      email: v.email,
+      password: v.password,
+      role: v.role,
+      consents: this.buildConsents()
     };
 
     this.authService.register(userData).subscribe({
-      next: (response) => {
-        this.showSuccess('Registration successful! Let\'s complete your profile.');
-        this.router.navigate(['/profile/setup']);
+      next: () => {
+        this.showSuccess('Registration successful! Please check your email to verify your account.');
+        this.router.navigate(['/verify']);
       },
       error: (error) => {
         this.loading = false;
@@ -109,16 +146,36 @@ export class RegisterComponent implements OnInit {
     });
   }
 
+  private buildConsents(): ConsentItemData[] {
+    const v = this.registerForm.value;
+    const consents: ConsentItemData[] = [];
+
+    if (this.isFreelancer) {
+      consents.push({ consentType: 'freelancer_tcs', version: '1.0', consented: v.freelancerTcsAccepted });
+      consents.push({ consentType: 'privacy_policy', version: '1.0', consented: v.freelancerPrivacyAccepted });
+      consents.push({ consentType: 'tax_acknowledgement', version: '1.0', consented: v.freelancerTaxAccepted });
+      consents.push({ consentType: 'age_confirmation', version: '1.0', consented: v.freelancerAgeConfirmed });
+    } else {
+      consents.push({ consentType: 'business_tcs', version: '1.0', consented: v.businessTcsAccepted });
+      consents.push({ consentType: 'privacy_policy', version: '1.0', consented: v.businessPrivacyAccepted });
+      consents.push({ consentType: 'contractor_acknowledgement', version: '1.0', consented: v.businessContractorAcknowledged });
+      consents.push({ consentType: 'authority_confirmation', version: '1.0', consented: v.businessAuthorityConfirmed });
+      consents.push({ consentType: 'age_confirmation', version: '1.0', consented: v.businessAgeConfirmed });
+    }
+
+    consents.push({ consentType: 'marketing_emails', version: '1.0', consented: v.marketingEmails });
+    return consents;
+  }
+
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(key => {
-      const control = formGroup.get(key);
-      control?.markAsTouched();
+      formGroup.get(key)?.markAsTouched();
     });
   }
 
   private showSuccess(message: string): void {
     this.snackBar.open(message, 'Close', {
-      duration: 3000,
+      duration: 5000,
       horizontalPosition: 'end',
       verticalPosition: 'top',
       panelClass: ['success-snackbar']

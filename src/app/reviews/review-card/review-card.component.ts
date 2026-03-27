@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -23,15 +23,21 @@ import { Review } from '../models';
   templateUrl: './review-card.component.html',
   styleUrls: ['./review-card.component.scss']
 })
-export class ReviewCardComponent {
+export class ReviewCardComponent implements OnDestroy {
   @Input() review!: Review;
   @Input() showJobTitle = false;
   @Input() canEdit = false;
-  @Output() helpful = new EventEmitter<boolean>();
+  @Output() helpful = new EventEmitter<{ current: boolean | null; previous: boolean | null }>();
   @Output() edit = new EventEmitter<void>();
   @Output() delete = new EventEmitter<void>();
 
-  userHasVoted = false;
+  userVote: boolean | null = null;
+  private committedVote: boolean | null = null;
+  private debounceTimer: any = null;
+
+  ngOnDestroy(): void {
+    clearTimeout(this.debounceTimer);
+  }
 
   getStarArray(): number[] {
     return [1, 2, 3, 4, 5];
@@ -48,10 +54,32 @@ export class ReviewCardComponent {
   }
 
   markHelpful(helpful: boolean): void {
-    if (!this.userHasVoted) {
-      this.userHasVoted = true;
-      this.helpful.emit(helpful);
+    clearTimeout(this.debounceTimer);
+
+    // Update local UI immediately (optimistic)
+    if (this.userVote === helpful) {
+      // Toggle off
+      if (helpful) this.review.helpfulCount = Math.max(0, this.review.helpfulCount - 1);
+      else this.review.notHelpfulCount = Math.max(0, this.review.notHelpfulCount - 1);
+      this.userVote = null;
+    } else {
+      // Switch or new vote — undo previous first
+      if (this.userVote !== null) {
+        if (this.userVote) this.review.helpfulCount = Math.max(0, this.review.helpfulCount - 1);
+        else this.review.notHelpfulCount = Math.max(0, this.review.notHelpfulCount - 1);
+      }
+      if (helpful) this.review.helpfulCount++;
+      else this.review.notHelpfulCount++;
+      this.userVote = helpful;
     }
+
+    // Debounce the API call — fires 500ms after the last click
+    this.debounceTimer = setTimeout(() => {
+      if (this.userVote === this.committedVote) return; // no net change
+      const previous = this.committedVote;
+      this.committedVote = this.userVote;
+      this.helpful.emit({ current: this.userVote, previous });
+    }, 500);
   }
 
   getTimeAgo(): string {

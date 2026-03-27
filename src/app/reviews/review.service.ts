@@ -122,4 +122,14 @@ export class ReviewService {
     }
     return this.http.post<Review>(`${this.apiUrl}/${reviewId}/helpful`, { helpful });
   }
+
+  /**
+   * Remove a helpful/not-helpful vote from a review
+   */
+  removeReviewHelpful(reviewId: string, helpful: boolean): Observable<Review> {
+    if (this.useMockData) {
+      return this.mockReviewService.markReviewHelpful(reviewId, helpful);
+    }
+    return this.http.delete<Review>(`${this.apiUrl}/${reviewId}/helpful`, { params: { helpful: helpful.toString() } });
+  }
 }

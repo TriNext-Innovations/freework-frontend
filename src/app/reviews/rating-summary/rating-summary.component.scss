@@ -6,9 +6,10 @@
       gap: 0.5rem;
       font-size: 1.25rem;
       font-weight: 600;
+      color: var(--color-text-primary);
 
       mat-icon {
-        color: #ffa000;
+        color: var(--color-warning-500);
       }
     }
   }
@@ -29,32 +30,32 @@
 
       p {
         margin: 0;
-        color: rgba(0, 0, 0, 0.6);
+        color: var(--color-text-secondary);
       }
     }
 
     .loading-state {
       .loading-icon {
-        color: #1976d2;
+        color: var(--color-accent-500);
         animation: spin 2s linear infinite;
       }
     }
 
     .error-state {
       .error-icon {
-        color: #f44336;
+        color: var(--color-error-500);
       }
     }
 
     .no-reviews {
       .no-reviews-icon {
-        color: rgba(0, 0, 0, 0.26);
+        color: var(--color-gray-400);
       }
 
       h3 {
         margin: 0 0 0.5rem;
         font-size: 1.25rem;
-        color: rgba(0, 0, 0, 0.87);
+        color: var(--color-text-primary);
       }
 
       p {
@@ -68,8 +69,8 @@
         align-items: center;
         gap: 2rem;
         padding: 1.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        border-radius: 12px;
+        background: linear-gradient(135deg, var(--color-accent-700) 0%, var(--color-accent-500) 100%);
+        border-radius: var(--radius-lg);
         color: white;
         margin-bottom: 2rem;
 
@@ -115,7 +116,7 @@
           font-size: 1rem;
           font-weight: 600;
           margin: 0 0 1rem;
-          color: rgba(0, 0, 0, 0.87);
+          color: var(--color-text-primary);
         }
 
         .rating-bar {
@@ -131,13 +132,13 @@
             font-size: 0.9375rem;
             font-weight: 500;
             min-width: 50px;
-            color: rgba(0, 0, 0, 0.87);
+            color: var(--color-text-primary);
 
             .small-star {
               font-size: 1rem;
               width: 1rem;
               height: 1rem;
-              color: #ffa000;
+              color: var(--color-warning-500);
             }
           }
 
@@ -151,7 +152,7 @@
             min-width: 40px;
             text-align: right;
             font-size: 0.875rem;
-            color: rgba(0, 0, 0, 0.6);
+            color: var(--color-text-secondary);
           }
         }
       }
@@ -160,12 +161,8 @@
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @media (max-width: 768px) {
@@ -198,17 +195,11 @@
           .rating-bar {
             gap: 0.5rem;
 
-            .star-label {
-              min-width: 40px;
-            }
-
-            .count-label {
-              min-width: 30px;
-            }
+            .star-label { min-width: 40px; }
+            .count-label { min-width: 30px; }
           }
         }
       }
     }
   }
 }
-

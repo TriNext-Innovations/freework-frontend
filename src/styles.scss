@@ -678,10 +678,18 @@ a {
 // Select
 .mat-mdc-select {
   font-size: 14px !important;
+  padding: 0 var(--spacing-md) !important;
+  color: var(--color-text-primary) !important;
 
-  .mat-mdc-select-value       { color: var(--color-text-primary) !important; }
+  .mat-mdc-select-value {
+    color: var(--color-text-primary) !important;
+    font-size: 14px !important;
+  }
+  .mat-mdc-select-value-text {
+    color: var(--color-text-primary) !important;
+  }
   .mat-mdc-select-placeholder { color: var(--color-text-tertiary) !important; }
-  .mat-mdc-select-arrow       { color: var(--color-text-tertiary) !important; }
+  .mat-mdc-select-arrow       { color: var(--color-text-secondary) !important; }
 }
 
 .mat-mdc-select-panel {

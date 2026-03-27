@@ -1,4 +1,6 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -140,21 +142,38 @@ export class ReviewListComponent implements OnInit, OnChanges {
     this.applyFilters();
   }
 
-  onMarkHelpful(review: Review, helpful: boolean): void {
-    this.reviewService.markReviewHelpful(review.id, helpful).subscribe({
+  onMarkHelpful(review: Review, current: boolean | null, previous: boolean | null): void {
+    let request$: Observable<Review>;
+
+    if (previous !== null && current === null) {
+      // Remove vote
+      request$ = this.reviewService.removeReviewHelpful(review.id, previous);
+    } else if (previous === null && current !== null) {
+      // New vote
+      request$ = this.reviewService.markReviewHelpful(review.id, current);
+    } else if (previous !== null && current !== null) {
+      // Switch: remove old then add new
+      request$ = this.reviewService.removeReviewHelpful(review.id, previous).pipe(
+        switchMap(() => this.reviewService.markReviewHelpful(review.id, current))
+      );
+    } else {
+      return;
+    }
+
+    request$.subscribe({
       next: (updatedReview) => {
         const index = this.reviews.findIndex(r => r.id === review.id);
         if (index !== -1) {
           this.reviews[index] = updatedReview;
           this.applyFilters();
         }
-        this.showSuccess(helpful ? 'Thank you for your feedback!' : 'Feedback recorded');
       },
-      error: (error) => {
-        console.error('Error marking review helpful:', error);
-        this.showError('Failed to record feedback');
-      }
+      error: () => this.showError('Failed to update vote')
     });
+  }
+
+  trackByReviewId(index: number, review: Review): string {
+    return review.id;
   }
 
   retryLoad(): void {

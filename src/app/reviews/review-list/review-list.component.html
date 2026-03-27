@@ -59,10 +59,10 @@
     <!-- Review Cards -->
     <div class="reviews-grid" *ngIf="filteredReviews.length > 0">
       <app-review-card
-        *ngFor="let review of filteredReviews"
+        *ngFor="let review of filteredReviews; trackBy: trackByReviewId"
         [review]="review"
         [showJobTitle]="showJobTitle"
-        (helpful)="onMarkHelpful(review, $event)"
+        (helpful)="onMarkHelpful(review, $event.current, $event.previous)"
       ></app-review-card>
     </div>
 

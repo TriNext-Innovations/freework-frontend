@@ -10,7 +10,7 @@
   align-items: center;
   gap: 16px;
   padding: 80px 0;
-  color: var(--mat-sys-on-surface-variant, #777);
+  color: var(--color-text-secondary);
 }
 
 /* ── Plan Hero ─────────────────────────────────────────────── */
@@ -18,7 +18,8 @@
   border-radius: 16px;
   padding: 36px 40px;
   margin-bottom: 28px;
-  background: var(--mat-sys-surface-variant, #f5f5f5);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -26,11 +27,13 @@
   flex-wrap: wrap;
 
   &--pro {
-    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-    color: #fff;
+    background: linear-gradient(135deg, #0a2a1f 0%, #0d3326 50%, #082a20 100%);
+    border-color: rgba(43, 184, 138, 0.25);
+    color: #f0faf5;
 
-    .plan-tagline { color: rgba(255,255,255,0.75); }
-    .plan-status { color: rgba(255,255,255,0.6); }
+    .plan-tagline { color: rgba(240, 250, 245, 0.75); }
+    .plan-status  { color: rgba(240, 250, 245, 0.6); }
+    .plan-title   { color: #f0faf5; }
   }
 }
 
@@ -50,7 +53,9 @@
   border-radius: 20px;
   font-size: 13px;
   font-weight: 700;
-  background: rgba(0,0,0,0.08);
+  background: rgba(43, 184, 138, 0.12);
+  color: var(--color-accent-500);
+  border: 1px solid rgba(43, 184, 138, 0.2);
   letter-spacing: 0.5px;
 
   mat-icon { font-size: 16px; width: 16px; height: 16px; }
@@ -58,15 +63,16 @@
   &--pro {
     background: linear-gradient(135deg, #f59e0b, #d97706);
     color: #fff;
-    box-shadow: 0 2px 8px rgba(245,158,11,0.4);
+    border: none;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4);
   }
 }
 
 .plan-status {
   font-size: 13px;
-  color: var(--mat-sys-on-surface-variant, #666);
+  color: var(--color-text-secondary);
 
-  &--cancelled { color: #ef4444; }
+  &--cancelled { color: var(--color-error-500); }
 }
 
 .plan-title {
@@ -74,12 +80,13 @@
   font-weight: 700;
   margin: 0 0 8px;
   line-height: 1.2;
+  color: var(--color-text-primary);
 }
 
 .plan-tagline {
   font-size: 15px;
   margin: 0;
-  color: var(--mat-sys-on-surface-variant, #555);
+  color: var(--color-text-secondary);
   max-width: 460px;
 }
 
@@ -100,13 +107,13 @@
   align-items: center;
   gap: 8px;
   font-size: 15px;
-  box-shadow: 0 4px 14px rgba(43,184,138,0.35) !important;
+  box-shadow: 0 4px 14px rgba(43, 184, 138, 0.35) !important;
 }
 
 .cancel-btn {
   font-size: 13px;
-  color: rgba(255,255,255,0.7) !important;
-  border-color: rgba(255,255,255,0.3) !important;
+  color: rgba(240, 250, 245, 0.7) !important;
+  border-color: rgba(240, 250, 245, 0.3) !important;
 }
 
 /* ── Usage ─────────────────────────────────────────────────── */
@@ -130,37 +137,36 @@
   gap: 6px;
   font-weight: 500;
   font-size: 14px;
+  color: var(--color-text-primary);
 
-  mat-icon { font-size: 18px; width: 18px; height: 18px; color: var(--mat-sys-on-surface-variant, #666); }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; color: var(--color-text-secondary); }
 }
 
 .usage-count {
   font-size: 14px;
   font-weight: 600;
-  color: var(--mat-sys-primary, #2BB88A);
+  color: var(--color-accent-500);
 
-  &--warning { color: #ef4444; }
+  &--warning { color: var(--color-error-500); }
 }
 
 .usage-hint {
   margin: 6px 0 0;
   font-size: 12px;
-  color: #ef4444;
+  color: var(--color-error-500);
 }
 
 /* ── Value Section ─────────────────────────────────────────── */
-.value-section { }
-
 .value-header {
   text-align: center;
   margin-bottom: 28px;
 
-  h2 { font-size: 22px; font-weight: 700; margin: 0 0 8px; }
+  h2 { font-size: 22px; font-weight: 700; margin: 0 0 8px; color: var(--color-text-primary); }
 }
 
 .value-sub {
   font-size: 15px;
-  color: var(--mat-sys-on-surface-variant, #555);
+  color: var(--color-text-secondary);
   margin: 0;
 }
 
@@ -179,8 +185,7 @@
   overflow: hidden;
 
   &--pro {
-    border: 2px solid #f59e0b !important;
-    background: var(--mat-sys-surface, #fff);
+    border: 2px solid rgba(245, 158, 11, 0.5) !important;
   }
 }
 
@@ -210,6 +215,7 @@
     align-items: center;
     gap: 8px;
     font-size: 14px;
+    color: var(--color-text-primary);
   }
 
   mat-icon {
@@ -217,8 +223,8 @@
     width: 18px;
     height: 18px;
 
-    &.check { color: #2BB88A; }
-    &.limit { color: #9ca3af; }
+    &.check { color: var(--color-accent-500); }
+    &.limit { color: var(--color-text-tertiary); }
   }
 }
 
@@ -239,8 +245,8 @@
 /* ── Commission Callout ────────────────────────────────────── */
 .commission-callout {
   border-radius: 12px !important;
-  background: linear-gradient(135deg, #f0fdf4, #dcfce7) !important;
-  border: 1px solid #bbf7d0 !important;
+  background: rgba(43, 184, 138, 0.08) !important;
+  border: 1px solid rgba(43, 184, 138, 0.2) !important;
 }
 
 .callout-inner {
@@ -254,14 +260,14 @@
     font-size: 36px;
     width: 36px;
     height: 36px;
-    color: #2BB88A;
+    color: var(--color-accent-500);
     flex-shrink: 0;
   }
 }
 
 .callout-text {
-  h3 { margin: 0 0 8px; font-size: 17px; font-weight: 700; color: #166534; }
-  p { margin: 0; font-size: 14px; color: #166534; line-height: 1.6; }
+  h3 { margin: 0 0 8px; font-size: 17px; font-weight: 700; color: var(--color-text-primary); }
+  p  { margin: 0; font-size: 14px; color: var(--color-text-secondary); line-height: 1.6; }
 }
 
 /* ── PRO Perks ─────────────────────────────────────────────── */

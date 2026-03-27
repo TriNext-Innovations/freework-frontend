@@ -513,6 +513,22 @@ a {
   height: 24px !important;
   padding: 0 var(--spacing-sm) !important;
 
+  .mdc-evolution-chip__text-label,
+  .mat-mdc-chip-action-label {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 0.25rem !important;
+    line-height: 1 !important;
+
+    mat-icon, .mat-icon {
+      font-size: 14px !important;
+      width: 14px !important;
+      height: 14px !important;
+      line-height: 1 !important;
+      flex-shrink: 0;
+    }
+  }
+
   &.mat-primary {
     --mdc-chip-elevated-container-color: var(--chip-skill-bg);
     --mdc-chip-elevated-selected-container-color: var(--chip-skill-bg);

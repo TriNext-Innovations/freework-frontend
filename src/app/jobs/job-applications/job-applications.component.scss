@@ -184,23 +184,6 @@
   }
 }
 
-// ── Status chip icon alignment ───────────────────────────────────────────────
-
-::ng-deep .status-badge {
-  .mat-mdc-chip-action-label {
-    display: flex;
-    align-items: center;
-    gap: 0.25rem;
-
-    mat-icon {
-      font-size: 1rem;
-      width: 1rem;
-      height: 1rem;
-      line-height: 1;
-    }
-  }
-}
-
 // ── Card actions ─────────────────────────────────────────────────────────────
 
 mat-card-actions {

@@ -31,7 +31,7 @@
               <mat-icon>attach_money</mat-icon>
               <div>
                 <span class="info-label">Budget</span>
-                <span class="info-value">${{ job.budget }} {{ job.budgetType === 'HOURLY' ? '/hr' : '' }}</span>
+                <span class="info-value">R{{ job.budget }} {{ job.budgetType === 'HOURLY' ? '/hr' : '' }}</span>
               </div>
             </div>
             <div class="info-item">
@@ -176,7 +176,7 @@
                   type="number"
                   placeholder="0"
                 >
-                <span matPrefix>$&nbsp;</span>
+                <span matPrefix>R&nbsp;</span>
                 <span matSuffix *ngIf="job.budgetType === 'HOURLY'">/hr</span>
                 <mat-hint>Your rate for this project (optional)</mat-hint>
                 <mat-error *ngIf="applicationForm.get('proposedRate')?.hasError('min')">

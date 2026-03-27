@@ -198,6 +198,8 @@ export class ProfileEditComponent implements OnInit {
         if (this.profile) {
           this.profile.profilePicture = response.url;
         }
+        // Sync the new picture URL into the auth user so the navbar avatar updates
+        this.authService.fetchUserProfile().subscribe();
         this.isSaving = false;
         setTimeout(() => this.successMessage = null, 3000);
       },

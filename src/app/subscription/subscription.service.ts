@@ -2,49 +2,61 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
-
-export interface Subscription {
-  plan: 'FREE' | 'GROWTH' | 'SCALE';
-  status: 'ACTIVE' | 'CANCELLED' | 'EXPIRED';
-  currentPeriodEnd?: string;
-}
+import { buildApiEndpointUrl } from '../api.config';
+import { SubscriptionInfo, CheckoutResponse, PaymentProvider } from './subscription.models';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubscriptionService {
-  private subscriptionSubject = new BehaviorSubject<Subscription | null>(null);
+  private readonly API_URL = buildApiEndpointUrl('/subscription');
+
+  private subscriptionSubject = new BehaviorSubject<SubscriptionInfo | null>(null);
   public subscription$ = this.subscriptionSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
-  get currentSubscription(): Subscription | null {
+  get currentSubscription(): SubscriptionInfo | null {
     return this.subscriptionSubject.value;
   }
 
   get isProMember(): boolean {
     const sub = this.subscriptionSubject.value;
-    return !!sub && sub.status === 'ACTIVE' && (sub.plan === 'GROWTH' || sub.plan === 'SCALE');
+    return !!sub && sub.proMember && sub.status === 'ACTIVE';
   }
 
-  activeJobsCount = 0;
+  get activeJobsCount(): number {
+    return this.subscriptionSubject.value?.activeJobsCount ?? 0;
+  }
 
   get atJobLimit(): boolean {
-    return !this.isProMember && this.activeJobsCount >= 1;
+    const sub = this.subscriptionSubject.value;
+    if (!sub || this.isProMember) return false;
+    return (sub.activeJobsCount ?? 0) >= 1;
   }
 
   get atApplicationLimit(): boolean {
-    return false;
+    const sub = this.subscriptionSubject.value;
+    if (!sub || this.isProMember) return false;
+    return (sub.applicationsThisMonth ?? 0) >= 5;
   }
 
-  loadSubscription(): Observable<Subscription | null> {
-    return this.http.get<Subscription>('/api/subscription/current').pipe(
+  loadSubscription(): Observable<SubscriptionInfo | null> {
+    return this.http.get<SubscriptionInfo>(`${this.API_URL}/current`).pipe(
       tap(sub => this.subscriptionSubject.next(sub)),
       catchError(() => {
         this.subscriptionSubject.next(null);
         return of(null);
       })
     );
+  }
+
+  createCheckout(provider: PaymentProvider): Observable<CheckoutResponse> {
+    return this.http.post<CheckoutResponse>(`${this.API_URL}/checkout`, { provider });
+  }
+
+  cancelSubscription(): Observable<void> {
+    return this.http.post<void>(`${this.API_URL}/cancel`, {});
   }
 
   clearSubscription(): void {

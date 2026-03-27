@@ -36,7 +36,7 @@
           <mat-icon>attach_money</mat-icon>
           <div class="summary-info">
             <span class="label">Total Amount</span>
-            <span class="value">${{ getTotalAmount().toFixed(2) }}</span>
+            <span class="value">R{{ getTotalAmount().toFixed(2) }}</span>
           </div>
         </div>
       </div>
@@ -99,7 +99,7 @@
           </div>
 
           <div class="payment-amount">
-            <span class="amount">${{ payment.amount.toFixed(2) }}</span>
+            <span class="amount">R{{ payment.amount.toFixed(2) }}</span>
             <span class="currency">{{ payment.currency }}</span>
           </div>
 

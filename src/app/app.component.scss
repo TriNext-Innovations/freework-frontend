@@ -234,6 +234,16 @@ mat-nav-list {
   margin-right: var(--spacing-xs);
   color: var(--color-text-secondary);
   transition: color var(--transition-fast);
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+
+  .mat-icon {
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
   &:hover {
     color: var(--color-text-primary);

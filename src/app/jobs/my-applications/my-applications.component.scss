@@ -1,7 +1,7 @@
 .applications-container {
   padding: var(--spacing-2xl) 0;
   min-height: calc(100vh - 64px);
-  background: var(--color-surface);
+  //background: var(--color-surface);
 }
 
 // Header
@@ -155,19 +155,19 @@
     font-size: 4rem;
     width: 4rem;
     height: 4rem;
-    color: #cbd5e0;
+    color: var(--color-gray-400);
     margin-bottom: var(--spacing-md);
   }
 
   h2 {
     margin: 0 0 var(--spacing-sm);
     font-size: 1.25rem;
-    color: #1a1a1a;
+    color: var(--color-text-primary);
   }
 
   p {
     margin: 0 0 var(--spacing-lg);
-    color: #64748b;
+    color: var(--color-text-secondary);
     max-width: 400px;
   }
 
@@ -190,10 +190,10 @@
       margin: 0;
       font-size: 1.25rem;
       font-weight: 600;
-      color: #1a1a1a;
+      color: var(--color-text-primary);
 
       .count {
-        color: #64748b;
+        color: var(--color-text-secondary);
         font-weight: 400;
         font-size: 0.875rem;
       }
@@ -204,10 +204,10 @@
 // Application Card
 .application-card {
   margin-bottom: var(--spacing-md);
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
 
   &:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08) !important;
+    box-shadow: var(--shadow-lg) !important;
   }
 
   mat-card_content {
@@ -233,11 +233,11 @@
       margin: 0 0 var(--spacing-xs);
       font-size: 1.125rem;
       font-weight: 600;
-      color: #1a1a1a;
+      color: var(--color-text-primary);
       cursor: pointer;
 
       &:hover {
-        color: #667eea;
+        color: var(--color-accent-500);
       }
     }
 
@@ -246,7 +246,7 @@
       flex-wrap: wrap;
       gap: var(--spacing-md);
       margin: var(--spacing-sm) 0;
-      color: #64748b;
+      color: var(--color-text-secondary);
       font-size: 0.813rem;
 
       span {
@@ -265,13 +265,13 @@
     .cover-letter-preview {
       margin: var(--spacing-md) 0;
       padding: var(--spacing-sm);
-      background: #f8fafc;
-      border-radius: var(--border-radius);
-      border-left: 3px solid #667eea;
+      background: var(--color-surface);
+      border-radius: var(--radius-md);
+      border-left: 3px solid var(--color-accent-500);
 
       .preview-text {
         margin: 0;
-        color: #475569;
+        color: var(--color-text-secondary);
         font-size: 0.875rem;
         line-height: 1.6;
         display: -webkit-box;
@@ -292,11 +292,11 @@
         font-size: 1rem;
         width: 1rem;
         height: 1rem;
-        color: #667eea;
+        color: var(--color-accent-500);
       }
 
       a {
-        color: #667eea;
+        color: var(--color-accent-500);
         text-decoration: none;
         font-size: 0.875rem;
         font-weight: 500;
@@ -330,7 +330,7 @@
     display: flex;
     gap: var(--spacing-sm);
     padding-top: var(--spacing-md);
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--color-border);
 
     button {
       display: flex;
@@ -339,10 +339,10 @@
     }
 
     .withdraw-button {
-      color: #ef4444;
+      color: var(--color-error-500);
 
       &:hover {
-        background: rgba(239, 68, 68, 0.05);
+        background: var(--color-error-50);
       }
     }
 
@@ -388,29 +388,29 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-xxl);
+  padding: var(--spacing-3xl);
   text-align: center;
-  background: white;
-  border-radius: var(--card-border-radius);
-  border: 1px solid #e2e8f0;
+  background: var(--color-surface-raised);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
 
   mat-icon {
     font-size: 3rem;
     width: 3rem;
     height: 3rem;
-    color: #cbd5e0;
+    color: var(--color-gray-400);
     margin-bottom: var(--spacing-md);
   }
 
   h3 {
     margin: 0 0 var(--spacing-xs);
     font-size: 1.125rem;
-    color: #1a1a1a;
+    color: var(--color-text-primary);
   }
 
   p {
     margin: 0 0 var(--spacing-md);
-    color: #64748b;
+    color: var(--color-text-secondary);
   }
 }
 

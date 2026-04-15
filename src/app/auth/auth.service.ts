@@ -94,8 +94,32 @@ export class AuthService {
   }
 
   /**
-   * Verify email address via token from verification email.
-   * On success the backend returns a JWT so we auto-login the user.
+   * Exchange the one-time code (from the ?code= redirect after email verification)
+   * for a JWT. The code is single-use and expires after 5 minutes.
+   * The JWT is never placed in the URL — it only travels over this API call.
+   */
+  exchangeCode(code: string): Observable<AuthResponse> {
+    return this.http.post<any>(`${this.API_URL}/exchange-code`, { code })
+      .pipe(
+        tap(response => {
+          const authResponse: AuthResponse = {
+            accessToken: response.accessToken || response.token,
+            refreshToken: response.refreshToken || response.refresh_token || '',
+            tokenType: response.tokenType || 'Bearer',
+            expiresIn: response.expiresIn || response.expires_in || 3600,
+            user: response.user || response.userDetails ||
+              this.extractUserFromToken(response.accessToken || response.token)
+          };
+          this.handleAuthResponse(authResponse);
+        }),
+        catchError(error => throwError(() => error))
+      );
+  }
+
+  /**
+   * @deprecated Use the backend-redirect flow: backend sends verification email
+   * with a link to the backend /auth/verify endpoint, which redirects the browser
+   * to /auth/verified?code=... on the frontend. The frontend then calls exchangeCode().
    */
   verifyEmail(token: string): Observable<AuthResponse> {
     return this.http.get<any>(`${this.API_URL}/verify`, { params: { token } })

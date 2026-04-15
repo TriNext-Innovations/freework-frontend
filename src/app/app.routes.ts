@@ -22,6 +22,12 @@ export const routes: Routes = [
     path: 'verify',
     loadComponent: () => import('./auth/email-verify/email-verify.component').then(m => m.EmailVerifyComponent)
   },
+  // Landing page for the backend email-verification redirect.
+  // Backend redirects here with ?code=<one-time-code>; this page exchanges it for a JWT.
+  {
+    path: 'auth/verified',
+    loadComponent: () => import('./auth/email-verified/email-verified.component').then(m => m.EmailVerifiedComponent)
+  },
 
   // Job routes
   {

@@ -97,10 +97,36 @@
     </p>
   </div>
 
-  <!-- Loading Spinner -->
-  <div class="loading-container" *ngIf="loading">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p>Loading jobs...</p>
+  <!-- Skeleton Loader -->
+  <div class="skeleton-grid" *ngIf="loading" aria-label="Loading jobs" aria-busy="true">
+    <div class="skeleton-card" *ngFor="let n of [1,2,3,4,5,6]">
+      <div class="skeleton-card-header">
+        <div class="skeleton-lines">
+          <div class="skeleton-line skeleton-line--title"></div>
+          <div class="skeleton-line skeleton-line--sub"></div>
+        </div>
+        <div class="skeleton-chip"></div>
+      </div>
+      <div class="skeleton-body">
+        <div class="skeleton-line"></div>
+        <div class="skeleton-line skeleton-line--short"></div>
+        <div class="skeleton-line skeleton-line--shorter"></div>
+      </div>
+      <div class="skeleton-meta">
+        <div class="skeleton-meta-item"></div>
+        <div class="skeleton-meta-item"></div>
+        <div class="skeleton-meta-item"></div>
+      </div>
+      <div class="skeleton-chips">
+        <div class="skeleton-chip-sm"></div>
+        <div class="skeleton-chip-sm"></div>
+        <div class="skeleton-chip-sm"></div>
+      </div>
+      <div class="skeleton-footer">
+        <div class="skeleton-budget"></div>
+        <div class="skeleton-count"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Jobs List -->
@@ -156,7 +182,7 @@
           <span class="budget-amount">{{ formatBudget(job) }}</span>
         </div>
         <div class="applications-badge">
-          <span class="badge-icon">👥</span>
+          <mat-icon>people</mat-icon>
           <span>{{ job.applicationsCount || 0 }} {{ (job.applicationsCount || 0) === 1 ? 'Application' : 'Applications' }}</span>
         </div>
       </div>

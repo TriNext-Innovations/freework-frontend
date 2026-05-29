@@ -1,7 +1,8 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet, RouterLink } from '@angular/router';
+import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
+import { BreakpointObserver } from '@angular/cdk/layout';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,12 +14,14 @@ import { MatListModule } from '@angular/material/list';
 import { AuthService } from './auth/auth.service';
 import { ThemeService } from './theme.service';
 import { SubscriptionService } from './subscription/subscription.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { filter, switchMap } from 'rxjs/operators';
 import { User } from './auth/models';
 import { environment } from '../environments/environment';
 import { CookieConsentBannerComponent } from './legal/cookie-consent-banner/cookie-consent-banner.component';
 import { FooterComponent } from './shared/footer/footer.component';
+
+const DESKTOP_BREAKPOINT = '(min-width: 1024px)';
 
 @Component({
   selector: 'app-root',
@@ -27,6 +30,7 @@ import { FooterComponent } from './shared/footer/footer.component';
     CommonModule,
     RouterOutlet,
     RouterLink,
+    RouterLinkActive,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
@@ -41,15 +45,19 @@ import { FooterComponent } from './shared/footer/footer.component';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'Freework';
   sidenavOpened = false;
+  isDesktop = false;
   currentUser$: Observable<User | null>;
+
+  private bpSub?: Subscription;
 
   constructor(
     public authService: AuthService,
     public themeService: ThemeService,
     public subscriptionService: SubscriptionService,
+    private breakpointObserver: BreakpointObserver,
     @Inject(DOCUMENT) private document: Document
   ) {
     this.currentUser$ = this.authService.currentUser$;
@@ -58,25 +66,36 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     (window as any).AIChatbotConfig = { apiKey: environment.chatbotApiKey };
 
-    // Load subscription whenever user logs in
+    this.bpSub = this.breakpointObserver.observe(DESKTOP_BREAKPOINT).subscribe(state => {
+      this.isDesktop = state.matches;
+      this.sidenavOpened = state.matches;
+    });
+
     this.authService.currentUser$.pipe(
       filter(user => !!user),
       switchMap(() => this.subscriptionService.loadSubscription())
     ).subscribe();
 
-    // Clear subscription on logout
     this.authService.currentUser$.pipe(
       filter(user => !user)
     ).subscribe(() => this.subscriptionService.clearSubscription());
   }
 
+  ngOnDestroy(): void {
+    this.bpSub?.unsubscribe();
+  }
+
+  get sidenavMode(): 'side' | 'over' {
+    return this.isDesktop ? 'side' : 'over';
+  }
+
   logout(): void {
     this.authService.logout();
-    this.sidenavOpened = false;
+    if (!this.isDesktop) this.sidenavOpened = false;
   }
 
   closeSidenav(): void {
-    this.sidenavOpened = false;
+    if (!this.isDesktop) this.sidenavOpened = false;
   }
 
   getAvatarUrl(user: User): string {

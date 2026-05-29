@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProfileService } from '../profile.service';
 import { AuthService } from '../../auth/auth.service';
 import { Profile, FreelancerProfile, CustomerProfile } from '../models/profile.models';
@@ -8,7 +11,7 @@ import { Profile, FreelancerProfile, CustomerProfile } from '../models/profile.m
 @Component({
   selector: 'app-profile-view',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
   templateUrl: './profile-view.component.html',
   styleUrls: ['./profile-view.component.scss']
 })
@@ -100,7 +103,7 @@ export class ProfileViewComponent implements OnInit {
       || (profile as any).avatar
       || (profile as any).avatarUrl
       || (profile as any).picture;
-    return image || 'https://via.placeholder.com/150';
+    return image || '';
   }
 
   getProficiencyLabel(proficiency: string): string {

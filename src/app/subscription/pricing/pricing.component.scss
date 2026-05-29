@@ -11,11 +11,12 @@
     font-size: 36px;
     font-weight: 700;
     margin: 0 0 12px;
+    color: var(--color-text-primary);
   }
 
   .hero-sub {
     font-size: 16px;
-    color: var(--mat-sys-on-surface-variant, #555);
+    color: var(--color-text-secondary);
     max-width: 520px;
     margin: 0 auto 20px;
     line-height: 1.6;
@@ -27,10 +28,11 @@
     gap: 6px;
     padding: 8px 18px;
     border-radius: 24px;
-    background: var(--mat-sys-primary-container, #e8def8);
-    color: var(--mat-sys-on-primary-container, #21005d);
+    background: var(--color-accent-50);
+    color: var(--color-accent-700);
     font-weight: 600;
     font-size: 14px;
+    border: 1px solid var(--color-accent-200, rgba(43, 184, 138, 0.25));
 
     mat-icon { font-size: 18px; width: 18px; height: 18px; }
   }
@@ -66,8 +68,8 @@
   }
 
   &.plan-card--pro {
-    border: 2px solid var(--mat-sys-primary, #6750a4);
-    box-shadow: 0 8px 32px rgba(103, 80, 164, 0.15);
+    border: 2px solid var(--color-accent-600);
+    box-shadow: 0 8px 32px rgba(43, 184, 138, 0.15);
   }
 }
 
@@ -84,18 +86,18 @@
 }
 
 .pro-ribbon {
-  background: var(--mat-sys-primary, #6750a4);
+  background: var(--color-accent-600);
   color: #fff;
 }
 
 .current-badge {
-  background: var(--mat-sys-secondary-container, #e8def8);
-  color: var(--mat-sys-on-secondary-container, #1d192b);
+  background: var(--color-gray-100);
+  color: var(--color-text-primary);
   left: 16px;
   right: auto;
 
   &.current-badge--pro {
-    background: var(--mat-sys-primary, #6750a4);
+    background: var(--color-accent-600);
     color: #fff;
     right: 16px;
     left: auto;
@@ -112,12 +114,12 @@
   .price-amount {
     font-size: 36px;
     font-weight: 700;
-    color: var(--mat-sys-on-surface, #1c1b1f);
+    color: var(--color-text-primary);
   }
 
   .price-period {
     font-size: 14px;
-    color: var(--mat-sys-on-surface-variant, #49454f);
+    color: var(--color-text-secondary);
   }
 }
 
@@ -136,12 +138,13 @@
   align-items: center;
   gap: 10px;
   font-size: 14px;
+  color: var(--color-text-primary);
 
   mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; }
 
   &.feature-item--check mat-icon { color: #22c55e; }
-  &.feature-item--limit { color: var(--mat-sys-on-surface-variant, #666); }
-  &.feature-item--limit mat-icon { color: var(--mat-sys-on-surface-variant, #999); }
+  &.feature-item--limit { color: var(--color-text-secondary); }
+  &.feature-item--limit mat-icon { color: var(--color-text-tertiary); }
 }
 
 // CTAs
@@ -149,8 +152,12 @@
   width: 100%;
 
   &.plan-cta--pro {
-    background: var(--mat-sys-primary, #6750a4);
-    color: #fff;
+    background: var(--color-accent-600) !important;
+    color: #fff !important;
+
+    &:hover {
+      background: var(--color-accent-700) !important;
+    }
   }
 }
 
@@ -185,11 +192,11 @@
     font-size: 40px;
     width: 40px;
     height: 40px;
-    color: var(--mat-sys-primary, #6750a4);
+    color: var(--color-accent-600);
     flex-shrink: 0;
     margin-top: 4px;
   }
 
-  h3 { margin: 0 0 8px; font-size: 18px; }
-  p { margin: 0; color: var(--mat-sys-on-surface-variant, #555); line-height: 1.6; }
+  h3 { margin: 0 0 8px; font-size: 18px; color: var(--color-text-primary); }
+  p { margin: 0; color: var(--color-text-secondary); line-height: 1.6; }
 }

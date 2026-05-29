@@ -1,7 +1,8 @@
-// Modern App Component Styles
-.spacer {
-  flex: 1 1 auto;
-}
+// =====================================================
+// APP SHELL — layout, toolbar, sidenav
+// =====================================================
+
+.spacer { flex: 1 1 auto; }
 
 .container {
   padding: var(--spacing-2xl);
@@ -9,20 +10,27 @@
   margin: 0 auto;
 }
 
-// Sidenav Container
+// ── Sidenav container ─────────────────────────────
 .sidenav-container {
   height: 100vh;
   background: transparent;
 }
 
+// ── Sidenav panel ─────────────────────────────────
 mat-sidenav {
-  width: 280px;
+  width: 280px; // mobile overlay default
   background: var(--color-background);
   border-right: 1px solid var(--color-border);
   box-shadow: none;
 }
 
-// Sidenav Header — The Weave brand
+// Desktop persistent sidebar — narrower, no shadow
+mat-sidenav.desktop-nav {
+  width: 240px;
+  box-shadow: none !important;
+}
+
+// ── Sidenav Header (mobile only) ──────────────────
 .sidenav-header {
   display: flex;
   align-items: center;
@@ -61,52 +69,82 @@ mat-sidenav {
   }
 }
 
-// User info section in sidebar
+// Light mode override for mobile sidenav header
+:host-context([data-theme="light"]) {
+  .sidenav-header {
+    background: var(--color-surface-raised);
+    border-bottom-color: var(--color-border);
+
+    .sidenav-wordmark {
+      color: var(--color-text-secondary);
+      strong { color: var(--color-text-primary); }
+    }
+
+    button {
+      color: var(--color-text-secondary);
+      &:hover {
+        color: var(--color-text-primary);
+        background-color: var(--color-gray-100);
+      }
+    }
+  }
+}
+
+// ── User info section in sidebar ──────────────────
 .sidenav-user-info {
   display: flex;
   align-items: center;
   gap: var(--spacing-md);
-  padding: var(--spacing-lg) var(--spacing-xl);
+  padding: var(--spacing-md) var(--spacing-lg);
   background-color: var(--color-gray-50);
   border-bottom: 1px solid var(--color-border);
 
   .sidenav-avatar {
-    width: 40px;
-    height: 40px;
+    width: 36px;
+    height: 36px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--color-accent-600);
+    flex-shrink: 0;
   }
 
   mat-icon {
-    font-size: 40px;
-    width: 40px;
-    height: 40px;
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
     color: var(--color-accent-600);
+    flex-shrink: 0;
   }
 
   div {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 1px;
+    min-width: 0;
 
     strong {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       color: var(--color-text-primary);
       letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     small {
-      font-size: 12px;
+      font-size: 11px;
       color: var(--color-text-tertiary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
 
-// Navigation list items
+// ── Navigation list items ─────────────────────────
 mat-nav-list {
-  padding: var(--spacing-md) var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-xs);
 
   a[mat-list-item] {
     color: var(--color-text-primary);
@@ -115,34 +153,31 @@ mat-nav-list {
     transition: all var(--transition-fast);
     font-size: 14px;
     font-weight: 500;
-    height: 44px;
+    height: 40px;
 
     mat-icon {
-      color: var(--color-text-secondary);
-      margin-right: var(--spacing-sm);
+      color: var(--color-text-tertiary);
+      margin-right: var(--spacing-xs);
+      font-size: 20px;
+      width: 20px;
+      height: 20px;
     }
 
     &:hover {
-      background-color: var(--color-gray-50);
-
-      mat-icon {
-        color: var(--color-accent-600);
-      }
+      background-color: var(--color-gray-100);
+      mat-icon { color: var(--color-accent-600); }
     }
 
-    &.active,
-    &.mdc-list-item--activated {
+    &.active {
       background-color: var(--color-accent-50);
       color: var(--color-accent-700);
-
-      mat-icon {
-        color: var(--color-accent-600);
-      }
+      font-weight: 600;
+      mat-icon { color: var(--color-accent-600); }
     }
   }
 }
 
-// App container
+// ── App container ─────────────────────────────────
 .app-container {
   display: flex;
   flex-direction: column;
@@ -150,40 +185,33 @@ mat-nav-list {
   background: transparent;
 }
 
-// Toolbar - Clean and minimal
+// ── Toolbar ───────────────────────────────────────
+// Glassmorphism background handled by global [data-theme] .mat-toolbar rules
 .app-toolbar {
   position: sticky;
   top: 0;
-  z-index: 1000;
-  background: var(--color-background) !important;
+  z-index: 100;
   color: var(--color-text-primary) !important;
-  border-bottom: 1px solid var(--color-border) !important;
   box-shadow: none !important;
   height: 64px !important;
-  backdrop-filter: blur(8px);
 }
 
 .toolbar-content {
   display: flex;
   align-items: center;
   width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 0 var(--spacing-lg);
   height: 100%;
 }
 
-// Menu button
+// ── Menu button (mobile only) ─────────────────────
 .menu-button {
   margin-right: var(--spacing-sm);
   color: var(--color-text-primary);
-
-  &:hover {
-    background-color: var(--color-gray-100);
-  }
+  &:hover { background-color: var(--color-gray-100); }
 }
 
-// Logo — The Weave mark + wordmark
+// ── Logo ──────────────────────────────────────────
 .logo {
   display: flex;
   align-items: center;
@@ -210,26 +238,10 @@ mat-nav-list {
     }
   }
 
-  &:hover {
-    opacity: 0.8;
-  }
+  &:hover { opacity: 0.8; }
 }
 
-// Mobile logo — smaller
-@media (max-width: 480px) {
-  .logo {
-    .logo-mark {
-      width: 26px;
-      height: 21px;
-    }
-
-    .logo-wordmark {
-      font-size: 1.0625rem;
-    }
-  }
-}
-
-// Theme toggle
+// ── Theme toggle ──────────────────────────────────
 .theme-toggle-button {
   margin-right: var(--spacing-xs);
   color: var(--color-text-secondary);
@@ -241,14 +253,14 @@ mat-nav-list {
   }
 }
 
-// User menu
+// ── User menu ─────────────────────────────────────
 .user-menu {
   display: flex;
   align-items: center;
   gap: var(--spacing-sm);
 
   .login-button {
-    height: 40px;
+    height: 38px;
     padding: 0 var(--spacing-lg);
     background-color: var(--color-accent-600);
     color: white;
@@ -261,26 +273,27 @@ mat-nav-list {
       box-shadow: var(--shadow-sm);
     }
 
-    mat-icon {
-      margin-right: var(--spacing-xs);
-    }
+    mat-icon { margin-right: var(--spacing-xs); }
   }
 
   .profile-button {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     padding: 0 !important;
     border-radius: 50% !important;
     overflow: hidden !important;
     line-height: 0 !important;
+    border: 2px solid var(--color-border) !important;
+    transition: border-color var(--transition-fast) !important;
 
     &:hover {
-      opacity: 0.8;
+      opacity: 0.9;
+      border-color: var(--color-accent-500) !important;
     }
 
     .profile-avatar {
-      width: 40px;
-      height: 40px;
+      width: 34px;
+      height: 34px;
       border-radius: 50%;
       object-fit: cover;
       display: block;
@@ -288,24 +301,22 @@ mat-nav-list {
   }
 
   button[mat-icon-button] {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
     border-radius: 50%;
     color: var(--color-text-primary);
 
     mat-icon {
-      font-size: 24px;
-      width: 24px;
-      height: 24px;
+      font-size: 22px;
+      width: 22px;
+      height: 22px;
     }
 
-    &:hover {
-      background-color: var(--color-gray-100);
-    }
+    &:hover { background-color: var(--color-gray-100); }
   }
 }
 
-// User menu dropdown
+// ── Dropdown user info panel ───────────────────────
 .user-info {
   padding: var(--spacing-md);
   display: flex;
@@ -315,8 +326,8 @@ mat-nav-list {
   margin-bottom: var(--spacing-xs);
 
   .menu-avatar {
-    width: 60px;
-    height: 60px;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--color-accent-600);
@@ -341,94 +352,83 @@ mat-nav-list {
   }
 }
 
-// Main content area
+// ── Main content area ─────────────────────────────
 .main-content {
   flex: 1;
   overflow-y: auto;
   background: transparent;
-  //padding: var(--spacing-xl);
+}
 
-  @media (max-width: 768px) {
+// ── PRO badge & upgrade link ──────────────────────
+.sidenav-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sidenav-pro-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+
+.sidenav-plan-link { margin-top: 2px; }
+
+.upgrade-link {
+  font-size: 11px;
+  color: var(--color-accent-600);
+  text-decoration: none;
+  font-weight: 600;
+  &:hover { text-decoration: underline; }
+}
+
+// =====================================================
+// RESPONSIVE
+// =====================================================
+
+// Desktop — persistent sidebar is active
+@media (min-width: 1024px) {
+  .toolbar-content {
+    padding: 0 var(--spacing-xl);
   }
 }
 
-// Responsive design for main app layout
 @media (max-width: 1400px) {
-  .toolbar-content {
-    padding: 0 var(--spacing-md);
-  }
-
-  .container {
-    padding: var(--spacing-xl);
-  }
+  .toolbar-content { padding: 0 var(--spacing-md); }
+  .container { padding: var(--spacing-xl); }
 }
 
-@media (max-width: 992px) {
-  mat-sidenav {
-    width: 260px;
-  }
+@media (max-width: 1023px) {
+  // Tablet / mobile: revert to overlay styles
+  mat-sidenav { width: 280px; }
 
-  .toolbar-content {
-    padding: 0 var(--spacing-md);
-  }
-
-  .container {
-    padding: var(--spacing-lg);
-  }
+  .toolbar-content { padding: 0 var(--spacing-md); }
+  .container { padding: var(--spacing-lg); }
 }
 
 @media (max-width: 768px) {
-  .app-toolbar {
-    height: 56px !important;
-  }
+  .app-toolbar { height: 56px !important; }
 
-  .toolbar-content {
-    padding: 0 var(--spacing-sm);
-  }
+  .toolbar-content { padding: 0 var(--spacing-sm); }
 
-  mat-sidenav {
-    width: 280px; // Full width on mobile for better usability
-  }
-
-  .sidenav-header {
-    padding: var(--spacing-md) var(--spacing-lg);
-
-    h2 {
-      font-size: 1.125rem;
-    }
-  }
+  mat-sidenav { width: 280px; }
 
   .sidenav-user-info {
     padding: var(--spacing-md) var(--spacing-lg);
-
-    .sidenav-avatar {
-      width: 36px;
-      height: 36px;
-    }
-
-    mat-icon {
-      font-size: 36px;
-      width: 36px;
-      height: 36px;
-    }
-
-    div {
-      strong {
-        font-size: 13px;
-      }
-
-      small {
-        font-size: 11px;
-      }
-    }
   }
 
   mat-nav-list {
-    padding: var(--spacing-sm);
-
     a[mat-list-item] {
-      font-size: 13px;
-      height: 40px;
+      font-size: 14px;
+      height: 44px;
     }
   }
 
@@ -445,41 +445,21 @@ mat-nav-list {
       padding: 0 var(--spacing-md);
       font-size: 13px;
     }
-
-    .user-avatar-button {
-      width: 36px;
-      height: 36px;
-
-      mat-icon {
-        font-size: 20px;
-        width: 20px;
-        height: 20px;
-      }
-    }
   }
 
-  .container {
-    padding: var(--spacing-md);
-  }
+  .container { padding: var(--spacing-md); }
 }
 
 @media (max-width: 480px) {
-  .app-toolbar {
-    height: 56px !important;
-  }
+  .app-toolbar { height: 56px !important; }
 
-  .toolbar-content {
-    padding: 0 var(--spacing-xs);
-  }
+  .toolbar-content { padding: 0 var(--spacing-xs); }
 
   .menu-button {
     margin-right: var(--spacing-xs);
     width: 40px;
     height: 40px;
-
-    mat-icon {
-      font-size: 22px;
-    }
+    mat-icon { font-size: 22px; }
   }
 
   .logo {
@@ -488,7 +468,7 @@ mat-nav-list {
   }
 
   mat-sidenav {
-    width: 100%; // Full screen on very small phones
+    width: 100%;
     max-width: 320px;
   }
 
@@ -496,60 +476,19 @@ mat-nav-list {
     .login-button {
       padding: 0 var(--spacing-sm);
       font-size: 12px;
-
-      span {
-        display: none; // Hide "Login" text on very small screens
-      }
-
-      mat-icon {
-        margin: 0;
-      }
+      span { display: none; }
+      mat-icon { margin: 0; }
     }
   }
 
-  .container {
-    padding: var(--spacing-sm);
-  }
+  .container { padding: var(--spacing-sm); }
 }
 
-// Sidenav PRO badge & upgrade link
-.sidenav-name-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.sidenav-pro-badge {
-  display: inline-flex;
-  align-items: center;
-  padding: 1px 6px;
-  border-radius: 4px;
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #fff;
-  line-height: 1.6;
-}
-
-.sidenav-plan-link {
-  margin-top: 2px;
-}
-
-.upgrade-link {
-  font-size: 11px;
-  color: var(--color-accent-600);
-  text-decoration: none;
-  font-weight: 600;
-
-  &:hover { text-decoration: underline; }
-}
-
-// Touch-friendly improvements
+// ── Touch targets ─────────────────────────────────
 @media (hover: none) and (pointer: coarse) {
   mat-nav-list {
     a[mat-list-item] {
-      height: 48px; // Larger touch targets
+      height: 48px;
       min-height: 48px;
     }
   }
@@ -561,7 +500,7 @@ mat-nav-list {
 
   .user-menu {
     .login-button,
-    .user-avatar-button {
+    .profile-button {
       min-height: 44px;
     }
   }

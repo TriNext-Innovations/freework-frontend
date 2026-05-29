@@ -1,44 +1,42 @@
 <div class="edit-container">
   <!-- Loading State -->
   <div *ngIf="isLoading" class="loading-container">
-    <div class="spinner"></div>
+    <mat-spinner diameter="48"></mat-spinner>
     <p>Loading profile...</p>
   </div>
 
-  <!-- Error State - Show prominently if profile fails to load -->
+  <!-- Error State -->
   <div *ngIf="error && !isLoading && !profile" class="error-container">
-    <div class="error-message">
-      <i class="fas fa-exclamation-circle"></i>
-      <p>{{ error }}</p>
-      <button class="btn btn-primary" (click)="loadProfile()">Try Again</button>
-    </div>
+    <mat-icon class="error-state-icon">error_outline</mat-icon>
+    <p>{{ error }}</p>
+    <button mat-raised-button color="primary" (click)="loadProfile()">Try Again</button>
   </div>
 
   <!-- Edit Form -->
   <div *ngIf="!isLoading && profile" class="edit-content">
     <!-- First Time Profile Completion Banner -->
     <div *ngIf="isFirstTime" class="alert alert-info first-time-banner">
-      <i class="fas fa-info-circle"></i>
+      <mat-icon>info</mat-icon>
       <div>
-        <h3>Welcome to Freework! 🎉</h3>
+        <h3>Welcome to Freework!</h3>
         <p>Please complete your profile to start {{ profile.role === 'FREELANCER' ? 'browsing and applying for jobs' : 'posting jobs and hiring freelancers' }}.</p>
       </div>
     </div>
 
     <div class="page-header">
-      <h1><i class="fas fa-user-edit"></i> {{ isFirstTime ? 'Complete Your Profile' : 'Edit Profile' }}</h1>
+      <h1><mat-icon>manage_accounts</mat-icon> {{ isFirstTime ? 'Complete Your Profile' : 'Edit Profile' }}</h1>
       <p class="subtitle">{{ isFirstTime ? 'Tell us about yourself to get started' : 'Update your profile information' }}</p>
     </div>
 
     <!-- Success Message -->
     <div *ngIf="successMessage" class="alert alert-success">
-      <i class="fas fa-check-circle"></i>
+      <mat-icon>check_circle</mat-icon>
       {{ successMessage }}
     </div>
 
     <!-- Error Message -->
     <div *ngIf="error" class="alert alert-error">
-      <i class="fas fa-exclamation-circle"></i>
+      <mat-icon>error</mat-icon>
       {{ error }}
     </div>
 
@@ -49,9 +47,13 @@
         <div class="picture-upload">
           <div class="current-picture">
             <img
-              [src]="previewUrl || profile.profilePicture || 'https://via.placeholder.com/150'"
+              *ngIf="previewUrl || profile.profilePicture"
+              [src]="previewUrl || profile.profilePicture"
               alt="Profile picture"
             />
+            <div *ngIf="!previewUrl && !profile.profilePicture" class="picture-placeholder">
+              <mat-icon>person</mat-icon>
+            </div>
           </div>
           <div class="upload-controls">
             <input
@@ -61,19 +63,20 @@
               accept="image/*"
               style="display: none"
             />
-            <button type="button" class="btn btn-secondary" (click)="fileInput.click()">
-              <i class="fas fa-upload"></i> Choose Photo
+            <button type="button" mat-stroked-button (click)="fileInput.click()">
+              <mat-icon>upload</mat-icon> Choose Photo
             </button>
             <button
               *ngIf="selectedFile"
               type="button"
-              class="btn btn-primary"
+              mat-raised-button
+              color="primary"
               (click)="uploadProfilePicture()"
               [disabled]="isSaving"
             >
-              <i class="fas fa-save"></i> Upload Photo
+              <mat-icon>save</mat-icon> Upload Photo
             </button>
-            <p class="help-text">Recommended: Square image, at least 400x400px</p>
+            <p class="help-text">Recommended: Square image, at least 400×400px</p>
           </div>
         </div>
       </div>
@@ -90,7 +93,7 @@
               formControlName="firstName"
               [class.invalid]="isFieldInvalid('firstName')"
             />
-            <span *ngIf="isFieldInvalid('firstName')" class="error-message">
+            <span *ngIf="isFieldInvalid('firstName')" class="field-error">
               {{ getErrorMessage('firstName') }}
             </span>
           </div>
@@ -103,40 +106,25 @@
               formControlName="lastName"
               [class.invalid]="isFieldInvalid('lastName')"
             />
-            <span *ngIf="isFieldInvalid('lastName')" class="error-message">
+            <span *ngIf="isFieldInvalid('lastName')" class="field-error">
               {{ getErrorMessage('lastName') }}
             </span>
           </div>
 
           <div class="form-group">
             <label for="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              formControlName="email"
-              [disabled]="true"
-            />
+            <input type="email" id="email" formControlName="email" [disabled]="true" />
             <span class="help-text">Email cannot be changed</span>
           </div>
 
           <div class="form-group">
             <label for="phone">Phone Number</label>
-            <input
-              type="tel"
-              id="phone"
-              formControlName="phone"
-              placeholder="+1 (555) 123-4567"
-            />
+            <input type="tel" id="phone" formControlName="phone" placeholder="+27 71 234 5678" />
           </div>
 
           <div class="form-group full-width">
             <label for="location">Location</label>
-            <input
-              type="text"
-              id="location"
-              formControlName="location"
-              placeholder="City, State/Country"
-            />
+            <input type="text" id="location" formControlName="location" placeholder="City, Province / Country" />
           </div>
         </div>
       </div>
@@ -148,23 +136,12 @@
           <div class="form-grid">
             <div class="form-group">
               <label for="title">Professional Title</label>
-              <input
-                type="text"
-                id="title"
-                formControlName="title"
-                placeholder="e.g., Full Stack Developer"
-              />
+              <input type="text" id="title" formControlName="title" placeholder="e.g., Full Stack Developer" />
             </div>
 
             <div class="form-group">
-              <label for="hourlyRate">Hourly Rate (USD)</label>
-              <input
-                type="number"
-                id="hourlyRate"
-                formControlName="hourlyRate"
-                min="0"
-                placeholder="75"
-              />
+              <label for="hourlyRate">Hourly Rate (ZAR)</label>
+              <input type="number" id="hourlyRate" formControlName="hourlyRate" min="0" placeholder="750" />
             </div>
 
             <div class="form-group full-width">
@@ -189,22 +166,12 @@
 
             <div class="form-group full-width">
               <label for="experience">Experience</label>
-              <textarea
-                id="experience"
-                formControlName="experience"
-                rows="3"
-                placeholder="Describe your professional experience"
-              ></textarea>
+              <textarea id="experience" formControlName="experience" rows="3" placeholder="Describe your professional experience"></textarea>
             </div>
 
             <div class="form-group full-width">
               <label for="education">Education</label>
-              <textarea
-                id="education"
-                formControlName="education"
-                rows="2"
-                placeholder="Your educational background"
-              ></textarea>
+              <textarea id="education" formControlName="education" rows="2" placeholder="Your educational background"></textarea>
             </div>
           </div>
         </div>
@@ -214,31 +181,24 @@
           <h2>Languages</h2>
           <div formArrayName="languages" class="languages-section">
             <div *ngFor="let language of languages.controls; let i = index" [formGroupName]="i" class="language-item">
-              <div class="form-grid">
+              <div class="language-item-fields">
                 <div class="form-group">
                   <label [for]="'languageName' + i">Language</label>
-                  <input
-                    type="text"
-                    [id]="'languageName' + i"
-                    formControlName="name"
-                    placeholder="e.g., English"
-                  />
+                  <input type="text" [id]="'languageName' + i" formControlName="name" placeholder="e.g., English" />
                 </div>
                 <div class="form-group">
                   <label [for]="'languageProficiency' + i">Proficiency</label>
                   <select [id]="'languageProficiency' + i" formControlName="proficiency">
-                    <option *ngFor="let option of proficiencyOptions" [value]="option.value">
-                      {{ option.label }}
-                    </option>
+                    <option *ngFor="let option of proficiencyOptions" [value]="option.value">{{ option.label }}</option>
                   </select>
                 </div>
+                <button type="button" mat-icon-button color="warn" (click)="removeLanguage(i)" aria-label="Remove language" class="remove-language-btn">
+                  <mat-icon>delete_outline</mat-icon>
+                </button>
               </div>
-              <button type="button" class="btn btn-danger btn-sm" (click)="removeLanguage(i)">
-                <i class="fas fa-trash"></i> Remove
-              </button>
             </div>
-            <button type="button" class="btn btn-secondary" (click)="addLanguage()">
-              <i class="fas fa-plus"></i> Add Language
+            <button type="button" mat-stroked-button (click)="addLanguage()" class="add-language-btn">
+              <mat-icon>add</mat-icon> Add Language
             </button>
           </div>
         </div>
@@ -251,44 +211,29 @@
           <div class="form-grid">
             <div class="form-group">
               <label for="company">Company Name</label>
-              <input
-                type="text"
-                id="company"
-                formControlName="company"
-                placeholder="Your company name"
-              />
+              <input type="text" id="company" formControlName="company" placeholder="Your company name" />
             </div>
 
             <div class="form-group">
               <label for="companySize">Company Size</label>
               <select id="companySize" formControlName="companySize">
                 <option value="">Select size</option>
-                <option value="1-10 employees">1-10 employees</option>
-                <option value="11-50 employees">11-50 employees</option>
-                <option value="51-200 employees">51-200 employees</option>
-                <option value="201-500 employees">201-500 employees</option>
+                <option value="1-10 employees">1–10 employees</option>
+                <option value="11-50 employees">11–50 employees</option>
+                <option value="51-200 employees">51–200 employees</option>
+                <option value="201-500 employees">201–500 employees</option>
                 <option value="500+ employees">500+ employees</option>
               </select>
             </div>
 
             <div class="form-group">
               <label for="industry">Industry</label>
-              <input
-                type="text"
-                id="industry"
-                formControlName="industry"
-                placeholder="e.g., Technology, Finance"
-              />
+              <input type="text" id="industry" formControlName="industry" placeholder="e.g., Technology, Finance" />
             </div>
 
             <div class="form-group">
               <label for="website">Company Website</label>
-              <input
-                type="url"
-                id="website"
-                formControlName="website"
-                placeholder="https://example.com"
-              />
+              <input type="url" id="website" formControlName="website" placeholder="https://example.com" />
             </div>
           </div>
         </div>
@@ -315,63 +260,33 @@
         <h2>Social Links</h2>
         <div class="form-grid">
           <div class="form-group">
-            <label for="linkedin"><i class="fab fa-linkedin"></i> LinkedIn</label>
-            <input
-              type="url"
-              id="linkedin"
-              formControlName="linkedin"
-              placeholder="https://linkedin.com/in/yourprofile"
-            />
+            <label for="linkedin"><mat-icon class="label-icon">link</mat-icon> LinkedIn</label>
+            <input type="url" id="linkedin" formControlName="linkedin" placeholder="https://linkedin.com/in/yourprofile" />
           </div>
 
           <div class="form-group" *ngIf="isFreelancer()">
-            <label for="github"><i class="fab fa-github"></i> GitHub</label>
-            <input
-              type="url"
-              id="github"
-              formControlName="github"
-              placeholder="https://github.com/yourusername"
-            />
+            <label for="github"><mat-icon class="label-icon">code</mat-icon> GitHub</label>
+            <input type="url" id="github" formControlName="github" placeholder="https://github.com/yourusername" />
           </div>
 
           <div class="form-group">
-            <label for="twitter"><i class="fab fa-twitter"></i> Twitter</label>
-            <input
-              type="url"
-              id="twitter"
-              formControlName="twitter"
-              placeholder="https://twitter.com/yourusername"
-            />
+            <label for="twitter"><mat-icon class="label-icon">alternate_email</mat-icon> Twitter / X</label>
+            <input type="url" id="twitter" formControlName="twitter" placeholder="https://twitter.com/yourusername" />
           </div>
 
           <div class="form-group">
-            <label for="websiteLink"><i class="fas fa-globe"></i> Website</label>
-            <input
-              type="url"
-              id="websiteLink"
-              formControlName="website"
-              placeholder="https://yourwebsite.com"
-            />
+            <label for="websiteLink"><mat-icon class="label-icon">language</mat-icon> Website</label>
+            <input type="url" id="websiteLink" formControlName="website" placeholder="https://yourwebsite.com" />
           </div>
 
           <div class="form-group" *ngIf="isFreelancer()">
-            <label for="behance"><i class="fab fa-behance"></i> Behance</label>
-            <input
-              type="url"
-              id="behance"
-              formControlName="behance"
-              placeholder="https://behance.net/yourprofile"
-            />
+            <label for="behance"><mat-icon class="label-icon">palette</mat-icon> Behance</label>
+            <input type="url" id="behance" formControlName="behance" placeholder="https://behance.net/yourprofile" />
           </div>
 
           <div class="form-group" *ngIf="isFreelancer()">
-            <label for="dribbble"><i class="fab fa-dribbble"></i> Dribbble</label>
-            <input
-              type="url"
-              id="dribbble"
-              formControlName="dribbble"
-              placeholder="https://dribbble.com/yourusername"
-            />
+            <label for="dribbble"><mat-icon class="label-icon">sports_basketball</mat-icon> Dribbble</label>
+            <input type="url" id="dribbble" formControlName="dribbble" placeholder="https://dribbble.com/yourusername" />
           </div>
         </div>
       </div>
@@ -381,13 +296,13 @@
         <button
           *ngIf="!isFirstTime"
           type="button"
-          class="btn btn-secondary"
+          mat-stroked-button
           (click)="cancel()"
           [disabled]="isSaving">
           Cancel
         </button>
-        <button type="submit" class="btn btn-primary" [disabled]="isSaving || profileForm.invalid">
-          <i class="fas fa-save"></i>
+        <button type="submit" mat-raised-button color="primary" [disabled]="isSaving || profileForm.invalid">
+          <mat-icon>save</mat-icon>
           {{ isSaving ? 'Saving...' : (isFirstTime ? 'Complete Profile' : 'Save Changes') }}
         </button>
       </div>

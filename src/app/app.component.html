@@ -1,8 +1,9 @@
 <mat-sidenav-container class="sidenav-container">
   <!-- Side Navigation -->
-  <mat-sidenav #sidenav [(opened)]="sidenavOpened" mode="over">
+  <mat-sidenav #sidenav [(opened)]="sidenavOpened" [mode]="sidenavMode" [class.desktop-nav]="isDesktop">
     <mat-nav-list>
-      <div class="sidenav-header">
+      <!-- Mobile only: logo header + close button -->
+      <div class="sidenav-header" *ngIf="!isDesktop">
         <div class="sidenav-logo">
           <svg viewBox="0 0 64 52" width="28" height="23" xmlns="http://www.w3.org/2000/svg">
             <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
@@ -10,12 +11,12 @@
           </svg>
           <span class="sidenav-wordmark"><strong>free</strong>work</span>
         </div>
-        <button mat-icon-button (click)="closeSidenav()">
+        <button mat-icon-button (click)="closeSidenav()" aria-label="Close navigation menu">
           <mat-icon>close</mat-icon>
         </button>
       </div>
 
-      <mat-divider></mat-divider>
+      <mat-divider *ngIf="!isDesktop"></mat-divider>
 
       <!-- User Info if Logged In -->
       <div class="sidenav-user-info" *ngIf="currentUser$ | async as user">
@@ -45,31 +46,31 @@
       <mat-divider *ngIf="currentUser$ | async"></mat-divider>
 
       <!-- Navigation Links -->
-      <a mat-list-item routerLink="/jobs" (click)="closeSidenav()">
+      <a mat-list-item routerLink="/jobs" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeSidenav()">
         <mat-icon matListItemIcon>search</mat-icon>
         <span matListItemTitle>Browse Jobs</span>
       </a>
 
-      <a mat-list-item routerLink="/pricing" (click)="closeSidenav()">
+      <a mat-list-item routerLink="/pricing" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
         <mat-icon matListItemIcon>workspace_premium</mat-icon>
         <span matListItemTitle>Pricing</span>
       </a>
 
       <!-- Authenticated Links -->
       <ng-container *ngIf="currentUser$ | async as user">
-        <a mat-list-item routerLink="/messages" (click)="closeSidenav()">
+        <a mat-list-item routerLink="/messages" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>message</mat-icon>
           <span matListItemTitle>Messages</span>
         </a>
 
         <!-- Customer Only -->
         <ng-container *ngIf="user.role === 'CUSTOMER'">
-          <a mat-list-item routerLink="/jobs/new" (click)="closeSidenav()">
+          <a mat-list-item routerLink="/jobs/new" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
             <mat-icon matListItemIcon>add</mat-icon>
             <span matListItemTitle>Post Job</span>
           </a>
 
-          <a mat-list-item routerLink="/my-jobs" (click)="closeSidenav()">
+          <a mat-list-item routerLink="/my-jobs" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
             <mat-icon matListItemIcon>work_outline</mat-icon>
             <span matListItemTitle>My Jobs</span>
           </a>
@@ -77,35 +78,35 @@
 
         <!-- Freelancer Only -->
         <ng-container *ngIf="user.role === 'FREELANCER'">
-          <a mat-list-item routerLink="/my-active-jobs" (click)="closeSidenav()">
+          <a mat-list-item routerLink="/my-active-jobs" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
             <mat-icon matListItemIcon>work</mat-icon>
             <span matListItemTitle>My Active Jobs</span>
           </a>
 
-          <a mat-list-item routerLink="/my-applications" (click)="closeSidenav()">
+          <a mat-list-item routerLink="/my-applications" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
             <mat-icon matListItemIcon>assignment</mat-icon>
             <span matListItemTitle>My Applications</span>
           </a>
         </ng-container>
 
-        <a mat-list-item routerLink="/payments" (click)="closeSidenav()">
+        <a mat-list-item routerLink="/payments" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>payment</mat-icon>
           <span matListItemTitle>Payments</span>
         </a>
 
         <mat-divider></mat-divider>
 
-        <a mat-list-item routerLink="/profile" (click)="closeSidenav()">
+        <a mat-list-item routerLink="/profile" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>person</mat-icon>
           <span matListItemTitle>Profile</span>
         </a>
 
-        <a mat-list-item routerLink="/settings" (click)="closeSidenav()">
+        <a mat-list-item routerLink="/settings" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>settings</mat-icon>
           <span matListItemTitle>Settings</span>
         </a>
 
-        <a mat-list-item routerLink="/settings/billing" (click)="closeSidenav()">
+        <a mat-list-item routerLink="/settings/billing" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>workspace_premium</mat-icon>
           <span matListItemTitle>Plan &amp; Billing</span>
         </a>
@@ -120,7 +121,7 @@
 
       <!-- Not Logged In -->
       <ng-container *ngIf="!(currentUser$ | async)">
-        <a mat-list-item routerLink="/login" (click)="closeSidenav()">
+        <a mat-list-item routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>login</mat-icon>
           <span matListItemTitle>Login</span>
         </a>
@@ -135,8 +136,8 @@
       <!-- Navigation Bar -->
       <mat-toolbar color="primary" class="app-toolbar">
         <div class="toolbar-content">
-          <!-- Burger Menu Button -->
-          <button mat-icon-button (click)="sidenavOpened = !sidenavOpened" class="menu-button">
+          <!-- Burger Menu Button — mobile only -->
+          <button mat-icon-button (click)="sidenavOpened = !sidenavOpened" class="menu-button" *ngIf="!isDesktop" aria-label="Open navigation menu">
             <mat-icon>menu</mat-icon>
           </button>
 
@@ -153,7 +154,7 @@
           <span class="spacer"></span>
 
           <!-- Theme Toggle -->
-          <button mat-icon-button (click)="themeService.toggle()" class="theme-toggle-button" [title]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
+          <button mat-icon-button (click)="themeService.toggle()" class="theme-toggle-button" [attr.aria-label]="themeService.isDark() ? 'Switch to light mode' : 'Switch to dark mode'">
             <mat-icon>{{ themeService.isDark() ? 'light_mode' : 'dark_mode' }}</mat-icon>
           </button>
 
@@ -169,7 +170,7 @@
 
             <!-- Logged In -->
             <ng-container *ngIf="currentUser$ | async as user">
-              <button mat-icon-button [matMenuTriggerFor]="userMenu" class="profile-button">
+              <button mat-icon-button [matMenuTriggerFor]="userMenu" class="profile-button" aria-label="Open user menu">
                 <ng-container *ngIf="user.avatar || user.profilePicture; else defaultAvatar">
                   <img
                     [src]="getAvatarUrl(user)"

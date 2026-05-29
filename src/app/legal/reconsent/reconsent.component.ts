@@ -11,20 +11,19 @@ import { LegalService, ReconsentCheck } from '../legal.service';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
-  selector: 'app-reconsent',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    FormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatIconModule,
-    MatProgressSpinnerModule
-  ],
-  templateUrl: './reconsent.component.html',
-  styleUrl: './reconsent.component.scss'
+    selector: 'app-reconsent',
+    imports: [
+        CommonModule,
+        RouterLink,
+        FormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatCheckboxModule,
+        MatIconModule,
+        MatProgressSpinnerModule
+    ],
+    templateUrl: './reconsent.component.html',
+    styleUrl: './reconsent.component.scss'
 })
 export class ReconsentComponent implements OnInit {
   reconsentCheck: ReconsentCheck | null = null;

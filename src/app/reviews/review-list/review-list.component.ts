@@ -13,22 +13,21 @@ import { ReviewService } from '../review.service';
 import { Review, ReviewType } from '../models';
 
 @Component({
-  selector: 'app-review-list',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    ReviewCardComponent
-  ],
-  templateUrl: './review-list.component.html',
-  styleUrls: ['./review-list.component.scss']
+    selector: 'app-review-list',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        ReviewCardComponent
+    ],
+    templateUrl: './review-list.component.html',
+    styleUrls: ['./review-list.component.scss']
 })
 export class ReviewListComponent implements OnInit, OnChanges {
   @Input() jobId?: string;

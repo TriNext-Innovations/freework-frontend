@@ -14,23 +14,22 @@ import { LegalService } from '../legal/legal.service';
 import { DeleteAccountDialogComponent } from './delete-account-dialog/delete-account-dialog.component';
 
 @Component({
-  selector: 'app-settings',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    FormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatListModule,
-    MatSlideToggleModule,
-    MatDialogModule,
-    MatSnackBarModule
-  ],
-  templateUrl: './settings.component.html',
-  styleUrl: './settings.component.scss'
+    selector: 'app-settings',
+    imports: [
+        CommonModule,
+        RouterLink,
+        FormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatDividerModule,
+        MatListModule,
+        MatSlideToggleModule,
+        MatDialogModule,
+        MatSnackBarModule
+    ],
+    templateUrl: './settings.component.html',
+    styleUrl: './settings.component.scss'
 })
 export class SettingsComponent implements OnInit {
   marketingConsented = false;

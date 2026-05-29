@@ -12,20 +12,19 @@ import { LegalService } from '../../legal/legal.service';
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
-  selector: 'app-delete-account-dialog',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatProgressSpinnerModule
-  ],
-  templateUrl: './delete-account-dialog.component.html',
-  styleUrl: './delete-account-dialog.component.scss'
+    selector: 'app-delete-account-dialog',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatIconModule,
+        MatProgressSpinnerModule
+    ],
+    templateUrl: './delete-account-dialog.component.html',
+    styleUrl: './delete-account-dialog.component.scss'
 })
 export class DeleteAccountDialogComponent {
   form: FormGroup;

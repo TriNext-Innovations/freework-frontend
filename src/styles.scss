@@ -2,7 +2,8 @@
 
 @use '@angular/material' as mat;
 
-@include mat.core();
+@include mat.elevation-classes();
+@include mat.app-background();
 
 // ========================================
 // MATERIAL THEMES — Teal palette
@@ -508,11 +509,11 @@ a {
 .mat-mdc-chip,
 .mat-mdc-chip-row,
 .mat-mdc-chip-option {
-  --mdc-chip-elevated-container-color: var(--color-gray-100);
-  --mdc-chip-elevated-selected-container-color: var(--color-gray-100);
-  --mdc-chip-label-text-color: var(--color-text-secondary);
-  --mdc-chip-selected-label-text-color: var(--color-text-secondary);
-  --mdc-chip-outline-color: var(--color-border);
+  --mat-chip-elevated-container-color: var(--color-gray-100);
+  --mat-chip-elevated-selected-container-color: var(--color-gray-100);
+  --mat-chip-label-text-color: var(--color-text-secondary);
+  --mat-chip-selected-label-text-color: var(--color-text-secondary);
+  --mat-chip-outline-color: var(--color-border);
   border-radius: var(--radius-sm) !important;
   font-size: 12px !important;
   font-weight: 500 !important;
@@ -520,36 +521,36 @@ a {
   padding: 0 var(--spacing-sm) !important;
 
   &.mat-primary {
-    --mdc-chip-elevated-container-color: var(--chip-skill-bg);
-    --mdc-chip-elevated-selected-container-color: var(--chip-skill-bg);
-    --mdc-chip-label-text-color: var(--chip-skill-color);
-    --mdc-chip-selected-label-text-color: var(--chip-skill-color);
-    --mdc-chip-outline-color: var(--chip-skill-border);
+    --mat-chip-elevated-container-color: var(--chip-skill-bg);
+    --mat-chip-elevated-selected-container-color: var(--chip-skill-bg);
+    --mat-chip-label-text-color: var(--chip-skill-color);
+    --mat-chip-selected-label-text-color: var(--chip-skill-color);
+    --mat-chip-outline-color: var(--chip-skill-border);
   }
 
   &.mat-accent {
-    --mdc-chip-elevated-container-color: var(--color-success-50);
-    --mdc-chip-elevated-selected-container-color: var(--color-success-50);
-    --mdc-chip-label-text-color: var(--color-success-500);
-    --mdc-chip-selected-label-text-color: var(--color-success-500);
-    --mdc-chip-outline-color: transparent;
+    --mat-chip-elevated-container-color: var(--color-success-50);
+    --mat-chip-elevated-selected-container-color: var(--color-success-50);
+    --mat-chip-label-text-color: var(--color-success-500);
+    --mat-chip-selected-label-text-color: var(--color-success-500);
+    --mat-chip-outline-color: transparent;
   }
 
   &.mat-warn {
-    --mdc-chip-elevated-container-color: var(--color-error-50);
-    --mdc-chip-elevated-selected-container-color: var(--color-error-50);
-    --mdc-chip-label-text-color: var(--color-error-500);
-    --mdc-chip-selected-label-text-color: var(--color-error-500);
-    --mdc-chip-outline-color: transparent;
+    --mat-chip-elevated-container-color: var(--color-error-50);
+    --mat-chip-elevated-selected-container-color: var(--color-error-50);
+    --mat-chip-label-text-color: var(--color-error-500);
+    --mat-chip-selected-label-text-color: var(--color-error-500);
+    --mat-chip-outline-color: transparent;
   }
 }
 
 .chip-skill {
-  --mdc-chip-elevated-container-color: var(--chip-skill-bg);
-  --mdc-chip-elevated-selected-container-color: var(--chip-skill-bg);
-  --mdc-chip-label-text-color: var(--chip-skill-color);
-  --mdc-chip-selected-label-text-color: var(--chip-skill-color);
-  --mdc-chip-outline-color: var(--chip-skill-border);
+  --mat-chip-elevated-container-color: var(--chip-skill-bg);
+  --mat-chip-elevated-selected-container-color: var(--chip-skill-bg);
+  --mat-chip-label-text-color: var(--chip-skill-color);
+  --mat-chip-selected-label-text-color: var(--chip-skill-color);
+  --mat-chip-outline-color: var(--chip-skill-border);
   background-color: var(--chip-skill-bg) !important;
   color: var(--chip-skill-color) !important;
   border-color: var(--chip-skill-border) !important;

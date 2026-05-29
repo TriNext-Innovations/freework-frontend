@@ -15,16 +15,15 @@ export interface ReviewDialogData {
 }
 
 @Component({
-  selector: 'app-review-dialog',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule,
-    ReviewFormComponent
-  ],
-  template: `
+    selector: 'app-review-dialog',
+    imports: [
+        CommonModule,
+        MatDialogModule,
+        MatButtonModule,
+        MatIconModule,
+        ReviewFormComponent
+    ],
+    template: `
     <div class="review-dialog">
       <div class="dialog-header">
         <h2 mat-dialog-title>
@@ -55,7 +54,7 @@ export interface ReviewDialogData {
       </mat-dialog-content>
     </div>
   `,
-  styles: [`
+    styles: [`
     .review-dialog {
       min-width: 600px;
       max-width: 800px;

@@ -239,11 +239,11 @@
   }
 
   mat-chip {
-    --mdc-chip-elevated-container-color: var(--chip-skill-bg);
-    --mdc-chip-elevated-selected-container-color: var(--chip-skill-bg);
-    --mdc-chip-label-text-color: var(--chip-skill-color);
-    --mdc-chip-selected-label-text-color: var(--chip-skill-color);
-    --mdc-chip-outline-color: var(--chip-skill-border);
+    --mat-chip-elevated-container-color: var(--chip-skill-bg);
+    --mat-chip-elevated-selected-container-color: var(--chip-skill-bg);
+    --mat-chip-label-text-color: var(--chip-skill-color);
+    --mat-chip-selected-label-text-color: var(--chip-skill-color);
+    --mat-chip-outline-color: var(--chip-skill-border);
     background-color: var(--chip-skill-bg) !important;
     color: var(--chip-skill-color) !important;
     border-color: var(--chip-skill-border) !important;

@@ -15,25 +15,24 @@ import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { LegalService, PopiaRequestResponse } from '../../legal/legal.service';
 
 @Component({
-  selector: 'app-popia-admin',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatTableModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatDividerModule,
-    MatDialogModule
-  ],
-  templateUrl: './popia-admin.component.html',
-  styleUrl: './popia-admin.component.scss'
+    selector: 'app-popia-admin',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatTableModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatChipsModule,
+        MatProgressSpinnerModule,
+        MatDividerModule,
+        MatDialogModule
+    ],
+    templateUrl: './popia-admin.component.html',
+    styleUrl: './popia-admin.component.scss'
 })
 export class PopiaAdminComponent implements OnInit {
   requests: PopiaRequestResponse[] = [];

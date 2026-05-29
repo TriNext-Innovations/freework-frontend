@@ -15,21 +15,20 @@ import { Job } from '../models';
 import { MessagingService } from '../../messaging/messaging.service';
 
 @Component({
-  selector: 'app-job-applications',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatDividerModule,
-    MatSnackBarModule
-  ],
-  templateUrl: './job-applications.component.html',
-  styleUrl: './job-applications.component.scss'
+    selector: 'app-job-applications',
+    imports: [
+        CommonModule,
+        RouterLink,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatChipsModule,
+        MatProgressSpinnerModule,
+        MatDividerModule,
+        MatSnackBarModule
+    ],
+    templateUrl: './job-applications.component.html',
+    styleUrl: './job-applications.component.scss'
 })
 export class JobApplicationsComponent implements OnInit {
   job: Job | null = null;

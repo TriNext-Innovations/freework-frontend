@@ -10,20 +10,19 @@ import { RatingSummaryComponent } from '../rating-summary/rating-summary.compone
 import { ReviewType } from '../models';
 
 @Component({
-  selector: 'app-reviews-demo',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatTabsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    ReviewFormComponent,
-    ReviewListComponent,
-    RatingSummaryComponent
-  ],
-  templateUrl: './reviews-demo.component.html',
-  styleUrls: ['./reviews-demo.component.scss']
+    selector: 'app-reviews-demo',
+    imports: [
+        CommonModule,
+        MatTabsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        ReviewFormComponent,
+        ReviewListComponent,
+        RatingSummaryComponent
+    ],
+    templateUrl: './reviews-demo.component.html',
+    styleUrls: ['./reviews-demo.component.scss']
 })
 export class ReviewsDemoComponent {
   // Demo data

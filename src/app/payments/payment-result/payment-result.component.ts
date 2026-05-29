@@ -6,10 +6,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-payment-result',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterLink],
-  template: `
+    selector: 'app-payment-result',
+    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterLink],
+    template: `
     <div class="result-container">
       <mat-card class="result-card">
         <mat-card-content>
@@ -28,7 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
       </mat-card>
     </div>
   `,
-  styles: [`
+    styles: [`
     .result-container { display: flex; justify-content: center; align-items: center; min-height: 60vh; }
     .result-card { text-align: center; padding: 2rem; max-width: 400px; }
     .success-icon { font-size: 4rem; width: 4rem; height: 4rem; color: #2BB88A; }

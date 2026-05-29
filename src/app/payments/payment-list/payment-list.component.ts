@@ -13,22 +13,21 @@ import { PaymentService } from '../payment.service';
 import { Payment, PaymentStatus } from '../models/payment.models';
 
 @Component({
-  selector: 'app-payment-list',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatTableModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatTabsModule,
-    MatBadgeModule
-  ],
-  templateUrl: './payment-list.component.html',
-  styleUrls: ['./payment-list.component.scss']
+    selector: 'app-payment-list',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatTableModule,
+        MatChipsModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        MatBadgeModule
+    ],
+    templateUrl: './payment-list.component.html',
+    styleUrls: ['./payment-list.component.scss']
 })
 export class PaymentListComponent implements OnInit {
   payments: Payment[] = [];

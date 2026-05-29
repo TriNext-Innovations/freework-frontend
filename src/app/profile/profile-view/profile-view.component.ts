@@ -9,11 +9,10 @@ import { AuthService } from '../../auth/auth.service';
 import { Profile, FreelancerProfile, CustomerProfile } from '../models/profile.models';
 
 @Component({
-  selector: 'app-profile-view',
-  standalone: true,
-  imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
-  templateUrl: './profile-view.component.html',
-  styleUrls: ['./profile-view.component.scss']
+    selector: 'app-profile-view',
+    imports: [CommonModule, RouterModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+    templateUrl: './profile-view.component.html',
+    styleUrls: ['./profile-view.component.scss']
 })
 export class ProfileViewComponent implements OnInit {
   profile: Profile | null = null;

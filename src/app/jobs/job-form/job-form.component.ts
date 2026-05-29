@@ -22,28 +22,27 @@ import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-job-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    RouterLink,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    MatChipsModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
-    MatRadioModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatAutocompleteModule
-  ],
-  templateUrl: './job-form.component.html',
-  styleUrl: './job-form.component.scss'
+    selector: 'app-job-form',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        RouterLink,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        MatChipsModule,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatRadioModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatAutocompleteModule
+    ],
+    templateUrl: './job-form.component.html',
+    styleUrl: './job-form.component.scss'
 })
 export class JobFormComponent implements OnInit {
   jobForm!: FormGroup;

@@ -20,25 +20,24 @@ import { AuthService } from '../../auth/auth.service';
 import { ProfileService } from '../../profile/profile.service';
 
 @Component({
-  selector: 'app-chat',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    RouterModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatBadgeModule,
-    MatDividerModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatTooltipModule
-  ],
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.scss']
+    selector: 'app-chat',
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatBadgeModule,
+        MatDividerModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatTooltipModule
+    ],
+    templateUrl: './chat.component.html',
+    styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;

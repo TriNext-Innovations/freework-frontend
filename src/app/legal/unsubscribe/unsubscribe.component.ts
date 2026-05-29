@@ -8,18 +8,17 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { LegalService } from '../legal.service';
 
 @Component({
-  selector: 'app-unsubscribe',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule
-  ],
-  templateUrl: './unsubscribe.component.html',
-  styleUrl: './unsubscribe.component.scss'
+    selector: 'app-unsubscribe',
+    imports: [
+        CommonModule,
+        RouterLink,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule
+    ],
+    templateUrl: './unsubscribe.component.html',
+    styleUrl: './unsubscribe.component.scss'
 })
 export class UnsubscribeComponent implements OnInit {
   loading = true;

@@ -9,10 +9,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 
 @Component({
-  selector: 'app-email-verify',
-  standalone: true,
-  imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
-  template: `
+    selector: 'app-email-verify',
+    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
+    template: `
     <div class="verify-container">
       <mat-card class="verify-card">
         <mat-card-content>
@@ -36,7 +35,7 @@ import { RouterLink } from '@angular/router';
       </mat-card>
     </div>
   `,
-  styles: [`
+    styles: [`
     .verify-container { display: flex; justify-content: center; align-items: center; min-height: 100vh; }
     .verify-card { text-align: center; padding: 2rem; max-width: 400px; }
     .success-icon { font-size: 4rem; width: 4rem; height: 4rem; color: #2BB88A; }

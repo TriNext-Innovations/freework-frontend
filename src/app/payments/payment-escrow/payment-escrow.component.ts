@@ -17,25 +17,24 @@ import { PaymentService } from '../payment.service';
 import { Payment, PaymentMethod, PaymentType, Milestone } from '../models/payment.models';
 
 @Component({
-  selector: 'app-payment-escrow',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatCardModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatStepperModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatDividerModule,
-    MatChipsModule
-  ],
-  templateUrl: './payment-escrow.component.html',
-  styleUrls: ['./payment-escrow.component.scss']
+    selector: 'app-payment-escrow',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatCardModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatStepperModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatDividerModule,
+        MatChipsModule
+    ],
+    templateUrl: './payment-escrow.component.html',
+    styleUrls: ['./payment-escrow.component.scss']
 })
 export class PaymentEscrowComponent implements OnInit {
   @Input() jobId!: string;

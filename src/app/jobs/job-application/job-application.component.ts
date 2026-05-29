@@ -17,23 +17,22 @@ import { CreateApplicationDto } from '../models/application.models';
 import { SubscriptionService } from '../../subscription/subscription.service';
 
 @Component({
-  selector: 'app-job-application',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    RouterModule
-  ],
-  templateUrl: './job-application.component.html',
-  styleUrls: ['./job-application.component.scss']
+    selector: 'app-job-application',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatChipsModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        RouterModule
+    ],
+    templateUrl: './job-application.component.html',
+    styleUrls: ['./job-application.component.scss']
 })
 export class JobApplicationComponent implements OnInit {
   applicationForm!: FormGroup;

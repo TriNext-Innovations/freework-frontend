@@ -20,25 +20,24 @@ import { ReviewDialogComponent, ReviewDialogData } from '../../reviews/review-di
 import { ReviewType } from '../../reviews/models';
 
 @Component({
-  selector: 'app-job-detail',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatDividerModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule,
-    MatDialogModule,
-    MatSnackBarModule,
-    MatTabsModule,
-    RatingSummaryComponent,
-    ReviewListComponent
-  ],
-  templateUrl: './job-detail.component.html',
-  styleUrl: './job-detail.component.scss'
+    selector: 'app-job-detail',
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatChipsModule,
+        MatDividerModule,
+        MatProgressSpinnerModule,
+        MatTooltipModule,
+        MatDialogModule,
+        MatSnackBarModule,
+        MatTabsModule,
+        RatingSummaryComponent,
+        ReviewListComponent
+    ],
+    templateUrl: './job-detail.component.html',
+    styleUrl: './job-detail.component.scss'
 })
 export class JobDetailComponent implements OnInit {
   job: Job | null = null;

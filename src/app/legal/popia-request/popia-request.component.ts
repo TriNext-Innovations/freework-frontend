@@ -12,22 +12,21 @@ import { MatDividerModule } from '@angular/material/divider';
 import { LegalService, PopiaRequestResponse } from '../legal.service';
 
 @Component({
-  selector: 'app-popia-request',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatDividerModule
-  ],
-  templateUrl: './popia-request.component.html',
-  styleUrl: './popia-request.component.scss'
+    selector: 'app-popia-request',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatDividerModule
+    ],
+    templateUrl: './popia-request.component.html',
+    styleUrl: './popia-request.component.scss'
 })
 export class PopiaRequestComponent implements OnInit {
   form!: FormGroup;

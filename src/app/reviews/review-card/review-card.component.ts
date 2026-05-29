@@ -9,19 +9,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Review } from '../models';
 
 @Component({
-  selector: 'app-review-card',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatChipsModule,
-    MatDividerModule,
-    MatTooltipModule
-  ],
-  templateUrl: './review-card.component.html',
-  styleUrls: ['./review-card.component.scss']
+    selector: 'app-review-card',
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatIconModule,
+        MatButtonModule,
+        MatChipsModule,
+        MatDividerModule,
+        MatTooltipModule
+    ],
+    templateUrl: './review-card.component.html',
+    styleUrls: ['./review-card.component.scss']
 })
 export class ReviewCardComponent {
   @Input() review!: Review;

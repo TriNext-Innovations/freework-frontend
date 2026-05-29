@@ -8,11 +8,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { CookieConsentService, CookieConsent } from '../cookie-consent.service';
 
 @Component({
-  selector: 'app-cookie-consent-banner',
-  standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink, MatButtonModule, MatSlideToggleModule, MatDividerModule],
-  templateUrl: './cookie-consent-banner.component.html',
-  styleUrl: './cookie-consent-banner.component.scss'
+    selector: 'app-cookie-consent-banner',
+    imports: [CommonModule, FormsModule, RouterLink, MatButtonModule, MatSlideToggleModule, MatDividerModule],
+    templateUrl: './cookie-consent-banner.component.html',
+    styleUrl: './cookie-consent-banner.component.scss'
 })
 export class CookieConsentBannerComponent implements OnInit {
   visible = false;

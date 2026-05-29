@@ -8,17 +8,16 @@ import { ReviewService } from '../review.service';
 import { ReviewSummary } from '../models';
 
 @Component({
-  selector: 'app-rating-summary',
-  standalone: true,
-  imports: [
-    CommonModule,
-    MatCardModule,
-    MatIconModule,
-    MatProgressBarModule,
-    MatChipsModule
-  ],
-  templateUrl: './rating-summary.component.html',
-  styleUrls: ['./rating-summary.component.scss']
+    selector: 'app-rating-summary',
+    imports: [
+        CommonModule,
+        MatCardModule,
+        MatIconModule,
+        MatProgressBarModule,
+        MatChipsModule
+    ],
+    templateUrl: './rating-summary.component.html',
+    styleUrls: ['./rating-summary.component.scss']
 })
 export class RatingSummaryComponent implements OnInit, OnChanges {
   @Input() targetId!: string;

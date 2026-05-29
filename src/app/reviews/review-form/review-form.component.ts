@@ -14,23 +14,22 @@ import { ReviewService } from '../review.service';
 import { CreateReviewRequest, ReviewType } from '../models';
 
 @Component({
-  selector: 'app-review-form',
-  standalone: true,
-  imports: [
-    CommonModule,
-    FormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatSnackBarModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule
-  ],
-  templateUrl: './review-form.component.html',
-  styleUrls: ['./review-form.component.scss']
+    selector: 'app-review-form',
+    imports: [
+        CommonModule,
+        FormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatChipsModule,
+        MatSnackBarModule,
+        MatProgressSpinnerModule,
+        MatTooltipModule
+    ],
+    templateUrl: './review-form.component.html',
+    styleUrls: ['./review-form.component.scss']
 })
 export class ReviewFormComponent {
   @Input() jobId!: string;

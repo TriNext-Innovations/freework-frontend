@@ -10,19 +10,18 @@ import { LEGAL_CONTENT, LegalDocument } from '../legal-content';
 import { CookieConsentService } from '../cookie-consent.service';
 
 @Component({
-  selector: 'app-legal-page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatButtonModule,
-    MatIconModule,
-    MatDividerModule,
-    MatButtonToggleModule,
-    FormsModule
-  ],
-  templateUrl: './legal-page.component.html',
-  styleUrl: './legal-page.component.scss'
+    selector: 'app-legal-page',
+    imports: [
+        CommonModule,
+        RouterLink,
+        MatButtonModule,
+        MatIconModule,
+        MatDividerModule,
+        MatButtonToggleModule,
+        FormsModule
+    ],
+    templateUrl: './legal-page.component.html',
+    styleUrl: './legal-page.component.scss'
 })
 export class LegalPageComponent implements OnInit {
   document: LegalDocument | null = null;

@@ -15,22 +15,21 @@ import { JobApplication, ApplicationStatus } from '../models/application.models'
 import { MessagingService } from '../../messaging/messaging.service';
 
 @Component({
-  selector: 'app-my-applications',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterModule,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatTabsModule,
-    MatSnackBarModule,
-    MatDialogModule
-  ],
-  templateUrl: './my-applications.component.html',
-  styleUrls: ['./my-applications.component.scss']
+    selector: 'app-my-applications',
+    imports: [
+        CommonModule,
+        RouterModule,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatChipsModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        MatSnackBarModule,
+        MatDialogModule
+    ],
+    templateUrl: './my-applications.component.html',
+    styleUrls: ['./my-applications.component.scss']
 })
 export class MyApplicationsComponent implements OnInit {
   applications: JobApplication[] = [];

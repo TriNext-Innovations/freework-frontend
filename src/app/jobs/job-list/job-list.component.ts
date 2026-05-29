@@ -19,25 +19,24 @@ import { AuthService } from '../../auth/auth.service';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-job-list',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatSelectModule,
-    MatChipsModule,
-    MatPaginatorModule,
-    MatProgressSpinnerModule,
-    MatTooltipModule,
-    MatBadgeModule
-  ],
-  templateUrl: './job-list.component.html',
-  styleUrl: './job-list.component.scss'
+    selector: 'app-job-list',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatSelectModule,
+        MatChipsModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        MatTooltipModule,
+        MatBadgeModule
+    ],
+    templateUrl: './job-list.component.html',
+    styleUrl: './job-list.component.scss'
 })
 export class JobListComponent implements OnInit {
   jobs: Job[] = [];

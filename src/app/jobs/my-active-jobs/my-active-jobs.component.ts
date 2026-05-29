@@ -25,23 +25,22 @@ interface ActiveJob {
 }
 
 @Component({
-  selector: 'app-my-active-jobs',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatChipsModule,
-    MatProgressSpinnerModule,
-    MatTabsModule,
-    MatBadgeModule,
-    MatDialogModule,
-    MatSnackBarModule
-  ],
-  templateUrl: './my-active-jobs.component.html',
-  styleUrl: './my-active-jobs.component.scss'
+    selector: 'app-my-active-jobs',
+    imports: [
+        CommonModule,
+        RouterLink,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatChipsModule,
+        MatProgressSpinnerModule,
+        MatTabsModule,
+        MatBadgeModule,
+        MatDialogModule,
+        MatSnackBarModule
+    ],
+    templateUrl: './my-active-jobs.component.html',
+    styleUrl: './my-active-jobs.component.scss'
 })
 export class MyActiveJobsComponent implements OnInit {
   activeJobs: ActiveJob[] = [];

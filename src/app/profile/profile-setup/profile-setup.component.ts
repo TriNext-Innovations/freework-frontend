@@ -18,24 +18,23 @@ import { CanDeactivateProfileSetup } from '../../auth/auth.guard';
 import { SKILLS_DATABASE } from '../../jobs/models/job.models';
 
 @Component({
-  selector: 'app-profile-setup',
-  standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule,
-    MatChipsModule,
-    MatSelectModule,
-    MatAutocompleteModule,
-  ],
-  templateUrl: './profile-setup.component.html',
-  styleUrls: ['./profile-setup.component.scss']
+    selector: 'app-profile-setup',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatSnackBarModule,
+        MatChipsModule,
+        MatSelectModule,
+        MatAutocompleteModule,
+    ],
+    templateUrl: './profile-setup.component.html',
+    styleUrls: ['./profile-setup.component.scss']
 })
 export class ProfileSetupComponent implements OnInit, CanDeactivateProfileSetup {
   setupForm!: FormGroup;

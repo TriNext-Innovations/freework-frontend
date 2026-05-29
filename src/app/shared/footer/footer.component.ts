@@ -5,11 +5,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { CookieConsentService } from '../../legal/cookie-consent.service';
 
 @Component({
-  selector: 'app-footer',
-  standalone: true,
-  imports: [CommonModule, RouterLink, MatButtonModule],
-  templateUrl: './footer.component.html',
-  styleUrl: './footer.component.scss'
+    selector: 'app-footer',
+    imports: [CommonModule, RouterLink, MatButtonModule],
+    templateUrl: './footer.component.html',
+    styleUrl: './footer.component.scss'
 })
 export class FooterComponent {
   currentYear = new Date().getFullYear();

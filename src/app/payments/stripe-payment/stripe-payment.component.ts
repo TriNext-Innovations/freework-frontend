@@ -13,20 +13,19 @@ import { PaymentMethod, PaymentType } from '../models/payment.models';
 import { Job } from '../../jobs/models';
 
 @Component({
-  selector: 'app-stripe-payment',
-  standalone: true,
-  imports: [
-    CommonModule,
-    RouterLink,
-    MatCardModule,
-    MatButtonModule,
-    MatIconModule,
-    MatProgressSpinnerModule,
-    MatDividerModule,
-    MatSnackBarModule
-  ],
-  templateUrl: './stripe-payment.component.html',
-  styleUrls: ['./stripe-payment.component.scss']
+    selector: 'app-stripe-payment',
+    imports: [
+        CommonModule,
+        RouterLink,
+        MatCardModule,
+        MatButtonModule,
+        MatIconModule,
+        MatProgressSpinnerModule,
+        MatDividerModule,
+        MatSnackBarModule
+    ],
+    templateUrl: './stripe-payment.component.html',
+    styleUrls: ['./stripe-payment.component.scss']
 })
 export class StripePaymentComponent implements OnInit {
   job: Job | null = null;

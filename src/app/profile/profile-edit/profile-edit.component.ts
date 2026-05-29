@@ -10,11 +10,10 @@ import { AuthService } from '../../auth/auth.service';
 import { Profile, FreelancerProfile, CustomerProfile, UpdateProfileRequest, Language } from '../models/profile.models';
 
 @Component({
-  selector: 'app-profile-edit',
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
-  templateUrl: './profile-edit.component.html',
-  styleUrls: ['./profile-edit.component.scss']
+    selector: 'app-profile-edit',
+    imports: [CommonModule, ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+    templateUrl: './profile-edit.component.html',
+    styleUrls: ['./profile-edit.component.scss']
 })
 export class ProfileEditComponent implements OnInit {
   profileForm!: FormGroup;

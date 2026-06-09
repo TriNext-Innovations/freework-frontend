@@ -37,6 +37,10 @@ npm run build -- --configuration production      # production build → dist/ang
 - `src/environments/environment.ts` — dev (`apiUrl: 'http://localhost:8080'`)
 - `src/environments/environment.prod.ts` — prod (`apiUrl: 'https://api.freework.co.za'`)
 
+`apiUrl` must never include `/api` — the prefix is added by `buildApiEndpointUrl()` in `api.config.ts`.
+The backend has two conventions: `/auth` and `/jobs` have no `/api` prefix (use `buildApiUrl`);
+all other authenticated endpoints are under `/api/*` (use `buildApiEndpointUrl`).
+
 ## Active branch
 
 Development happens on `feature/ui-max`. Do not commit directly to `main` — GitHub Actions deploys to GitHub Pages from that branch.

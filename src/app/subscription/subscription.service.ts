@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
+import { buildApiEndpointUrl } from '../api.config';
 
 export interface Subscription {
   plan: 'FREE' | 'GROWTH' | 'SCALE';
@@ -33,17 +34,21 @@ export class SubscriptionService {
     return !this.isProMember && this.activeJobsCount >= 1;
   }
 
-  get atApplicationLimit(): boolean {
-    return false;
-  }
+  readonly atApplicationLimit = false;
 
   loadSubscription(): Observable<Subscription | null> {
-    return this.http.get<Subscription>('/api/subscription/current').pipe(
+    return this.http.get<Subscription>(buildApiEndpointUrl('/subscription/current')).pipe(
       tap(sub => this.subscriptionSubject.next(sub)),
       catchError(() => {
         this.subscriptionSubject.next(null);
         return of(null);
       })
+    );
+  }
+
+  checkout(provider = 'PAYFAST'): Observable<{ checkoutUrl: string }> {
+    return this.http.post<{ checkoutUrl: string }>(
+      buildApiEndpointUrl(`/subscriptions/checkout?provider=${provider}`), {}
     );
   }
 

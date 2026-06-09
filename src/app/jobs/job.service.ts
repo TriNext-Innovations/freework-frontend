@@ -26,7 +26,7 @@ export class JobService {
   /**
    * Get all jobs with optional filters and pagination
    */
-  getJobs(page: number = 0, size: number = 10, filters?: JobFilters): Observable<JobsResponse> {
+  getJobs(page = 0, size = 10, filters?: JobFilters): Observable<JobsResponse> {
     // Use mock data for testing
     if (this.useMockData) {
       if (filters) {
@@ -100,7 +100,7 @@ export class JobService {
   /**
    * Get jobs posted by current user (Customer only)
    */
-  getMyJobs(page: number = 0, size: number = 10): Observable<JobsResponse> {
+  getMyJobs(page = 0, size = 10): Observable<JobsResponse> {
     // Use mock data for testing
     if (this.useMockData) {
       const currentUser = this.authService.currentUserValue;
@@ -119,7 +119,7 @@ export class JobService {
   /**
    * Search jobs by keyword
    */
-  searchJobs(keyword: string, page: number = 0, size: number = 10): Observable<JobsResponse> {
+  searchJobs(keyword: string, page = 0, size = 10): Observable<JobsResponse> {
     const params = new HttpParams()
       .set('search', keyword)
       .set('page', page.toString())
@@ -131,7 +131,7 @@ export class JobService {
   /**
    * Get jobs by category
    */
-  getJobsByCategory(category: string, page: number = 0, size: number = 10): Observable<JobsResponse> {
+  getJobsByCategory(category: string, page = 0, size = 10): Observable<JobsResponse> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());

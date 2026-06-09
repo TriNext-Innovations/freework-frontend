@@ -163,7 +163,7 @@ export class MyActiveJobsComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       'OPEN': 'primary',
       'IN_PROGRESS': 'accent',
       'COMPLETED': 'warn',
@@ -173,7 +173,7 @@ export class MyActiveJobsComponent implements OnInit {
   }
 
   getStatusLabel(status: string): string {
-    const labels: { [key: string]: string } = {
+    const labels: Record<string, string> = {
       'OPEN': 'Open',
       'IN_PROGRESS': 'In Progress',
       'COMPLETED': 'Completed',
@@ -183,7 +183,7 @@ export class MyActiveJobsComponent implements OnInit {
   }
 
   getStatusIcon(status: string): string {
-    const icons: { [key: string]: string } = {
+    const icons: Record<string, string> = {
       'OPEN': 'radio_button_unchecked',
       'IN_PROGRESS': 'pending',
       'COMPLETED': 'check_circle',

@@ -99,7 +99,7 @@ export class MockMessagingService {
     }
   ];
 
-  private mockMessages: { [conversationId: string]: Message[] } = {
+  private mockMessages: Record<string, Message[]> = {
     'conv1': [
       {
         id: 'msg1-1',
@@ -284,8 +284,6 @@ export class MockMessagingService {
     ]
   };
 
-  constructor() {}
-
   getConversations(): Observable<ConversationListResponse> {
     const totalUnread = this.mockConversations.reduce((sum, conv) => sum + conv.unreadCount, 0);
 
@@ -303,7 +301,7 @@ export class MockMessagingService {
     return of(conversation).pipe(delay(200));
   }
 
-  getMessages(conversationId: string, page: number = 0, size: number = 50): Observable<Message[]> {
+  getMessages(conversationId: string, _page = 0, _size = 50): Observable<Message[]> {
     const messages = this.mockMessages[conversationId] || [];
     return of(messages).pipe(delay(300));
   }

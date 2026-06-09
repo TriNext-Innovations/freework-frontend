@@ -63,7 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    (window as any).AIChatbotConfig = { apiKey: environment.chatbotApiKey };
+    (window as unknown as Record<string, unknown>)['AIChatbotConfig'] = { apiKey: environment.chatbotApiKey };
 
     this.bpSub = this.breakpointObserver.observe(DESKTOP_BREAKPOINT).subscribe(state => {
       this.isDesktop = state.matches;

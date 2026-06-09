@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
  * Functional route guard to protect routes that require authentication
  * Usage: canActivate: [authGuard]
  */
-export const authGuard: CanActivateFn = (route, state) => {
+export const authGuard: CanActivateFn = (_route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -26,7 +26,7 @@ export const authGuard: CanActivateFn = (route, state) => {
  * Usage: canActivate: [roleGuard(['CUSTOMER'])]
  */
 export const roleGuard = (allowedRoles: string[]): CanActivateFn => {
-  return (route, state) => {
+  return (_route, state) => {
     const authService = inject(AuthService);
     const router = inject(Router);
 
@@ -65,7 +65,7 @@ export const profileSetupDeactivateGuard: CanDeactivateFn<CanDeactivateProfileSe
  * Guard to redirect authenticated users away from auth pages
  * Usage on login/register routes: canActivate: [guestGuard]
  */
-export const guestGuard: CanActivateFn = (route, state) => {
+export const guestGuard: CanActivateFn = (_route, _state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 

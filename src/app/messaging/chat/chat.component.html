@@ -19,7 +19,11 @@
         class="conversation-item"
         [class.active]="selectedConversation?.id === conversation.id"
         [class.unread]="conversation.unreadCount > 0"
+        tabindex="0"
+        role="button"
         (click)="selectConversation(conversation)"
+        (keyup.enter)="selectConversation(conversation)"
+        (keydown.space)="selectConversation(conversation)"
       >
         <div class="conversation-avatar">
           <img *ngIf="getConversationAvatar(conversation)" [src]="getConversationAvatar(conversation)" alt="Avatar">

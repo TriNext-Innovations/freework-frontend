@@ -89,15 +89,17 @@ export class CookieConsentService {
 
   private loadGoogleAnalytics(): void {
     if (!isPlatformBrowser(this.platformId)) return;
-    if (!(window as any).gtag) {
+    const win = window as unknown as Record<string, unknown>;
+    if (!win['gtag']) {
       const script = document.createElement('script');
       script.async = true;
       script.src = 'https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID';
       document.head.appendChild(script);
-      (window as any).dataLayer = (window as any).dataLayer || [];
-      (window as any).gtag = function() { (window as any).dataLayer.push(arguments); };
-      (window as any).gtag('js', new Date());
-      (window as any).gtag('config', 'GA_MEASUREMENT_ID');
+      win['dataLayer'] = (win['dataLayer'] as unknown[]) || [];
+      const dataLayer = win['dataLayer'] as unknown[];
+      win['gtag'] = function(...args: unknown[]) { dataLayer.push(args); };
+      (win['gtag'] as (...args: unknown[]) => void)('js', new Date());
+      (win['gtag'] as (...args: unknown[]) => void)('config', 'GA_MEASUREMENT_ID');
     }
   }
 

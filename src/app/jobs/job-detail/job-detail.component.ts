@@ -96,7 +96,6 @@ export class JobDetailComponent implements OnInit {
     if (!this.job) return;
 
     // Use mock user ID if not logged in (for testing purposes)
-    const userId = this.currentUserId || 'mock-user-id';
 
     const dialogData: ReviewDialogData = {
       jobId: this.job.id,
@@ -150,7 +149,7 @@ export class JobDetailComponent implements OnInit {
           this.showSuccess('Job deleted successfully');
           this.router.navigate(['/jobs']);
         },
-        error: (error) => {
+        error: () => {
           this.showError('Failed to delete job');
         }
       });
@@ -193,7 +192,7 @@ export class JobDetailComponent implements OnInit {
   }
 
   getLocationTypeLabel(locationType: string): string {
-    const labels: { [key: string]: string } = {
+    const labels: Record<string, string> = {
       'REMOTE': 'Remote',
       'ONSITE': 'On-site',
       'HYBRID': 'Hybrid'
@@ -202,7 +201,7 @@ export class JobDetailComponent implements OnInit {
   }
 
   getStatusLabel(status: string): string {
-    const labels: { [key: string]: string } = {
+    const labels: Record<string, string> = {
       'OPEN': 'Open',
       'IN_PROGRESS': 'In Progress',
       'COMPLETED': 'Completed',
@@ -212,7 +211,7 @@ export class JobDetailComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       'OPEN': 'primary',      // Blue - for open jobs
       'IN_PROGRESS': 'accent', // Green/Teal - for active work
       'COMPLETED': 'warn',     // Orange/Amber - for finished jobs

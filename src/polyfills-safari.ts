@@ -9,11 +9,11 @@ if (typeof window !== 'undefined') {
     const testKey = '__localStorage_test__';
     window.localStorage.setItem(testKey, 'test');
     window.localStorage.removeItem(testKey);
-  } catch (e) {
+  } catch (_e) {
     console.warn('localStorage not available, using memory fallback');
 
     // In-memory fallback for Safari Private Browsing
-    const memoryStorage: { [key: string]: string } = {};
+    const memoryStorage: Record<string, string> = {};
 
     Storage.prototype.setItem = function(key: string, value: string) {
       memoryStorage[key] = value;
@@ -39,7 +39,7 @@ if (typeof window !== 'undefined') {
 if (typeof atob === 'undefined' && typeof window !== 'undefined') {
   console.warn('atob not available, adding polyfill');
 
-  (window as any).atob = function(str: string): string {
+  (window as unknown as Record<string, unknown>)['atob'] = function(str: string): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvuvwxyz0123456789+/=';
     let output = '';
 
@@ -50,7 +50,7 @@ if (typeof atob === 'undefined' && typeof window !== 'undefined') {
     }
 
     for (
-      let bc = 0, bs: any, buffer: any, idx = 0;
+      let bc = 0, bs = 0, buffer: string | number, idx = 0;
       (buffer = str.charAt(idx++));
       ~buffer && ((bs = bc % 4 ? bs * 64 + buffer : buffer), bc++ % 4)
         ? (output += String.fromCharCode(255 & (bs >> ((-2 * bc) & 6))))
@@ -67,7 +67,7 @@ if (typeof atob === 'undefined' && typeof window !== 'undefined') {
 if (typeof btoa === 'undefined' && typeof window !== 'undefined') {
   console.warn('btoa not available, adding polyfill');
 
-  (window as any).btoa = function(str: string): string {
+  (window as unknown as Record<string, unknown>)['btoa'] = function(str: string): string {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
     let output = '';
 

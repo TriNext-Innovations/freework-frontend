@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -51,7 +52,7 @@ export class SettingsComponent implements OnInit {
   loadMarketingConsent(): void {
     this.legalService.getMarketingConsent().subscribe({
       next: (r) => { this.marketingConsented = r.consented; },
-      error: () => {}
+      error: (err: HttpErrorResponse) => console.error('Failed to load marketing consent', err)
     });
   }
 
@@ -61,7 +62,7 @@ export class SettingsComponent implements OnInit {
         this.canDelete = r.canDelete;
         this.blockingReason = r.blockingReason || '';
       },
-      error: () => {}
+      error: (err: HttpErrorResponse) => console.error('Failed to check delete eligibility', err)
     });
   }
 
@@ -89,7 +90,7 @@ export class SettingsComponent implements OnInit {
       width: '500px',
       disableClose: true
     });
-    ref.afterClosed().subscribe((deleted) => {
+    ref.afterClosed().subscribe((_deleted) => {
       // AuthService.logout() and navigation handled inside the dialog component
     });
   }

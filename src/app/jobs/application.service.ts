@@ -95,7 +95,7 @@ export class ApplicationService {
   /**
    * Get application statistics
    */
-  getApplicationStats(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/stats`);
+  getApplicationStats(): Observable<unknown> {
+    return this.http.get<unknown>(`${this.apiUrl}/stats`);
   }
 }

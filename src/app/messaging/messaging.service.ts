@@ -49,7 +49,7 @@ export class MessagingService {
   /**
    * Get messages for a conversation
    */
-  getMessages(conversationId: string, page: number = 0, size: number = 50): Observable<Message[]> {
+  getMessages(conversationId: string, page = 0, size = 50): Observable<Message[]> {
     if (this.useMockData) {
       return this.mockMessagingService.getMessages(conversationId, page, size);
     }

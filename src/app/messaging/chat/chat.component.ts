@@ -1,5 +1,6 @@
 import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -64,7 +65,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
   private destroy$ = new Subject<void>();
   private stopPolling$ = new Subject<void>();
-  private typingTimeout: any;
+  private typingTimeout: ReturnType<typeof setTimeout> | null = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -121,7 +122,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     const token = localStorage.getItem('access_token') || 'demo-token';
     try {
       this.webSocketService.connect(token);
-    } catch (error) {
+    } catch (_error) {
       console.log('WebSocket connection not available, using mock data mode');
     }
   }
@@ -403,7 +404,7 @@ export class ChatComponent implements OnInit, OnDestroy {
             this.avatarCache.set(userId, profile.profilePicture);
           }
         },
-        error: () => {}
+        error: (err: HttpErrorResponse) => console.error('Failed to load avatar', err)
       });
     });
   }

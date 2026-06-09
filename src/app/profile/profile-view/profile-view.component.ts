@@ -87,7 +87,7 @@ export class ProfileViewComponent implements OnInit {
   }
 
   getAvailabilityLabel(availability?: string): string {
-    const labels: { [key: string]: string } = {
+    const labels: Record<string, string> = {
       'FULL_TIME': 'Full Time',
       'PART_TIME': 'Part Time',
       'CONTRACT': 'Contract',
@@ -97,16 +97,17 @@ export class ProfileViewComponent implements OnInit {
   }
 
   getProfileImage(profile: Profile): string {
-    const image = (profile as any).profilePicture
-      || (profile as any).profilePictureUrl
-      || (profile as any).avatar
-      || (profile as any).avatarUrl
-      || (profile as any).picture;
-    return image || '';
+    const p = profile as Profile & Record<string, unknown>;
+    const image = p['profilePicture']
+      || p['profilePictureUrl']
+      || p['avatar']
+      || p['avatarUrl']
+      || p['picture'];
+    return (image as string) || '';
   }
 
   getProficiencyLabel(proficiency: string): string {
-    const labels: { [key: string]: string } = {
+    const labels: Record<string, string> = {
       'BASIC': 'Basic',
       'CONVERSATIONAL': 'Conversational',
       'FLUENT': 'Fluent',

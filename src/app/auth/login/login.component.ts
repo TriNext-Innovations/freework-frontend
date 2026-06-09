@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -79,7 +80,7 @@ export class LoginComponent implements OnInit {
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
 
     // Fetch current document versions for consent recording
-    this.legalService.getCurrentVersion('freelancer_tcs').subscribe({ next: r => this.tcVersion = r.version, error: () => {} });
+    this.legalService.getCurrentVersion('freelancer_tcs').subscribe({ next: r => this.tcVersion = r.version, error: (err: HttpErrorResponse) => console.error('Failed to load TC version', err) });
 
     // Single form with all controls — validators added/removed on toggle
     this.authForm = this.fb.group({
@@ -92,7 +93,7 @@ export class LoginComponent implements OnInit {
     }, { validators: this.passwordMatchValidator });
   }
 
-  get f(): { [key: string]: AbstractControl } {
+  get f(): Record<string, AbstractControl> {
     return this.authForm.controls;
   }
 
@@ -196,7 +197,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  private passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
+  private passwordMatchValidator(group: FormGroup): Record<string, boolean> | null {
     const pw  = group.get('password')?.value;
     const cpw = group.get('confirmPassword')?.value;
     if (!cpw) return null;

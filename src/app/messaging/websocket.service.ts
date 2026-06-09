@@ -24,8 +24,6 @@ export class WebSocketService {
   public notification$ = this.notificationSubject.asObservable();
   public connected$ = this.connectionSubject.asObservable();
 
-  constructor() {}
-
   /**
    * Connect to WebSocket server
    */
@@ -80,7 +78,7 @@ export class WebSocketService {
   /**
    * Send a message through WebSocket
    */
-  send(message: any): void {
+  send(message: Record<string, unknown>): void {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify(message));
     } else {

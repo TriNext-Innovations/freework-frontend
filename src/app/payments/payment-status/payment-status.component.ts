@@ -75,7 +75,7 @@ export class PaymentStatusComponent implements OnInit {
   }
 
   getStatusColor(status: PaymentStatus): string {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       [PaymentStatus.PENDING]: 'warn',
       [PaymentStatus.PROCESSING]: 'accent',
       [PaymentStatus.COMPLETED]: 'primary',

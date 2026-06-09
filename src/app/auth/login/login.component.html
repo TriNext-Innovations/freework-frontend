@@ -37,7 +37,7 @@
         </p>
         <p class="inbox-hint">Click the link in the email to verify your account and get started. Check your spam folder if you don't see it.</p>
         <div class="toggle-link">
-          <p>Already verified? <a (click)="registrationComplete = false; isRegister = false">Sign in</a></p>
+          <p>Already verified? <a tabindex="0" (click)="registrationComplete = false; isRegister = false" (keyup.enter)="registrationComplete = false; isRegister = false" (keydown.space)="registrationComplete = false; isRegister = false">Sign in</a></p>
         </div>
       </div>
     </mat-card-content>
@@ -128,8 +128,8 @@
 
             <!-- Role Selection -->
             <div class="role-section">
-              <label class="role-label">I want to:</label>
-              <mat-radio-group formControlName="role" class="role-group">
+              <span class="role-label">I want to:</span>
+              <mat-radio-group formControlName="role" class="role-group" aria-label="I want to:">
                 <mat-radio-button value="FREELANCER" class="role-option">
                   <div class="role-content">
                     <mat-icon>work</mat-icon>
@@ -197,8 +197,8 @@
 
         <!-- Toggle Link -->
         <div class="toggle-link">
-          <p *ngIf="!isRegister">Don't have an account? <a (click)="toggleMode()">Register here</a></p>
-          <p *ngIf="isRegister">Already have an account? <a (click)="toggleMode()">Sign in</a></p>
+          <p *ngIf="!isRegister">Don't have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Register here</a></p>
+          <p *ngIf="isRegister">Already have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Sign in</a></p>
         </div>
 
       </form>

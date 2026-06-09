@@ -37,7 +37,7 @@ import { SubscriptionService } from '../../subscription/subscription.service';
 export class JobApplicationComponent implements OnInit {
   applicationForm!: FormGroup;
   job: Job | null = null;
-  jobId: string = '';
+  jobId = '';
   loading = false;
   submitting = false;
   hasAlreadyApplied = false;
@@ -142,7 +142,7 @@ export class JobApplicationComponent implements OnInit {
     };
 
     this.applicationService.submitApplication(application).subscribe({
-      next: (response) => {
+      next: (_response) => {
         this.submitting = false;
         this.showSuccess('Application submitted successfully!');
         setTimeout(() => {

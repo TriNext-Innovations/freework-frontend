@@ -16,7 +16,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { JobService } from '../job.service';
 import { Job, JobFilters, JOB_CATEGORIES } from '../models';
 import { AuthService } from '../../auth/auth.service';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
     selector: 'app-job-list',
@@ -234,7 +234,7 @@ export class JobListComponent implements OnInit {
   }
 
   getLocationTypeLabel(locationType: string): string {
-    const labels: { [key: string]: string } = {
+    const labels: Record<string, string> = {
       'REMOTE': 'Remote',
       'ONSITE': 'On-site',
       'HYBRID': 'Hybrid'
@@ -243,7 +243,7 @@ export class JobListComponent implements OnInit {
   }
 
   getLocationTypeColor(locationType: string): string {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       'REMOTE': 'primary',
       'ONSITE': 'accent',
       'HYBRID': 'warn'

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of, delay } from 'rxjs';
-import { Job, JobsResponse } from './models';
+import { Job, JobsResponse, JobFilters } from './models';
 import { JobApplication, ApplicationStatus, ApplicationResponse, CreateApplicationDto } from './models/application.models';
 
 @Injectable({
@@ -307,10 +307,8 @@ export class MockDataService {
     }
   ];
 
-  constructor() {}
-
   // Mock Jobs Service Methods
-  getJobs(page: number = 0, size: number = 10): Observable<JobsResponse> {
+  getJobs(page = 0, size = 10): Observable<JobsResponse> {
     const start = page * size;
     const end = start + size;
     const paginatedJobs = this.mockJobs.slice(start, end);
@@ -324,7 +322,7 @@ export class MockDataService {
     }).pipe(delay(500)); // Simulate network delay
   }
 
-  getMyJobs(customerId: string, page: number = 0, size: number = 10): Observable<JobsResponse> {
+  getMyJobs(customerId: string, page = 0, size = 10): Observable<JobsResponse> {
     // Filter jobs by customer ID
     const customerJobs = this.mockJobs.filter(j => j.customerId === customerId);
 
@@ -349,7 +347,7 @@ export class MockDataService {
     return of(job).pipe(delay(300));
   }
 
-  searchJobs(filters: any, page: number = 0, size: number = 10): Observable<JobsResponse> {
+  searchJobs(filters: JobFilters, page = 0, size = 10): Observable<JobsResponse> {
     console.log('🔍 searchJobs called with filters:', JSON.stringify(filters, null, 2));
 
     let filteredJobs = [...this.mockJobs];
@@ -394,14 +392,14 @@ export class MockDataService {
     }
 
     // Apply budget range filters
-    if (filters.minBudget !== undefined && filters.minBudget !== null && filters.minBudget !== '') {
+    if (filters.minBudget !== undefined && filters.minBudget !== null) {
       const minBudget = Number(filters.minBudget);
       console.log(`💵 Applying min budget filter: ${minBudget}`);
       filteredJobs = filteredJobs.filter(j => j.budget >= minBudget);
       console.log(`   ✓ After min budget filter: ${filteredJobs.length} jobs`);
     }
 
-    if (filters.maxBudget !== undefined && filters.maxBudget !== null && filters.maxBudget !== '') {
+    if (filters.maxBudget !== undefined && filters.maxBudget !== null) {
       const maxBudget = Number(filters.maxBudget);
       console.log(`💵 Applying max budget filter: ${maxBudget}`);
       filteredJobs = filteredJobs.filter(j => j.budget <= maxBudget);

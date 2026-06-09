@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -14,6 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatAutocompleteModule, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { AuthService } from '../../auth/auth.service';
 import { ProfileService } from '../profile.service';
+import { UpdateProfileRequest } from '../models/profile.models';
 import { CanDeactivateProfileSetup } from '../../auth/auth.guard';
 import { SKILLS_DATABASE } from '../../jobs/models/job.models';
 
@@ -136,7 +137,7 @@ export class ProfileSetupComponent implements OnInit, CanDeactivateProfileSetup 
     this.submitting = true;
     const values = this.setupForm.value;
 
-    const updates: any = {
+    const updates: UpdateProfileRequest = {
       firstName: values.firstName,
       lastName: values.lastName,
       bio: values.bio || undefined,

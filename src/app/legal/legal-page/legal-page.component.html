@@ -40,7 +40,7 @@
       <h3>Contents</h3>
       <ul>
         <li *ngFor="let section of document.sections">
-          <a (click)="scrollToSection(section.id)" class="toc-link">{{ section.heading }}</a>
+          <a tabindex="0" (click)="scrollToSection(section.id)" (keyup.enter)="scrollToSection(section.id)" (keydown.space)="scrollToSection(section.id)" class="toc-link">{{ section.heading }}</a>
         </li>
       </ul>
     </aside>

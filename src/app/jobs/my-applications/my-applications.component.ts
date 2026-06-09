@@ -153,7 +153,7 @@ export class MyApplicationsComponent implements OnInit {
 
     if (confirm(`Are you sure you want to withdraw your application for "${application.jobTitle}"?`)) {
       this.applicationService.withdrawApplication(application.id!).subscribe({
-        next: (response) => {
+        next: (_response) => {
           this.showSuccess('Application withdrawn successfully');
           this.loadApplications();
         },

@@ -1,5 +1,5 @@
 // Type-safe wrapper around the particles.js configuration for the 404 page
-export const particlesConfig: any = {
+export const particlesConfig: unknown = {
   particles: {
     number: {
       value: 160,

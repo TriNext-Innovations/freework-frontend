@@ -162,7 +162,7 @@ export class MockReviewService {
       ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
       : 0;
 
-    const ratingDistribution: { [key: number]: number } = {
+    const ratingDistribution: Record<number, number> = {
       1: 0, 2: 0, 3: 0, 4: 0, 5: 0
     };
 

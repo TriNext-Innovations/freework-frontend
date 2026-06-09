@@ -11,7 +11,7 @@
     <mat-card-content>
       <!-- Star Rating -->
       <div class="rating-section">
-        <label class="section-label">Overall Rating *</label>
+        <span class="section-label">Overall Rating *</span>
         <div class="star-rating">
           <button
             *ngFor="let star of [1, 2, 3, 4, 5]"
@@ -59,10 +59,10 @@
 
       <!-- Pros Section -->
       <div class="pros-cons-section">
-        <label class="section-label">
+        <span class="section-label">
           <mat-icon class="section-icon positive">thumb_up</mat-icon>
           What went well? (Optional)
-        </label>
+        </span>
 
         <div class="input-with-button">
           <mat-form-field appearance="outline" class="flex-field">
@@ -95,10 +95,10 @@
 
       <!-- Cons Section -->
       <div class="pros-cons-section">
-        <label class="section-label">
+        <span class="section-label">
           <mat-icon class="section-icon negative">thumb_down</mat-icon>
           What could be improved? (Optional)
-        </label>
+        </span>
 
         <div class="input-with-button">
           <mat-form-field appearance="outline" class="flex-field">

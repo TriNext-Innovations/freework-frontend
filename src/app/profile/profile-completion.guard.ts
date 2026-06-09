@@ -7,7 +7,7 @@ import { AuthService } from '../auth/auth.service';
  * Redirects to profile edit page if profile is incomplete
  * Usage: canActivate: [profileCompletionGuard]
  */
-export const profileCompletionGuard: CanActivateFn = (route, state) => {
+export const profileCompletionGuard: CanActivateFn = (_route, _state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
@@ -33,7 +33,7 @@ export const profileCompletionGuard: CanActivateFn = (route, state) => {
  * Guard to ensure user completes profile before accessing certain features
  * Use on routes that require a completed profile (like job posting, applications, etc.)
  */
-export const requireCompleteProfile: CanActivateFn = (route, state) => {
+export const requireCompleteProfile: CanActivateFn = (_route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 

@@ -15,8 +15,8 @@ export interface LegalDocument {
 }
 
 export const LEGAL_CONTENT: {
-  en: { [key: string]: LegalDocument };
-  af: { [key: string]: LegalDocument };
+  en: Record<string, LegalDocument>;
+  af: Record<string, LegalDocument>;
 } = {
   en: {
     'privacy-policy': {

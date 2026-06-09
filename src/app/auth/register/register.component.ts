@@ -101,7 +101,7 @@ export class RegisterComponent implements OnInit {
     }
   }
 
-  passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
+  passwordMatchValidator(group: FormGroup): Record<string, boolean> | null {
     const password = group.get('password')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
     return password === confirmPassword ? null : { passwordMismatch: true };

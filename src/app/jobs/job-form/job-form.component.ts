@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -120,7 +120,7 @@ export class JobFormComponent implements OnInit {
         this.selectedSkills = job.skills ? [...job.skills] : [];
         this.loading = false;
       },
-      error: (error) => {
+      error: () => {
         this.showError('Failed to load job details');
         this.loading = false;
         this.router.navigate(['/jobs']);

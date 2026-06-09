@@ -48,7 +48,7 @@ export interface ReviewResponse {
 export interface ReviewSummary {
   totalReviews: number;
   averageRating: number;
-  ratingDistribution: { [key: number]: number };
+  ratingDistribution: Record<number, number>;
   recentReviews: Review[];
 }
 

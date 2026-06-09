@@ -1,3 +1,4 @@
+<ng-container *ngIf="vm$ | async as vm">
 <div class="pricing-page">
 
   <!-- Hero -->
@@ -5,7 +6,7 @@
     <h1>Simple, honest pricing</h1>
     <p class="hero-sub">
       Unlike Upwork or Fiverr — Freework <strong>never takes a cut</strong> of your earnings.
-      PRO just unlocks the full platform.
+      Upgrading just unlocks the full platform.
     </p>
     <div class="commission-badge">
       <mat-icon>savings</mat-icon>
@@ -18,7 +19,7 @@
 
     <!-- FREE -->
     <mat-card class="plan-card plan-card--free">
-      <div class="plan-badge current-badge" *ngIf="currentUser && !isPro">Your plan</div>
+      <div class="plan-badge current-badge" *ngIf="vm.user && !vm.isPaid">Your plan</div>
       <mat-card-header>
         <mat-icon mat-card-avatar>person</mat-icon>
         <mat-card-title>Free</mat-card-title>
@@ -29,120 +30,137 @@
           <span class="price-amount">R0</span>
           <span class="price-period">/ month</span>
         </div>
-
         <ul class="feature-list">
           <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            0% commission — always
+            <mat-icon>check_circle</mat-icon>0% commission — always
           </li>
           <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            Full messaging &amp; chat
+            <mat-icon>check_circle</mat-icon>Secure escrow payments
           </li>
           <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            Secure escrow payments
+            <mat-icon>check_circle</mat-icon>Browse all job listings
           </li>
-          <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            Browse all job listings
-          </li>
-          <!-- Role-aware limits -->
-          <ng-container *ngIf="isFreelancer || !currentUser">
+          <ng-container *ngIf="vm.isFreelancer || !vm.user">
             <li class="feature-item feature-item--limit">
               <mat-icon>remove_circle_outline</mat-icon>
               {{ FREE_APPLICATION_LIMIT }} applications per month
             </li>
           </ng-container>
-          <ng-container *ngIf="isCustomer || !currentUser">
+          <ng-container *ngIf="vm.isCustomer || !vm.user">
             <li class="feature-item feature-item--limit">
               <mat-icon>remove_circle_outline</mat-icon>
-              {{ FREE_JOB_LIMIT }} active job post
+              {{ FREE_JOB_LIMIT }} active job posts
             </li>
           </ng-container>
-          <ng-container *ngIf="!currentUser">
-            <li class="feature-item feature-item--limit">
-              <mat-icon>remove_circle_outline</mat-icon>
-              No PRO badge
-            </li>
-          </ng-container>
+          <li class="feature-item feature-item--limit">
+            <mat-icon>remove_circle_outline</mat-icon>3 conversations
+          </li>
         </ul>
       </mat-card-content>
       <mat-card-actions>
-        <a mat-stroked-button routerLink="/jobs" class="plan-cta">
-          Get Started
-        </a>
+        <a mat-stroked-button routerLink="/jobs" class="plan-cta">Get Started Free</a>
       </mat-card-actions>
     </mat-card>
 
-    <!-- PRO -->
+    <!-- GROWTH -->
     <mat-card class="plan-card plan-card--pro">
-      <div class="plan-badge pro-ribbon">PRO</div>
-      <div class="plan-badge current-badge current-badge--pro" *ngIf="isPro">Your plan</div>
+      <div class="plan-badge pro-ribbon">GROWTH</div>
+      <div class="plan-badge current-badge current-badge--pro" *ngIf="vm.isGrowth">Your plan</div>
       <mat-card-header>
         <mat-icon mat-card-avatar>workspace_premium</mat-icon>
-        <mat-card-title>PRO</mat-card-title>
-        <mat-card-subtitle>For serious freelancers &amp; clients</mat-card-subtitle>
+        <mat-card-title>Growth</mat-card-title>
+        <mat-card-subtitle>For active freelancers &amp; clients</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
         <div class="plan-price">
-          <span class="price-amount">R199</span>
+          <span class="price-amount">R149</span>
           <span class="price-period">/ month</span>
         </div>
-
         <ul class="feature-list">
           <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            0% commission — always
+            <mat-icon>check_circle</mat-icon>0% commission — always
           </li>
           <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            Full messaging &amp; chat
+            <mat-icon>check_circle</mat-icon>Secure escrow payments
           </li>
           <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            Secure escrow payments
+            <mat-icon>check_circle</mat-icon>Unlimited conversations
           </li>
-          <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            Browse all job listings
-          </li>
-          <ng-container *ngIf="isFreelancer || !currentUser">
+          <ng-container *ngIf="vm.isFreelancer || !vm.user">
             <li class="feature-item feature-item--check">
-              <mat-icon>check_circle</mat-icon>
-              Unlimited applications
+              <mat-icon>check_circle</mat-icon>Unlimited applications
             </li>
           </ng-container>
-          <ng-container *ngIf="isCustomer || !currentUser">
+          <ng-container *ngIf="vm.isCustomer || !vm.user">
             <li class="feature-item feature-item--check">
-              <mat-icon>check_circle</mat-icon>
-              Unlimited active job posts
+              <mat-icon>check_circle</mat-icon>{{ GROWTH_JOB_LIMIT }} active job posts
             </li>
           </ng-container>
           <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            PRO badge on your profile
+            <mat-icon>check_circle</mat-icon>Growth badge on profile
           </li>
           <li class="feature-item feature-item--check">
-            <mat-icon>check_circle</mat-icon>
-            Priority in search results
+            <mat-icon>check_circle</mat-icon>Priority in search results
           </li>
         </ul>
       </mat-card-content>
       <mat-card-actions>
-        <button
-          *ngIf="!isPro"
-          mat-raised-button
-          class="plan-cta plan-cta--pro"
-          (click)="upgradeToProo()"
-          [disabled]="checkingOut">
+        <button *ngIf="!vm.isGrowth && !vm.isScale" mat-raised-button class="plan-cta plan-cta--pro"
+          (click)="upgradeToPlan('GROWTH')" [disabled]="checkingOut">
           <mat-spinner diameter="18" *ngIf="checkingOut"></mat-spinner>
           <mat-icon *ngIf="!checkingOut">rocket_launch</mat-icon>
-          {{ checkingOut ? 'Starting checkout...' : 'Upgrade to PRO' }}
+          {{ checkingOut ? 'Starting checkout...' : 'Upgrade to Growth — R149' }}
         </button>
-        <div *ngIf="isPro" class="current-plan-note">
-          <mat-icon>check_circle</mat-icon>
-          You're already on PRO
+        <div *ngIf="vm.isGrowth" class="current-plan-note">
+          <mat-icon>check_circle</mat-icon>You're on Growth
+        </div>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- SCALE -->
+    <mat-card class="plan-card plan-card--scale">
+      <div class="plan-badge scale-ribbon">SCALE</div>
+      <div class="plan-badge current-badge current-badge--pro" *ngIf="vm.isScale">Your plan</div>
+      <mat-card-header>
+        <mat-icon mat-card-avatar>bolt</mat-icon>
+        <mat-card-title>Scale</mat-card-title>
+        <mat-card-subtitle>For agencies &amp; power users</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="plan-price">
+          <span class="price-amount">R349</span>
+          <span class="price-period">/ month</span>
+        </div>
+        <ul class="feature-list">
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>Everything in Growth
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>Unlimited job posts
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>Featured in search results
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>Scale badge on profile
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>Analytics dashboard
+          </li>
+          <li class="feature-item feature-item--check">
+            <mat-icon>check_circle</mat-icon>Priority support
+          </li>
+        </ul>
+      </mat-card-content>
+      <mat-card-actions>
+        <button *ngIf="!vm.isScale" mat-raised-button class="plan-cta plan-cta--scale"
+          (click)="upgradeToPlan('SCALE')" [disabled]="checkingOut">
+          <mat-spinner diameter="18" *ngIf="checkingOut"></mat-spinner>
+          <mat-icon *ngIf="!checkingOut">bolt</mat-icon>
+          {{ checkingOut ? 'Starting checkout...' : 'Upgrade to Scale — R349' }}
+        </button>
+        <div *ngIf="vm.isScale" class="current-plan-note">
+          <mat-icon>check_circle</mat-icon>You're on Scale
         </div>
       </mat-card-actions>
     </mat-card>
@@ -160,7 +178,7 @@
             <p>
               Upwork takes up to <strong>20%</strong>. Fiverr takes <strong>20%</strong>.
               Freework takes <strong>0%</strong> — on every plan, forever.
-              PRO just removes the limits so you can work more.
+              Growth and Scale just remove the limits so you can work more.
             </p>
           </div>
         </div>
@@ -169,3 +187,4 @@
   </div>
 
 </div>
+</ng-container>

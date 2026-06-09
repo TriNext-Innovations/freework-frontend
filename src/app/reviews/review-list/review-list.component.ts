@@ -43,8 +43,8 @@ export class ReviewListComponent implements OnInit, OnChanges {
   error = false;
 
   // Filter options
-  selectedRating: string = 'all';
-  selectedSort: string = 'date-desc';
+  selectedRating = 'all';
+  selectedSort = 'date-desc';
 
   constructor(
     private reviewService: ReviewService,

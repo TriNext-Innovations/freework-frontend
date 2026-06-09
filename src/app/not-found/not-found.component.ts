@@ -2,7 +2,7 @@ import { Component, AfterViewInit } from '@angular/core';
 import { particlesConfig } from '../../particles-config';
 import {RouterLink} from "@angular/router";
 
-declare const particlesJS: any;
+declare const particlesJS: (elementId: string, config: unknown, callback?: () => void) => void;
 
 @Component({
   selector: 'app-not-found',

@@ -39,7 +39,7 @@ export interface Payment {
   escrowedAt?: Date;
   releasedAt?: Date;
   description?: string;
-  metadata?: { [key: string]: any };
+  metadata?: Record<string, unknown>;
   createdAt: Date;
   updatedAt: Date;
 }

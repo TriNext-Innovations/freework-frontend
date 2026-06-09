@@ -218,7 +218,7 @@ export class ProfileService {
   /**
    * Mark profile as completed
    */
-  markProfileAsCompleted(): Observable<any> {
+  markProfileAsCompleted(): Observable<unknown> {
     if (this.useMockData) {
       return of({ success: true }).pipe(
         tap(() => {

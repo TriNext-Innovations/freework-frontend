@@ -113,14 +113,14 @@
 
         <mat-divider></mat-divider>
 
-        <a mat-list-item (click)="logout()">
+        <a mat-list-item tabindex="0" (click)="logout()" (keyup.enter)="logout()">
           <mat-icon matListItemIcon>logout</mat-icon>
           <span matListItemTitle>Logout</span>
         </a>
       </ng-container>
 
       <!-- Not Logged In -->
-      <ng-container *ngIf="!(currentUser$ | async)">
+      <ng-container *ngIf="(currentUser$ | async) === null">
         <a mat-list-item routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>login</mat-icon>
           <span matListItemTitle>Login</span>
@@ -161,7 +161,7 @@
           <!-- User Menu -->
           <div class="user-menu">
             <!-- Not Logged In -->
-            <ng-container *ngIf="!(currentUser$ | async)">
+            <ng-container *ngIf="(currentUser$ | async) === null">
               <a mat-button routerLink="/login" class="login-button">
                 <mat-icon>login</mat-icon>
                 Login

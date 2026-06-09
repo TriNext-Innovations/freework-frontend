@@ -41,11 +41,15 @@
 // Plans Grid
 .plans-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  max-width: 760px;
+  max-width: 1100px;
   margin: 0 auto;
   padding: 0 24px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr 1fr;
+  }
 
   @media (max-width: 600px) {
     grid-template-columns: 1fr;
@@ -88,6 +92,25 @@
 .pro-ribbon {
   background: var(--color-accent-600);
   color: #fff;
+}
+
+.scale-ribbon {
+  background: #6366f1;
+  color: #fff;
+}
+
+.plan-card--scale {
+  border: 2px solid #6366f1;
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
+}
+
+.plan-cta--scale {
+  background: #6366f1 !important;
+  color: #fff !important;
+
+  &:hover {
+    background: #4f46e5 !important;
+  }
 }
 
 .current-badge {
@@ -174,7 +197,7 @@
 
 // Commission callout
 .callout-section {
-  max-width: 760px;
+  max-width: 1100px;
   margin: 32px auto 0;
   padding: 0 24px;
 }

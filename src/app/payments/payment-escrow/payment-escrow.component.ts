@@ -235,7 +235,7 @@ export class PaymentEscrowComponent implements OnInit {
   }
 
   getStatusColor(status: string): string {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       'PENDING': 'warn',
       'PROCESSING': 'accent',
       'COMPLETED': 'primary',
@@ -249,7 +249,7 @@ export class PaymentEscrowComponent implements OnInit {
   }
 
   getMilestoneStatusColor(status: string): string {
-    const colors: { [key: string]: string } = {
+    const colors: Record<string, string> = {
       'PENDING': 'default',
       'IN_PROGRESS': 'accent',
       'COMPLETED': 'primary',

@@ -1,10 +1,33 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { AuthResponse, LoginRequest, RegisterRequest, User, RefreshTokenRequest, TokenPayload } from './models';
 import { buildApiEndpointUrl, buildApiUrl } from '../api.config';
+
+/** Shape of raw user objects returned from various API endpoints. */
+interface RawUserPayload {
+  id?: string;
+  userId?: string;
+  email?: string;
+  firstName?: string;
+  lastName?: string;
+  given_name?: string;
+  family_name?: string;
+  role?: string;
+  avatar?: string;
+  avatarUrl?: string;
+  imageUrl?: string;
+  photoUrl?: string;
+  profilePicture?: string;
+  profilePictureUrl?: string;
+  picture?: string;
+  createdAt?: string;
+  profileCompleted?: boolean;
+  profile_completed?: boolean;
+  [key: string]: unknown;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -108,29 +131,30 @@ export class AuthService {
       }
     };
 
-    return this.http.post<any>(`${this.API_URL}/login`, credentials, httpOptions)
+    return this.http.post<Record<string, unknown>>(`${this.API_URL}/login`, credentials, httpOptions)
       .pipe(
-        tap(response => {
+        map(response => {
           console.log('📥 Raw API Response received:', response);
           console.log('📥 Response type:', typeof response);
           console.log('📥 Response keys:', Object.keys(response));
-          console.log('📥 Access token:', response.accessToken || response.token || 'MISSING');
-          console.log('📥 Refresh token:', response.refreshToken || 'MISSING');
-          console.log('📥 User data:', response.user || response.userDetails || 'MISSING');
+          console.log('📥 Access token:', response['accessToken'] || response['token'] || 'MISSING');
+          console.log('📥 Refresh token:', response['refreshToken'] || 'MISSING');
+          console.log('📥 User data:', response['user'] || response['userDetails'] || 'MISSING');
 
           // Handle different possible API response formats
           const authResponse: AuthResponse = {
-            accessToken: response.accessToken || response.token,
-            refreshToken: response.refreshToken || response.refresh_token || '',
-            tokenType: response.tokenType || 'Bearer',
-            expiresIn: response.expiresIn || response.expires_in || 3600,
-            user: response.user || response.userDetails || this.extractUserFromToken(response.accessToken || response.token)
+            accessToken: (response['accessToken'] || response['token']) as string,
+            refreshToken: (response['refreshToken'] || response['refresh_token'] || '') as string,
+            tokenType: (response['tokenType'] || 'Bearer') as string,
+            expiresIn: (response['expiresIn'] || response['expires_in'] || 3600) as number,
+            user: (response['user'] || response['userDetails'] || this.extractUserFromToken((response['accessToken'] || response['token']) as string)) as User
           };
 
           console.log('📥 Normalized auth response:', authResponse);
           this.handleAuthResponse(authResponse);
+          return authResponse;
         }),
-        catchError(error => {
+        catchError((error: HttpErrorResponse) => {
           console.error('❌ Login error:', error);
           console.error('❌ Error status:', error.status);
           console.error('❌ Error message:', error.message);
@@ -183,10 +207,10 @@ export class AuthService {
   /**
    * Register new user — backend sends verification email; no auto-login here.
    */
-  register(userData: RegisterRequest): Observable<any> {
-    return this.http.post<any>(`${this.API_URL}/register`, userData)
+  register(userData: RegisterRequest): Observable<unknown> {
+    return this.http.post<unknown>(`${this.API_URL}/register`, userData)
       .pipe(
-        catchError(error => {
+        catchError((error: HttpErrorResponse) => {
           console.error('Registration error:', error);
           return throwError(() => error);
         })
@@ -198,20 +222,21 @@ export class AuthService {
    * On success the backend returns a JWT so we auto-login the user.
    */
   verifyEmail(token: string): Observable<AuthResponse> {
-    return this.http.get<any>(`${this.API_URL}/verify`, { params: { token } })
+    return this.http.get<Record<string, unknown>>(`${this.API_URL}/verify`, { params: { token } })
       .pipe(
-        tap(response => {
+        map(response => {
           const authResponse: AuthResponse = {
-            accessToken: response.accessToken || response.token,
-            refreshToken: response.refreshToken || response.refresh_token || '',
-            tokenType: response.tokenType || 'Bearer',
-            expiresIn: response.expiresIn || response.expires_in || 3600,
-            user: response.user || response.userDetails ||
-              this.extractUserFromToken(response.accessToken || response.token)
+            accessToken: (response['accessToken'] || response['token']) as string,
+            refreshToken: (response['refreshToken'] || response['refresh_token'] || '') as string,
+            tokenType: (response['tokenType'] || 'Bearer') as string,
+            expiresIn: (response['expiresIn'] || response['expires_in'] || 3600) as number,
+            user: (response['user'] || response['userDetails'] ||
+              this.extractUserFromToken((response['accessToken'] || response['token']) as string)) as User
           };
           this.handleAuthResponse(authResponse);
+          return authResponse;
         }),
-        catchError(error => {
+        catchError((error: HttpErrorResponse) => {
           console.error('Email verification error:', error);
           return throwError(() => error);
         })
@@ -295,7 +320,7 @@ export class AuthService {
   fetchUserProfile(): Observable<User> {
     return this.http.get<User>(`${this.PROFILE_API_URL}`)
       .pipe(
-        map(user => this.normalizeUser(user, this.getAccessToken() || undefined) || user),
+        map(user => this.normalizeUser(user as unknown as RawUserPayload, this.getAccessToken() || undefined) || user),
         tap(user => {
           this.currentUserSubject.next(user);
           this.storeUser(user);
@@ -421,7 +446,7 @@ export class AuthService {
 
     this.setTokens(response.accessToken, response.refreshToken);
 
-    const normalizedUser = this.normalizeUser(response.user, response.accessToken) || response.user;
+    const normalizedUser = this.normalizeUser(response.user as unknown as RawUserPayload, response.accessToken) || response.user;
     if (!normalizedUser) {
       console.error('❌ No user data available after normalization');
       return;
@@ -450,7 +475,7 @@ export class AuthService {
     console.log('✅ Token in storage:', this.getAccessToken() ? 'Present' : 'Missing');
   }
 
-  private normalizeUser(rawUser: any, token?: string): User | null {
+  private normalizeUser(rawUser: RawUserPayload | null | undefined, token?: string): User | null {
     const tokenUser = token ? this.extractUserFromToken(token) : null;
     if (!rawUser && !tokenUser) {
       return null;

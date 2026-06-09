@@ -3,8 +3,6 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Job, CreateJobRequest, UpdateJobRequest, JobFilters, JobsResponse } from './models';
-import { MockDataService } from './mock-data.service';
-import { AuthService } from '../auth/auth.service';
 import { buildApiUrl } from '../api.config';
 
 @Injectable({
@@ -12,34 +10,15 @@ import { buildApiUrl } from '../api.config';
 })
 export class JobService {
   private readonly API_URL = buildApiUrl('/jobs');
-  private useMockData = false; // Toggle this to switch between mock and real API
 
   private jobsSubject = new BehaviorSubject<Job[]>([]);
   public jobs$ = this.jobsSubject.asObservable();
 
   constructor(
-    private http: HttpClient,
-    private mockDataService: MockDataService,
-    private authService: AuthService
+    private http: HttpClient
   ) {}
 
-  /**
-   * Get all jobs with optional filters and pagination
-   */
   getJobs(page = 0, size = 10, filters?: JobFilters): Observable<JobsResponse> {
-    // Use mock data for testing
-    if (this.useMockData) {
-      if (filters) {
-        return this.mockDataService.searchJobs(filters, page, size).pipe(
-          tap(response => this.jobsSubject.next(response.content))
-        );
-      }
-      return this.mockDataService.getJobs(page, size).pipe(
-        tap(response => this.jobsSubject.next(response.content))
-      );
-    }
-
-    // Original API call
     let params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
@@ -64,51 +43,23 @@ export class JobService {
     );
   }
 
-  /**
-   * Get a single job by ID
-   */
   getJobById(id: string): Observable<Job> {
-    // Use mock data for testing
-    if (this.useMockData) {
-      return this.mockDataService.getJobById(id);
-    }
-
     return this.http.get<Job>(`${this.API_URL}/${id}`);
   }
 
-  /**
-   * Create a new job (Customer only)
-   */
   createJob(jobData: CreateJobRequest): Observable<Job> {
     return this.http.post<Job>(this.API_URL, jobData);
   }
 
-  /**
-   * Update an existing job (Customer only)
-   */
   updateJob(jobData: UpdateJobRequest): Observable<Job> {
     return this.http.put<Job>(`${this.API_URL}/${jobData.id}`, jobData);
   }
 
-  /**
-   * Delete a job (Customer only)
-   */
   deleteJob(id: string): Observable<void> {
     return this.http.delete<void>(`${this.API_URL}/${id}`);
   }
 
-  /**
-   * Get jobs posted by current user (Customer only)
-   */
   getMyJobs(page = 0, size = 10): Observable<JobsResponse> {
-    // Use mock data for testing
-    if (this.useMockData) {
-      const currentUser = this.authService.currentUserValue;
-      if (currentUser) {
-        return this.mockDataService.getMyJobs(currentUser.id, page, size);
-      }
-    }
-
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', size.toString());
@@ -116,9 +67,6 @@ export class JobService {
     return this.http.get<JobsResponse>(`${this.API_URL}/my-jobs`, { params });
   }
 
-  /**
-   * Search jobs by keyword
-   */
   searchJobs(keyword: string, page = 0, size = 10): Observable<JobsResponse> {
     const params = new HttpParams()
       .set('search', keyword)
@@ -128,9 +76,6 @@ export class JobService {
     return this.http.get<JobsResponse>(`${this.API_URL}/search`, { params });
   }
 
-  /**
-   * Get jobs by category
-   */
   getJobsByCategory(category: string, page = 0, size = 10): Observable<JobsResponse> {
     const params = new HttpParams()
       .set('page', page.toString())
@@ -139,9 +84,6 @@ export class JobService {
     return this.http.get<JobsResponse>(`${this.API_URL}/category/${category}`, { params });
   }
 
-  /**
-   * Update job status
-   */
   updateJobStatus(id: string, status: string): Observable<Job> {
     return this.http.patch<Job>(`${this.API_URL}/${id}/status`, { status });
   }

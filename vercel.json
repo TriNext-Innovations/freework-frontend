@@ -1,5 +1,5 @@
 {
-  "buildCommand": "ng build --configuration production",
+  "buildCommand": "ng build --configuration ${ANGULAR_CONFIGURATION:-production}",
   "outputDirectory": "dist/angular-app/browser",
   "installCommand": "npm ci",
   "framework": null,

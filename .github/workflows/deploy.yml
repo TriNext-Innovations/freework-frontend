@@ -1,40 +1,144 @@
-name: Deploy to GitHub Pages
+name: CI / CD — Frontend
 
 on:
   push:
-    branches: ["main", "feature/api-live-test", "feature/404-not-found"]
-  workflow_dispatch:
+    branches: [main, staging, develop]
+  pull_request:
+    branches: [main, staging, develop]
 
-permissions:
-  contents: write
+env:
+  NODE_VERSION: '20'
 
 jobs:
-  deploy:
+  # ── CI: runs on every push and PR ────────────────────────────────────────────
+  lint-and-build:
+    name: Lint & Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
-          cache: "npm"
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run lint
+
+      - name: Resolve Angular build configuration
+        id: cfg
+        run: |
+          case "${{ github.ref }}" in
+            refs/heads/main)    echo "angular_config=production" >> "$GITHUB_OUTPUT" ;;
+            refs/heads/staging) echo "angular_config=staging"    >> "$GITHUB_OUTPUT" ;;
+            *)                  echo "angular_config=staging"     >> "$GITHUB_OUTPUT" ;;
+          esac
+
+      - name: Build
+        run: npm run build -- --configuration ${{ steps.cfg.outputs.angular_config }}
+
+  # ── Deploy: production (main → GitHub Pages → freework.co.za) ────────────────
+  deploy-prod:
+    name: Deploy → Production
+    needs: lint-and-build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: prod
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
 
       - run: npm ci
 
       - run: npm run build -- --configuration production
 
-      - name: Prepare deploy folder
+      - name: Prepare GitHub Pages folder
         run: |
           mkdir -p deploy
           cp -r dist/angular-app/browser/* deploy/
           cp deploy/index.html deploy/404.html
           touch deploy/.nojekyll
           echo "freework.co.za" > deploy/CNAME
-          ls -la deploy/
 
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
           branch: gh-pages
           folder: deploy
           clean: true
+
+  # ── Deploy: staging (staging → Vercel → staging.freework.co.za) ─────────────
+  # Requires GitHub secret: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
+  # Vercel env var: ANGULAR_CONFIGURATION=staging  (set in Vercel dashboard)
+  # Vercel branch alias: staging.freework.co.za   (set in Vercel dashboard)
+  deploy-staging:
+    name: Deploy → Staging
+    needs: lint-and-build
+    if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: staging
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build -- --configuration staging
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy to Vercel (staging)
+        run: |
+          vercel deploy --prebuilt \
+            --token "${{ secrets.VERCEL_TOKEN }}" \
+            --scope "${{ secrets.VERCEL_ORG_ID }}" \
+            --yes \
+            dist/angular-app/browser
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+
+  # ── Deploy: dev (develop → Vercel → dev.freework.co.za) ─────────────────────
+  deploy-dev:
+    name: Deploy → Dev
+    needs: lint-and-build
+    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: dev
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build -- --configuration staging
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Deploy to Vercel (dev)
+        run: |
+          vercel deploy --prebuilt \
+            --token "${{ secrets.VERCEL_TOKEN }}" \
+            --scope "${{ secrets.VERCEL_ORG_ID }}" \
+            --yes \
+            dist/angular-app/browser
+        env:
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}

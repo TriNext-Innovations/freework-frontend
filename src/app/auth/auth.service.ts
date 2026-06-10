@@ -112,8 +112,21 @@ export class AuthService {
   }
 
   /**
-   * Verify email address via token from verification email.
-   * On success the backend returns a JWT so we auto-login the user.
+   * Exchange the one-time code (from the ?code= redirect after email verification)
+   * for a JWT. The code is single-use and expires after 5 minutes.
+   * The JWT never travels through the URL — only over this API call.
+   */
+  exchangeCode(code: string): Observable<AuthResponse> {
+    return this.http.post<AuthResponse>(`${this.API_URL}/exchange-code`, { code })
+      .pipe(
+        tap(response => this.handleAuthResponse(response)),
+        catchError((error: HttpErrorResponse) => throwError(() => error))
+      );
+  }
+
+  /**
+   * @deprecated Backend now redirects to /auth/verified?code=... after verification.
+   * Use exchangeCode() via EmailVerifiedComponent instead.
    */
   verifyEmail(token: string): Observable<AuthResponse> {
     return this.http.get<Record<string, unknown>>(`${this.API_URL}/verify`, { params: { token } })

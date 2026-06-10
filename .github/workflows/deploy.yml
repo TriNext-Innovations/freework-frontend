@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [main, staging, develop]
 
+# Branch → environment mapping:
+#   develop → CI only (dev is local; no cloud deploy)
+#   staging → Vercel staging (staging.freework.co.za)
+#   main    → GitHub Pages prod (freework.co.za)
+
 env:
   NODE_VERSION: '20'
 

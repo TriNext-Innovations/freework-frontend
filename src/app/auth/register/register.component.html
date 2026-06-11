@@ -9,13 +9,13 @@
           </svg>
           <span class="brand-wordmark"><strong>free</strong>work</span>
         </div>
-        <mat-card-title>Join freework</mat-card-title>
-        <mat-card-subtitle>Start <em>doing what you love</em> today</mat-card-subtitle>
+        <span class="auth-eyebrow">South Africa's freelance marketplace</span>
+        <h1 class="auth-title">Start doing what you <em>love</em></h1>
+        <p class="auth-subtitle">0% commission on every job, every plan, forever.</p>
       </div>
     </mat-card-header>
 
     <mat-card-content>
-      <!-- Registration Form -->
       <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
 
         <!-- Name Fields Row -->
@@ -26,19 +26,15 @@
               matInput
               type="text"
               formControlName="firstName"
-              placeholder="John"
+              placeholder="Jane"
               autocomplete="given-name">
             <mat-icon matPrefix>person</mat-icon>
             @if (f['firstName'].hasError('required')) {
-<mat-error>
-              First name is required
-            </mat-error>
-}
+              <mat-error>First name is required</mat-error>
+            }
             @if (f['firstName'].hasError('minlength')) {
-<mat-error>
-              At least 2 characters required
-            </mat-error>
-}
+              <mat-error>At least 2 characters required</mat-error>
+            }
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">
@@ -50,15 +46,11 @@
               placeholder="Doe"
               autocomplete="family-name">
             @if (f['lastName'].hasError('required')) {
-<mat-error>
-              Last name is required
-            </mat-error>
-}
+              <mat-error>Last name is required</mat-error>
+            }
             @if (f['lastName'].hasError('minlength')) {
-<mat-error>
-              At least 2 characters required
-            </mat-error>
-}
+              <mat-error>At least 2 characters required</mat-error>
+            }
           </mat-form-field>
         </div>
 
@@ -73,15 +65,11 @@
             autocomplete="email">
           <mat-icon matPrefix>email</mat-icon>
           @if (f['email'].hasError('required')) {
-<mat-error>
-            Email is required
-          </mat-error>
-}
+            <mat-error>Email is required</mat-error>
+          }
           @if (f['email'].hasError('email')) {
-<mat-error>
-            Please enter a valid email
-          </mat-error>
-}
+            <mat-error>Please enter a valid email</mat-error>
+          }
         </mat-form-field>
 
         <!-- Password Field -->
@@ -103,20 +91,14 @@
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
           @if (f['password'].hasError('required')) {
-<mat-error>
-            Password is required
-          </mat-error>
-}
+            <mat-error>Password is required</mat-error>
+          }
           @if (f['password'].hasError('minlength')) {
-<mat-error>
-            Password must be at least 6 characters
-          </mat-error>
-}
+            <mat-error>Password must be at least 6 characters</mat-error>
+          }
           @if (f['password'].hasError('pattern')) {
-<mat-error>
-            Password must contain uppercase, lowercase, and number
-          </mat-error>
-}
+            <mat-error>Password must contain uppercase, lowercase, and number</mat-error>
+          }
         </mat-form-field>
 
         <!-- Confirm Password Field -->
@@ -138,15 +120,11 @@
             <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
           @if (f['confirmPassword'].hasError('required')) {
-<mat-error>
-            Please confirm your password
-          </mat-error>
-}
+            <mat-error>Please confirm your password</mat-error>
+          }
           @if (registerForm.hasError('passwordMismatch') && f['confirmPassword'].touched) {
-<mat-error>
-            Passwords do not match
-          </mat-error>
-}
+            <mat-error>Passwords do not match</mat-error>
+          }
         </mat-form-field>
 
         <!-- Role Selection -->
@@ -176,61 +154,61 @@
 
         <!-- POPIA-compliant consent checkboxes — Freelancer -->
         @if (isFreelancer) {
-<div class="checkbox-section">
-          <p class="consent-heading">Freelancer Terms &amp; Consents <span class="required-note">(all required)</span></p>
+          <div class="checkbox-section">
+            <p class="consent-heading">Freelancer Terms &amp; Consents <span class="required-note">(all required)</span></p>
 
-          <mat-checkbox formControlName="freelancerTcsAccepted" class="consent-checkbox">
-            I have read and agree to the <a routerLink="/legal/freelancer-terms" target="_blank">Freelancer Terms and Conditions</a> — including the Independent Contractor clause confirming I am not an employee of Freework or any Client
-          </mat-checkbox>
+            <mat-checkbox formControlName="freelancerTcsAccepted" class="consent-checkbox">
+              I have read and agree to the <a routerLink="/legal/freelancer-terms" target="_blank">Freelancer Terms and Conditions</a> — including the Independent Contractor clause confirming I am not an employee of Freework or any Client
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="freelancerPrivacyAccepted" class="consent-checkbox">
-            I have read and agree to the <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a> and consent to the collection and processing of my personal information as described therein
-          </mat-checkbox>
+            <mat-checkbox formControlName="freelancerPrivacyAccepted" class="consent-checkbox">
+              I have read and agree to the <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a> and consent to the collection and processing of my personal information as described therein
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="freelancerTaxAccepted" class="consent-checkbox">
-            I understand that I am solely responsible for my own tax obligations, including registering with SARS and declaring all income earned through Freework
-          </mat-checkbox>
+            <mat-checkbox formControlName="freelancerTaxAccepted" class="consent-checkbox">
+              I understand that I am solely responsible for my own tax obligations, including registering with SARS and declaring all income earned through Freework
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="freelancerAgeConfirmed" class="consent-checkbox">
-            I confirm that I am at least 18 years of age
-          </mat-checkbox>
+            <mat-checkbox formControlName="freelancerAgeConfirmed" class="consent-checkbox">
+              I confirm that I am at least 18 years of age
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="marketingEmails" class="consent-checkbox optional-checkbox">
-            I agree to receive marketing communications from Freework. I understand I can unsubscribe at any time. <span class="optional-label">(Optional)</span>
-          </mat-checkbox>
-        </div>
-}
+            <mat-checkbox formControlName="marketingEmails" class="consent-checkbox optional-checkbox">
+              I agree to receive marketing communications from Freework. I understand I can unsubscribe at any time. <span class="optional-label">(Optional)</span>
+            </mat-checkbox>
+          </div>
+        }
 
         <!-- POPIA-compliant consent checkboxes — Business/Customer -->
         @if (!isFreelancer) {
-<div class="checkbox-section">
-          <p class="consent-heading">Business Terms &amp; Consents <span class="required-note">(all required)</span></p>
+          <div class="checkbox-section">
+            <p class="consent-heading">Business Terms &amp; Consents <span class="required-note">(all required)</span></p>
 
-          <mat-checkbox formControlName="businessTcsAccepted" class="consent-checkbox">
-            I have read and agree to the <a routerLink="/legal/business-terms" target="_blank">Business/Client Terms and Conditions</a> on behalf of my business
-          </mat-checkbox>
+            <mat-checkbox formControlName="businessTcsAccepted" class="consent-checkbox">
+              I have read and agree to the <a routerLink="/legal/business-terms" target="_blank">Business/Client Terms and Conditions</a> on behalf of my business
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="businessPrivacyAccepted" class="consent-checkbox">
-            I have read and agree to the <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a> and consent to the collection and processing of personal information as described therein
-          </mat-checkbox>
+            <mat-checkbox formControlName="businessPrivacyAccepted" class="consent-checkbox">
+              I have read and agree to the <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a> and consent to the collection and processing of personal information as described therein
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="businessContractorAcknowledged" class="consent-checkbox">
-            I confirm that Freelancers engaged through Freework are independent contractors, not employees, and I will not treat them as employees
-          </mat-checkbox>
+            <mat-checkbox formControlName="businessContractorAcknowledged" class="consent-checkbox">
+              I confirm that Freelancers engaged through Freework are independent contractors, not employees, and I will not treat them as employees
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="businessAuthorityConfirmed" class="consent-checkbox">
-            I confirm that I have the legal authority to bind my business to these Terms and Conditions
-          </mat-checkbox>
+            <mat-checkbox formControlName="businessAuthorityConfirmed" class="consent-checkbox">
+              I confirm that I have the legal authority to bind my business to these Terms and Conditions
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="businessAgeConfirmed" class="consent-checkbox">
-            I confirm that I am at least 18 years of age
-          </mat-checkbox>
+            <mat-checkbox formControlName="businessAgeConfirmed" class="consent-checkbox">
+              I confirm that I am at least 18 years of age
+            </mat-checkbox>
 
-          <mat-checkbox formControlName="marketingEmails" class="consent-checkbox optional-checkbox">
-            I agree to receive marketing communications from Freework. I understand I can unsubscribe at any time. <span class="optional-label">(Optional)</span>
-          </mat-checkbox>
-        </div>
-}
+            <mat-checkbox formControlName="marketingEmails" class="consent-checkbox optional-checkbox">
+              I agree to receive marketing communications from Freework. I understand I can unsubscribe at any time. <span class="optional-label">(Optional)</span>
+            </mat-checkbox>
+          </div>
+        }
 
         <!-- Submit Button -->
         <button
@@ -240,11 +218,11 @@
           class="full-width submit-btn"
           [disabled]="loading || !requiredConsentsSatisfied">
           @if (loading) {
-<mat-spinner diameter="20" class="button-spinner"></mat-spinner>
-}
+            <mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+          }
           @if (!loading) {
-<span>Create Account</span>
-}
+            <span>Create Account</span>
+          }
         </button>
       </form>
 

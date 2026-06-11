@@ -8,8 +8,10 @@ on:
 
 # Branch → environment mapping:
 #   develop → CI only (dev is local; no cloud deploy)
-#   staging → Vercel staging (staging.freework.co.za)
-#   main    → GitHub Pages prod (freework.co.za)
+#   staging → Cloudflare Pages (staging.freework.co.za) — talks to api-staging.freework.co.za
+#   main    → CI only FOR NOW. Prod frontend is deferred until the prod backend
+#             (api.freework.co.za) exists; otherwise we'd publish a UI that can't
+#             reach an API. When prod is ready, add a Cloudflare Pages prod deploy.
 
 env:
   NODE_VERSION: '20'
@@ -43,48 +45,14 @@ jobs:
       - name: Build
         run: npm run build -- --configuration ${{ steps.cfg.outputs.angular_config }}
 
-  # ── Deploy: production (main → GitHub Pages → freework.co.za) ────────────────
-  deploy-prod:
-    name: Deploy → Production
-    needs: lint-and-build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    environment: prod
-    permissions:
-      contents: write
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
-
-      - run: npm ci
-
-      - run: npm run build -- --configuration production
-
-      - name: Prepare GitHub Pages folder
-        run: |
-          mkdir -p deploy
-          cp -r dist/angular-app/browser/* deploy/
-          cp deploy/index.html deploy/404.html
-          touch deploy/.nojekyll
-          echo "freework.co.za" > deploy/CNAME
-
-      - name: Deploy to GitHub Pages
-        uses: JamesIves/github-pages-deploy-action@v4
-        with:
-          branch: gh-pages
-          folder: deploy
-          clean: true
-
-  # ── Deploy: staging (staging → Vercel → staging.freework.co.za) ─────────────
-  # Requires GitHub secret: VERCEL_TOKEN, VERCEL_ORG_ID, VERCEL_PROJECT_ID
-  # Vercel env var: ANGULAR_CONFIGURATION=staging  (set in Vercel dashboard)
-  # Vercel branch alias: staging.freework.co.za   (set in Vercel dashboard)
+  # ── Deploy: staging (staging → Cloudflare Pages → staging.freework.co.za) ────
+  # Requires GitHub secrets (staging environment):
+  #   CLOUDFLARE_API_TOKEN   — token with Account → Cloudflare Pages: Edit
+  #   CLOUDFLARE_ACCOUNT_ID  — Cloudflare account id
+  # The project is auto-created on first run; map staging.freework.co.za to it in
+  # the Cloudflare dashboard (Pages → custom domains) once.
   deploy-staging:
-    name: Deploy → Staging
+    name: Deploy → Staging (Cloudflare Pages)
     needs: lint-and-build
     if: github.ref == 'refs/heads/staging' && github.event_name == 'push'
     runs-on: ubuntu-latest
@@ -101,49 +69,17 @@ jobs:
 
       - run: npm run build -- --configuration staging
 
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
-      - name: Deploy to Vercel (staging)
-        run: |
-          vercel deploy --prebuilt \
-            --token "${{ secrets.VERCEL_TOKEN }}" \
-            --scope "${{ secrets.VERCEL_ORG_ID }}" \
-            --yes \
-            dist/angular-app/browser
-        env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-
-  # ── Deploy: dev (develop → Vercel → dev.freework.co.za) ─────────────────────
-  deploy-dev:
-    name: Deploy → Dev
-    needs: lint-and-build
-    if: github.ref == 'refs/heads/develop' && github.event_name == 'push'
-    runs-on: ubuntu-latest
-    environment: dev
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-node@v4
+      - name: Ensure Cloudflare Pages project exists
+        uses: cloudflare/wrangler-action@v3
+        continue-on-error: true
         with:
-          node-version: ${{ env.NODE_VERSION }}
-          cache: npm
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages project create freework-frontend-staging --production-branch=staging
 
-      - run: npm ci
-
-      - run: npm run build -- --configuration staging
-
-      - name: Install Vercel CLI
-        run: npm install -g vercel@latest
-
-      - name: Deploy to Vercel (dev)
-        run: |
-          vercel deploy --prebuilt \
-            --token "${{ secrets.VERCEL_TOKEN }}" \
-            --scope "${{ secrets.VERCEL_ORG_ID }}" \
-            --yes \
-            dist/angular-app/browser
-        env:
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/angular-app/browser --project-name=freework-frontend-staging --branch=staging

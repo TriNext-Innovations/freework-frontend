@@ -1,0 +1,4 @@
+# Cloudflare Pages SPA fallback: every unmatched path serves the Angular app
+# shell with a 200 so the client-side router can handle deep links
+# (e.g. /jobs/123, /auth/verified?code=...). Static assets are matched first.
+/*    /index.html   200

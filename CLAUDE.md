@@ -51,19 +51,24 @@ all other authenticated endpoints are under `/api/*` (use `buildApiEndpointUrl`)
 | Branch | Deploys to | URL |
 |--------|-----------|-----|
 | `feature/*` | — (CI only) | — |
-| `develop` | dev (Vercel) | dev.freework.co.za |
-| `staging` | staging (Vercel) | staging.freework.co.za |
-| `main` | prod (GitHub Pages) | freework.co.za |
-
-Do not commit directly to `main` or `staging`.
+| `develop` | — (CI only; dev is local) | — |
+| `staging` | staging — **Cloudflare Pages** | staging.freework.co.za |
+| `main` | — (CI only for now) | freework.co.za (prod, deferred) |
 
 ## Deployment
 
-`.github/workflows/deploy.yml` handles all three environments:
-- **CI** (lint + build) runs on every push and PR to the three protected branches
-- **`main`** → GitHub Pages (`gh-pages` branch) → freework.co.za
-- **`staging`** → Vercel → staging.freework.co.za
-- **`develop`** → Vercel → dev.freework.co.za
+`.github/workflows/deploy.yml`:
+- **CI** (lint + build, Node 24) runs on every push/PR
+- **`staging`** → **Cloudflare Pages** project `freework-frontend-staging` via
+  `wrangler-action` → staging.freework.co.za (talks to `api-staging.freework.co.za`)
+- **`main`** → CI only. Prod frontend is deferred until the prod backend
+  (`api.freework.co.za`) exists; then add a Cloudflare Pages prod deploy.
 
-Vercel is also configured via `vercel.json`; output dir is `dist/angular-app/browser/`.
-Set `ANGULAR_CONFIGURATION` env var in Vercel per environment (production / staging).
+Cloudflare Pages specifics:
+- Secrets `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` live in the `staging`
+  GitHub environment. The Pages project auto-creates on first deploy.
+- `public/_redirects` (`/* /index.html 200`) gives SPA deep-link routing — do NOT
+  add a `404.html` back (it intercepts routes on Cloudflare and breaks deep links).
+- `public/_headers` sets the CSP; `connect-src` must list every API origin the build
+  talks to (currently both `api.freework.co.za` and `api-staging.freework.co.za`).
+- CI runs **Node 24** to match the npm 11 lockfile; Node 20 (npm 10) rejects it.

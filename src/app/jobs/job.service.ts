@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -9,14 +9,12 @@ import { buildApiUrl } from '../api.config';
   providedIn: 'root'
 })
 export class JobService {
+  private http = inject(HttpClient);
+
   private readonly API_URL = buildApiUrl('/jobs');
 
   private jobsSubject = new BehaviorSubject<Job[]>([]);
   public jobs$ = this.jobsSubject.asObservable();
-
-  constructor(
-    private http: HttpClient
-  ) {}
 
   getJobs(page = 0, size = 10, filters?: JobFilters): Observable<JobsResponse> {
     let params = new HttpParams()

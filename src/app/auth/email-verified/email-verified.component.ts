@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -78,15 +78,13 @@ import { AuthService } from '../auth.service';
   `]
 })
 export class EmailVerifiedComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private authService = inject(AuthService);
+
   loading = true;
   success = false;
   errorMessage = 'The verification link is invalid or has expired. Please register again or request a new verification email.';
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private authService: AuthService
-  ) {}
 
   ngOnInit(): void {
     const code = this.route.snapshot.queryParamMap.get('code');

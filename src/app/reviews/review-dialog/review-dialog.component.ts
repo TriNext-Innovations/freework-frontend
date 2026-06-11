@@ -1,5 +1,5 @@
-import { Component, Inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,12 +17,11 @@ export interface ReviewDialogData {
 @Component({
     selector: 'app-review-dialog',
     imports: [
-        CommonModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatIconModule,
-        ReviewFormComponent
-    ],
+    MatDialogModule,
+    MatButtonModule,
+    MatIconModule,
+    ReviewFormComponent
+],
     template: `
     <div class="review-dialog">
       <div class="dialog-header">
@@ -137,10 +136,9 @@ export interface ReviewDialogData {
   `]
 })
 export class ReviewDialogComponent {
-  constructor(
-    public dialogRef: MatDialogRef<ReviewDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ReviewDialogData
-  ) {}
+  dialogRef = inject<MatDialogRef<ReviewDialogComponent>>(MatDialogRef);
+  data = inject<ReviewDialogData>(MAT_DIALOG_DATA);
+
 
   onReviewSubmitted(): void {
     this.dialogRef.close(true);

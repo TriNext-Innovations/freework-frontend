@@ -11,22 +11,31 @@
           </svg>
           <span class="brand-wordmark"><strong>free</strong>work</span>
         </div>
-        <ng-container *ngIf="!registrationComplete">
+        @if (!registrationComplete) {
+
           <mat-card-title>{{ isRegister ? 'Join freework' : 'Welcome back' }}</mat-card-title>
           <mat-card-subtitle>
-            <ng-container *ngIf="!isRegister"><em>doing what you love</em> — sign in to continue</ng-container>
-            <ng-container *ngIf="isRegister">Start <em>doing what you love</em> today</ng-container>
+            @if (!isRegister) {
+<em>doing what you love</em> — sign in to continue
+}
+            @if (isRegister) {
+Start <em>doing what you love</em> today
+}
           </mat-card-subtitle>
-        </ng-container>
-        <ng-container *ngIf="registrationComplete">
+        
+}
+        @if (registrationComplete) {
+
           <mat-card-title>Check your inbox</mat-card-title>
           <mat-card-subtitle>One step left to start <em>doing what you love</em></mat-card-subtitle>
-        </ng-container>
+        
+}
       </div>
     </mat-card-header>
 
     <!-- Check Your Inbox Screen -->
-    <mat-card-content *ngIf="registrationComplete">
+    @if (registrationComplete) {
+<mat-card-content>
       <div class="inbox-check">
         <div class="inbox-icon">
           <mat-icon>mark_email_unread</mat-icon>
@@ -41,8 +50,10 @@
         </div>
       </div>
     </mat-card-content>
+}
 
-    <mat-card-content *ngIf="!registrationComplete">
+    @if (!registrationComplete) {
+<mat-card-content>
       <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
 
         <!-- Two-column body: left = login + extra fields, right = role selection -->
@@ -57,8 +68,12 @@
                 <mat-label>First Name</mat-label>
                 <input matInput formControlName="firstName" placeholder="Jane" autocomplete="given-name">
                 <mat-icon matPrefix>person</mat-icon>
-                <mat-error *ngIf="f['firstName'].hasError('required')">Required</mat-error>
-                <mat-error *ngIf="f['firstName'].hasError('minlength')">At least 2 characters</mat-error>
+                @if (f['firstName'].hasError('required')) {
+<mat-error>Required</mat-error>
+}
+                @if (f['firstName'].hasError('minlength')) {
+<mat-error>At least 2 characters</mat-error>
+}
               </mat-form-field>
             </div>
 
@@ -68,8 +83,12 @@
                 <mat-label>Last Name</mat-label>
                 <input matInput formControlName="lastName" placeholder="Doe" autocomplete="family-name">
                 <mat-icon matPrefix>person</mat-icon>
-                <mat-error *ngIf="f['lastName'].hasError('required')">Required</mat-error>
-                <mat-error *ngIf="f['lastName'].hasError('minlength')">At least 2 characters</mat-error>
+                @if (f['lastName'].hasError('required')) {
+<mat-error>Required</mat-error>
+}
+                @if (f['lastName'].hasError('minlength')) {
+<mat-error>At least 2 characters</mat-error>
+}
               </mat-form-field>
             </div>
 
@@ -78,8 +97,12 @@
               <mat-label>Email</mat-label>
               <input matInput type="email" formControlName="email" placeholder="your@email.com" autocomplete="email">
               <mat-icon matPrefix>email</mat-icon>
-              <mat-error *ngIf="f['email'].hasError('required')">Email is required</mat-error>
-              <mat-error *ngIf="f['email'].hasError('email')">Please enter a valid email</mat-error>
+              @if (f['email'].hasError('required')) {
+<mat-error>Email is required</mat-error>
+}
+              @if (f['email'].hasError('email')) {
+<mat-error>Please enter a valid email</mat-error>
+}
             </mat-form-field>
 
             <!-- Password -->
@@ -95,9 +118,15 @@
               <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
                 <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
               </button>
-              <mat-error *ngIf="f['password'].hasError('required')">Password is required</mat-error>
-              <mat-error *ngIf="f['password'].hasError('minlength')">At least 6 characters</mat-error>
-              <mat-error *ngIf="f['password'].hasError('pattern')">Must contain uppercase, lowercase and a number</mat-error>
+              @if (f['password'].hasError('required')) {
+<mat-error>Password is required</mat-error>
+}
+              @if (f['password'].hasError('minlength')) {
+<mat-error>At least 6 characters</mat-error>
+}
+              @if (f['password'].hasError('pattern')) {
+<mat-error>Must contain uppercase, lowercase and a number</mat-error>
+}
             </mat-form-field>
 
             <!-- Register-only: Confirm Password -->
@@ -114,10 +143,14 @@
                 <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
                   <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
-                <mat-error *ngIf="f['confirmPassword'].hasError('required')">Please confirm your password</mat-error>
-                <mat-error *ngIf="authForm.hasError('passwordMismatch') && f['confirmPassword'].touched">
+                @if (f['confirmPassword'].hasError('required')) {
+<mat-error>Please confirm your password</mat-error>
+}
+                @if (authForm.hasError('passwordMismatch') && f['confirmPassword'].touched) {
+<mat-error>
                   Passwords do not match
                 </mat-error>
+}
               </mat-form-field>
             </div>
 
@@ -161,8 +194,12 @@
 
           <mat-checkbox [(ngModel)]="termsAccepted" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
             I have read and agree to the
-            <a routerLink="/legal/freelancer-terms" target="_blank" *ngIf="f['role'].value !== 'CUSTOMER'">Freelancer Terms and Conditions</a>
-            <a routerLink="/legal/business-terms" target="_blank" *ngIf="f['role'].value === 'CUSTOMER'">Business Terms and Conditions</a>
+            @if (f['role'].value !== 'CUSTOMER') {
+<a routerLink="/legal/freelancer-terms" target="_blank">Freelancer Terms and Conditions</a>
+}
+            @if (f['role'].value === 'CUSTOMER') {
+<a routerLink="/legal/business-terms" target="_blank">Business Terms and Conditions</a>
+}
             <span class="required-asterisk">*</span>
           </mat-checkbox>
 
@@ -178,10 +215,12 @@
         </div>
 
         <!-- Error Message — full width below columns -->
-        <div *ngIf="errorMessage" class="error-message">
+        @if (errorMessage) {
+<div class="error-message">
           <mat-icon>error</mat-icon>
           <span>{{ errorMessage }}</span>
         </div>
+}
 
         <!-- Submit Button -->
         <button
@@ -190,19 +229,30 @@
           type="submit"
           class="full-width submit-button"
           [disabled]="loading || (isRegister && !consentValid)">
-          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-          <span *ngIf="!loading">{{ isRegister ? 'Create Account' : 'Sign In' }}</span>
-          <span *ngIf="loading">{{ isRegister ? 'Creating account...' : 'Signing in...' }}</span>
+          @if (loading) {
+<mat-spinner diameter="20"></mat-spinner>
+}
+          @if (!loading) {
+<span>{{ isRegister ? 'Create Account' : 'Sign In' }}</span>
+}
+          @if (loading) {
+<span>{{ isRegister ? 'Creating account...' : 'Signing in...' }}</span>
+}
         </button>
 
         <!-- Toggle Link -->
         <div class="toggle-link">
-          <p *ngIf="!isRegister">Don't have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Register here</a></p>
-          <p *ngIf="isRegister">Already have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Sign in</a></p>
+          @if (!isRegister) {
+<p>Don't have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Register here</a></p>
+}
+          @if (isRegister) {
+<p>Already have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Sign in</a></p>
+}
         </div>
 
       </form>
     </mat-card-content>
+}
 
   </mat-card>
 </div>

@@ -11,23 +11,29 @@
   </div>
 
   <!-- Loading -->
-  <div *ngIf="loading" class="loading-container">
+  @if (loading) {
+<div class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p>Loading applications...</p>
   </div>
+}
 
   <!-- Empty state -->
-  <div *ngIf="!loading && applications.length === 0" class="empty-state">
+  @if (!loading && applications.length === 0) {
+<div class="empty-state">
     <mat-icon>inbox</mat-icon>
     <h2>No Applications Yet</h2>
     <p>No one has applied to this job yet. Check back later.</p>
   </div>
+}
 
   <!-- Applications list -->
-  <div *ngIf="!loading && applications.length > 0" class="applications-list">
+  @if (!loading && applications.length > 0) {
+<div class="applications-list">
     <p class="summary">{{ applications.length }} application{{ applications.length !== 1 ? 's' : '' }} received</p>
 
-    <mat-card *ngFor="let app of applications" class="application-card">
+    @for (app of applications; track app) {
+<mat-card class="application-card">
       <mat-card-header>
         <mat-card-title>{{ app.freelancerName || 'Freelancer' }}</mat-card-title>
         <mat-card-subtitle>Applied {{ formatDate(app.appliedAt) }}</mat-card-subtitle>
@@ -41,19 +47,25 @@
 
       <mat-card-content>
         <div class="app-details">
-          <div *ngIf="app.proposedRate" class="detail-item">
+          @if (app.proposedRate) {
+<div class="detail-item">
             <mat-icon>local_offer</mat-icon>
             <strong>Proposed Rate:</strong> ${{ app.proposedRate }}
           </div>
-          <div *ngIf="app.estimatedDuration" class="detail-item">
+}
+          @if (app.estimatedDuration) {
+<div class="detail-item">
             <mat-icon>schedule</mat-icon>
             <strong>Estimated Duration:</strong> {{ app.estimatedDuration }}
           </div>
-          <div *ngIf="app.portfolioLink" class="detail-item">
+}
+          @if (app.portfolioLink) {
+<div class="detail-item">
             <mat-icon>link</mat-icon>
             <strong>Portfolio:</strong>
             <a [href]="app.portfolioLink" target="_blank" rel="noopener">{{ app.portfolioLink }}</a>
           </div>
+}
         </div>
 
         <mat-divider></mat-divider>
@@ -63,13 +75,16 @@
           <p>{{ app.coverLetter }}</p>
         </div>
 
-        <div *ngIf="app.message && app.message !== app.coverLetter" class="message-section">
+        @if (app.message && app.message !== app.coverLetter) {
+<div class="message-section">
           <h4>Message</h4>
           <p>{{ app.message }}</p>
         </div>
+}
       </mat-card-content>
 
-      <mat-card-actions *ngIf="app.status === ApplicationStatus.PENDING">
+      @if (app.status === ApplicationStatus.PENDING) {
+<mat-card-actions>
         <button mat-raised-button color="accent" (click)="updateStatus(app, ApplicationStatus.ACCEPTED)">
           <mat-icon>check_circle</mat-icon>
           Accept
@@ -79,6 +94,9 @@
           Reject
         </button>
       </mat-card-actions>
+}
     </mat-card>
+}
   </div>
+}
 </div>

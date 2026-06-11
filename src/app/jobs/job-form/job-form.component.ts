@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
@@ -45,6 +45,13 @@ import { map, startWith } from 'rxjs/operators';
     styleUrl: './job-form.component.scss'
 })
 export class JobFormComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private jobService = inject(JobService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private snackBar = inject(MatSnackBar);
+  subscriptionService = inject(SubscriptionService);
+
   jobForm!: FormGroup;
   loading = false;
   isEditMode = false;
@@ -57,15 +64,6 @@ export class JobFormComponent implements OnInit {
   filteredSkills!: Observable<string[]>;
 
   minDate = new Date();
-
-  constructor(
-    private fb: FormBuilder,
-    private jobService: JobService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    public subscriptionService: SubscriptionService
-  ) {}
 
   ngOnInit(): void {
     this.initForm();

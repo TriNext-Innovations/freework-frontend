@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -17,34 +17,31 @@ import { RegisterRequest, ConsentItemData } from '../models';
 @Component({
     selector: 'app-register',
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        RouterLink,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatSnackBarModule,
-        MatRadioModule,
-        MatCheckboxModule
-    ],
+    ReactiveFormsModule,
+    RouterLink,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatRadioModule,
+    MatCheckboxModule
+],
     templateUrl: './register.component.html',
     styleUrl: './register.component.scss'
 })
 export class RegisterComponent implements OnInit {
+  private formBuilder = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+
   registerForm!: FormGroup;
   loading = false;
   hidePassword = true;
   hideConfirmPassword = true;
-
-  constructor(
-    private formBuilder: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     if (this.authService.isAuthenticated) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -30,6 +30,8 @@ import { Payment, PaymentStatus } from '../models/payment.models';
     styleUrls: ['./payment-list.component.scss']
 })
 export class PaymentListComponent implements OnInit {
+  private paymentService = inject(PaymentService);
+
   payments: Payment[] = [];
   filteredPayments: Payment[] = [];
   loading = false;
@@ -37,8 +39,6 @@ export class PaymentListComponent implements OnInit {
   displayedColumns: string[] = ['job', 'amount', 'status', 'method', 'date', 'actions'];
 
   PaymentStatus = PaymentStatus;
-
-  constructor(private paymentService: PaymentService) {}
 
   ngOnInit(): void {
     this.loadPayments();

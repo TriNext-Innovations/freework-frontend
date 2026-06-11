@@ -71,13 +71,17 @@
 
   <!-- Payments List -->
   <mat-card class="payments-card">
-    <div *ngIf="loading" class="loading-state">
+    @if (loading) {
+<div class="loading-state">
       <mat-spinner diameter="50"></mat-spinner>
       <p>Loading payments...</p>
     </div>
+}
 
-    <div *ngIf="!loading && filteredPayments.length > 0" class="payments-list">
-      <div *ngFor="let payment of filteredPayments" class="payment-row">
+    @if (!loading && filteredPayments.length > 0) {
+<div class="payments-list">
+      @for (payment of filteredPayments; track payment) {
+<div class="payment-row">
         <div class="payment-main">
           <div class="payment-icon">
             <mat-icon [color]="getStatusColor(payment.status)">
@@ -120,10 +124,12 @@
               <mat-icon>category</mat-icon>
               <span>{{ payment.paymentType }}</span>
             </div>
-            <div class="info-item" *ngIf="payment.transactionId">
+            @if (payment.transactionId) {
+<div class="info-item">
               <mat-icon>receipt</mat-icon>
               <span>{{ payment.transactionId }}</span>
             </div>
+}
           </div>
 
           <div class="payment-actions">
@@ -134,12 +140,16 @@
           </div>
         </div>
       </div>
+}
     </div>
+}
 
-    <div *ngIf="!loading && filteredPayments.length === 0" class="empty-state">
+    @if (!loading && filteredPayments.length === 0) {
+<div class="empty-state">
       <mat-icon>account_balance_wallet</mat-icon>
       <h3>No Payments Found</h3>
       <p>You don't have any payments matching the selected filter.</p>
     </div>
+}
   </mat-card>
 </div>

@@ -83,10 +83,12 @@
         <div class="danger-info">
           <strong>Delete My Account</strong>
           <p>Permanently delete your account and anonymise your personal data. This action cannot be undone.</p>
-          <p *ngIf="blockingReason" class="blocking-reason">
+          @if (blockingReason) {
+<p class="blocking-reason">
             <mat-icon>block</mat-icon>
             {{ blockingReason }}
           </p>
+}
         </div>
         <button
           mat-stroked-button

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -40,19 +40,17 @@ import { ReviewType } from '../../reviews/models';
     styleUrl: './job-detail.component.scss'
 })
 export class JobDetailComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private jobService = inject(JobService);
+  private authService = inject(AuthService);
+  private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
+
   job: Job | null = null;
   loading = false;
   isOwner = false;
   currentUserId: string | null = null;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private jobService: JobService,
-    private authService: AuthService,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
-  ) {}
 
   ngOnInit(): void {
     this.currentUserId = this.authService.currentUserValue?.id || null;

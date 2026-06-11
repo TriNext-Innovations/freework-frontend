@@ -117,7 +117,8 @@
             {{ showReviewForm ? 'Cancel Review' : 'Write a Review' }}
           </button>
 
-          <div *ngIf="showReviewForm" class="form-container">
+          @if (showReviewForm) {
+<div class="form-container">
             <app-review-form
               [jobId]="demoJobId"
               [revieweeId]="demoUserId"
@@ -126,11 +127,14 @@
               (reviewSubmitted)="onReviewSubmitted()"
             ></app-review-form>
           </div>
+}
 
-          <div *ngIf="!showReviewForm" class="placeholder-message">
+          @if (!showReviewForm) {
+<div class="placeholder-message">
             <mat-icon>info</mat-icon>
             <p>Click "Write a Review" to see the review form in action</p>
           </div>
+}
         </div>
       </div>
     </mat-tab>
@@ -182,7 +186,8 @@
           </div>
         </div>
 
-        <div *ngIf="showReviewForm" class="form-overlay">
+        @if (showReviewForm) {
+<div class="form-overlay">
           <div class="form-wrapper">
             <button
               mat-icon-button
@@ -200,6 +205,7 @@
             ></app-review-form>
           </div>
         </div>
+}
       </div>
     </mat-tab>
 
@@ -380,7 +386,8 @@
             </mat-card>
           </div>
 
-          <div *ngIf="showReviewForm" class="form-container">
+          @if (showReviewForm) {
+<div class="form-container">
             <div class="form-header">
               <h4>
                 <mat-icon>{{ reviewFormType === ReviewType.FREELANCER_REVIEW ? 'person' : 'work' }}</mat-icon>
@@ -395,11 +402,14 @@
               (reviewSubmitted)="onReviewSubmitted()"
             ></app-review-form>
           </div>
+}
 
-          <div *ngIf="!showReviewForm" class="placeholder-message">
+          @if (!showReviewForm) {
+<div class="placeholder-message">
             <mat-icon>info</mat-icon>
             <p>Choose a review type above to see the form in action</p>
           </div>
+}
         </div>
       </div>
     </mat-tab>

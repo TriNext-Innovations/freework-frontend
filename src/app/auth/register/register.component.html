@@ -29,12 +29,16 @@
               placeholder="John"
               autocomplete="given-name">
             <mat-icon matPrefix>person</mat-icon>
-            <mat-error *ngIf="f['firstName'].hasError('required')">
+            @if (f['firstName'].hasError('required')) {
+<mat-error>
               First name is required
             </mat-error>
-            <mat-error *ngIf="f['firstName'].hasError('minlength')">
+}
+            @if (f['firstName'].hasError('minlength')) {
+<mat-error>
               At least 2 characters required
             </mat-error>
+}
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">
@@ -45,12 +49,16 @@
               formControlName="lastName"
               placeholder="Doe"
               autocomplete="family-name">
-            <mat-error *ngIf="f['lastName'].hasError('required')">
+            @if (f['lastName'].hasError('required')) {
+<mat-error>
               Last name is required
             </mat-error>
-            <mat-error *ngIf="f['lastName'].hasError('minlength')">
+}
+            @if (f['lastName'].hasError('minlength')) {
+<mat-error>
               At least 2 characters required
             </mat-error>
+}
           </mat-form-field>
         </div>
 
@@ -64,12 +72,16 @@
             placeholder="your@email.com"
             autocomplete="email">
           <mat-icon matPrefix>email</mat-icon>
-          <mat-error *ngIf="f['email'].hasError('required')">
+          @if (f['email'].hasError('required')) {
+<mat-error>
             Email is required
           </mat-error>
-          <mat-error *ngIf="f['email'].hasError('email')">
+}
+          @if (f['email'].hasError('email')) {
+<mat-error>
             Please enter a valid email
           </mat-error>
+}
         </mat-form-field>
 
         <!-- Password Field -->
@@ -90,15 +102,21 @@
             [attr.aria-label]="'Hide password'">
             <mat-icon>{{hidePassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-          <mat-error *ngIf="f['password'].hasError('required')">
+          @if (f['password'].hasError('required')) {
+<mat-error>
             Password is required
           </mat-error>
-          <mat-error *ngIf="f['password'].hasError('minlength')">
+}
+          @if (f['password'].hasError('minlength')) {
+<mat-error>
             Password must be at least 6 characters
           </mat-error>
-          <mat-error *ngIf="f['password'].hasError('pattern')">
+}
+          @if (f['password'].hasError('pattern')) {
+<mat-error>
             Password must contain uppercase, lowercase, and number
           </mat-error>
+}
         </mat-form-field>
 
         <!-- Confirm Password Field -->
@@ -119,12 +137,16 @@
             [attr.aria-label]="'Hide password'">
             <mat-icon>{{hideConfirmPassword ? 'visibility_off' : 'visibility'}}</mat-icon>
           </button>
-          <mat-error *ngIf="f['confirmPassword'].hasError('required')">
+          @if (f['confirmPassword'].hasError('required')) {
+<mat-error>
             Please confirm your password
           </mat-error>
-          <mat-error *ngIf="registerForm.hasError('passwordMismatch') && f['confirmPassword'].touched">
+}
+          @if (registerForm.hasError('passwordMismatch') && f['confirmPassword'].touched) {
+<mat-error>
             Passwords do not match
           </mat-error>
+}
         </mat-form-field>
 
         <!-- Role Selection -->
@@ -153,7 +175,8 @@
         </div>
 
         <!-- POPIA-compliant consent checkboxes — Freelancer -->
-        <div class="checkbox-section" *ngIf="isFreelancer">
+        @if (isFreelancer) {
+<div class="checkbox-section">
           <p class="consent-heading">Freelancer Terms &amp; Consents <span class="required-note">(all required)</span></p>
 
           <mat-checkbox formControlName="freelancerTcsAccepted" class="consent-checkbox">
@@ -176,9 +199,11 @@
             I agree to receive marketing communications from Freework. I understand I can unsubscribe at any time. <span class="optional-label">(Optional)</span>
           </mat-checkbox>
         </div>
+}
 
         <!-- POPIA-compliant consent checkboxes — Business/Customer -->
-        <div class="checkbox-section" *ngIf="!isFreelancer">
+        @if (!isFreelancer) {
+<div class="checkbox-section">
           <p class="consent-heading">Business Terms &amp; Consents <span class="required-note">(all required)</span></p>
 
           <mat-checkbox formControlName="businessTcsAccepted" class="consent-checkbox">
@@ -205,6 +230,7 @@
             I agree to receive marketing communications from Freework. I understand I can unsubscribe at any time. <span class="optional-label">(Optional)</span>
           </mat-checkbox>
         </div>
+}
 
         <!-- Submit Button -->
         <button
@@ -213,8 +239,12 @@
           type="submit"
           class="full-width submit-btn"
           [disabled]="loading || !requiredConsentsSatisfied">
-          <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
-          <span *ngIf="!loading">Create Account</span>
+          @if (loading) {
+<mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+}
+          @if (!loading) {
+<span>Create Account</span>
+}
         </button>
       </form>
 

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -20,6 +20,8 @@ import { PaymentStatus, PaymentStatusUpdate } from '../models/payment.models';
     styleUrls: ['./payment-status.component.scss']
 })
 export class PaymentStatusComponent implements OnInit {
+  private paymentService = inject(PaymentService);
+
   @Input() paymentId?: string;
   @Input() showRealTimeUpdates = true;
 
@@ -35,8 +37,6 @@ export class PaymentStatusComponent implements OnInit {
     { status: PaymentStatus.ESCROWED, label: 'Escrowed', icon: 'lock' },
     { status: PaymentStatus.RELEASED, label: 'Released', icon: 'check_circle' }
   ];
-
-  constructor(private paymentService: PaymentService) {}
 
   ngOnInit(): void {
     if (this.paymentId) {

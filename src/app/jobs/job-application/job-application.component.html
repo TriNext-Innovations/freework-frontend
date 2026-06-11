@@ -1,13 +1,16 @@
 <div class="application-container container">
   <div class="application-wrapper">
     <!-- Loading State -->
-    <div *ngIf="loading" class="loading-state">
+    @if (loading) {
+<div class="loading-state">
       <mat-spinner diameter="50"></mat-spinner>
       <p>Loading job details...</p>
     </div>
+}
 
     <!-- Application Form -->
-    <div *ngIf="!loading && job" class="application-content">
+    @if (!loading && job) {
+<div class="application-content">
       <!-- Header -->
       <div class="application-header">
         <button mat-icon-button (click)="cancel()" class="back-button">
@@ -57,17 +60,22 @@
             </div>
           </div>
 
-          <div class="skills-section" *ngIf="job.skills && job.skills.length > 0">
+          @if (job.skills && job.skills.length > 0) {
+<div class="skills-section">
             <span class="skills-label">Required Skills:</span>
             <mat-chip-set class="skills-chips">
-              <mat-chip *ngFor="let skill of job.skills">{{ skill }}</mat-chip>
+              @for (skill of job.skills; track skill) {
+<mat-chip>{{ skill }}</mat-chip>
+}
             </mat-chip-set>
           </div>
+}
         </mat-card-content>
       </mat-card>
 
       <!-- Application Limit Reached -->
-      <mat-card *ngIf="atApplicationLimit" class="limit-card">
+      @if (atApplicationLimit) {
+<mat-card class="limit-card">
         <mat-card-content>
           <div class="warning-content">
             <mat-icon>lock</mat-icon>
@@ -82,9 +90,11 @@
           </a>
         </mat-card-content>
       </mat-card>
+}
 
       <!-- Already Applied Warning -->
-      <mat-card *ngIf="hasAlreadyApplied" class="warning-card">
+      @if (hasAlreadyApplied) {
+<mat-card class="warning-card">
         <mat-card-content>
           <div class="warning-content">
             <mat-icon>info</mat-icon>
@@ -98,9 +108,11 @@
           </button>
         </mat-card-content>
       </mat-card>
+}
 
       <!-- Application Form Card -->
-      <mat-card class="application-form-card" *ngIf="!hasAlreadyApplied && !atApplicationLimit">
+      @if (!hasAlreadyApplied && !atApplicationLimit) {
+<mat-card class="application-form-card">
         <mat-card-header>
           <mat-card-title>Your Application</mat-card-title>
           <mat-card-subtitle>Tell the client why you're the perfect fit</mat-card-subtitle>
@@ -118,15 +130,21 @@
                 placeholder="Introduce yourself and explain why you're the best candidate for this project. Highlight your relevant experience and skills."
               ></textarea>
               <mat-hint align="end">{{ getCharacterCount('coverLetter') }}</mat-hint>
-              <mat-error *ngIf="applicationForm.get('coverLetter')?.hasError('required')">
+              @if (applicationForm.get('coverLetter')?.hasError('required')) {
+<mat-error>
                 Cover letter is required
               </mat-error>
-              <mat-error *ngIf="applicationForm.get('coverLetter')?.hasError('minlength')">
+}
+              @if (applicationForm.get('coverLetter')?.hasError('minlength')) {
+<mat-error>
                 Cover letter must be at least 100 characters
               </mat-error>
-              <mat-error *ngIf="applicationForm.get('coverLetter')?.hasError('maxlength')">
+}
+              @if (applicationForm.get('coverLetter')?.hasError('maxlength')) {
+<mat-error>
                 Cover letter cannot exceed 2000 characters
               </mat-error>
+}
             </mat-form-field>
 
             <!-- Message to Client -->
@@ -139,15 +157,21 @@
                 placeholder="Send a brief message to the client about your interest in this project."
               ></textarea>
               <mat-hint align="end">{{ getCharacterCount('message') }}</mat-hint>
-              <mat-error *ngIf="applicationForm.get('message')?.hasError('required')">
+              @if (applicationForm.get('message')?.hasError('required')) {
+<mat-error>
                 Message is required
               </mat-error>
-              <mat-error *ngIf="applicationForm.get('message')?.hasError('minlength')">
+}
+              @if (applicationForm.get('message')?.hasError('minlength')) {
+<mat-error>
                 Message must be at least 50 characters
               </mat-error>
-              <mat-error *ngIf="applicationForm.get('message')?.hasError('maxlength')">
+}
+              @if (applicationForm.get('message')?.hasError('maxlength')) {
+<mat-error>
                 Message cannot exceed 500 characters
               </mat-error>
+}
             </mat-form-field>
 
             <!-- Portfolio Link -->
@@ -161,9 +185,11 @@
               >
               <mat-icon matPrefix>link</mat-icon>
               <mat-hint>Share a link to your portfolio, GitHub, or relevant work samples</mat-hint>
-              <mat-error *ngIf="applicationForm.get('portfolioLink')?.hasError('pattern')">
+              @if (applicationForm.get('portfolioLink')?.hasError('pattern')) {
+<mat-error>
                 Please enter a valid URL starting with http:// or https://
               </mat-error>
+}
             </mat-form-field>
 
             <div class="form-row">
@@ -177,11 +203,15 @@
                   placeholder="0"
                 >
                 <span matPrefix>$&nbsp;</span>
-                <span matSuffix *ngIf="job.budgetType === 'HOURLY'">/hr</span>
+                @if (job.budgetType === 'HOURLY') {
+<span matSuffix>/hr</span>
+}
                 <mat-hint>Your rate for this project (optional)</mat-hint>
-                <mat-error *ngIf="applicationForm.get('proposedRate')?.hasError('min')">
+                @if (applicationForm.get('proposedRate')?.hasError('min')) {
+<mat-error>
                   Rate must be positive
                 </mat-error>
+}
               </mat-form-field>
 
               <!-- Estimated Duration -->
@@ -194,9 +224,11 @@
                 >
                 <mat-icon matPrefix>schedule</mat-icon>
                 <mat-hint>How long you estimate this project will take</mat-hint>
-                <mat-error *ngIf="applicationForm.get('estimatedDuration')?.hasError('maxlength')">
+                @if (applicationForm.get('estimatedDuration')?.hasError('maxlength')) {
+<mat-error>
                   Duration cannot exceed 100 characters
                 </mat-error>
+}
               </mat-form-field>
             </div>
 
@@ -218,14 +250,20 @@
                 type="submit"
                 [disabled]="applicationForm.invalid || submitting"
               >
-                <mat-spinner diameter="20" *ngIf="submitting"></mat-spinner>
-                <mat-icon *ngIf="!submitting">send</mat-icon>
+                @if (submitting) {
+<mat-spinner diameter="20"></mat-spinner>
+}
+                @if (!submitting) {
+<mat-icon>send</mat-icon>
+}
                 {{ submitting ? 'Submitting...' : 'Submit Application' }}
               </button>
             </div>
           </form>
         </mat-card-content>
       </mat-card>
+}
     </div>
+}
   </div>
 </div>

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,32 +15,29 @@ import { Job } from '../../jobs/models';
 @Component({
     selector: 'app-stripe-payment',
     imports: [
-        CommonModule,
-        RouterLink,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatDividerModule,
-        MatSnackBarModule
-    ],
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatSnackBarModule
+],
     templateUrl: './stripe-payment.component.html',
     styleUrls: ['./stripe-payment.component.scss']
 })
 export class StripePaymentComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private paymentService = inject(PaymentService);
+  private jobService = inject(JobService);
+  private snackBar = inject(MatSnackBar);
+
   job: Job | null = null;
   loading = true;
   redirecting = false;
   jobId = '';
   currency = 'ZAR';
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private paymentService: PaymentService,
-    private jobService: JobService,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     this.jobId = this.route.snapshot.paramMap.get('jobId') || '';

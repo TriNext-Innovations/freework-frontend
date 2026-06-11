@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,21 +17,27 @@ import { MessagingService } from '../../messaging/messaging.service';
 @Component({
     selector: 'app-my-applications',
     imports: [
-        CommonModule,
-        RouterModule,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatChipsModule,
-        MatProgressSpinnerModule,
-        MatTabsModule,
-        MatSnackBarModule,
-        MatDialogModule
-    ],
+    RouterModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatTabsModule,
+    MatSnackBarModule,
+    MatDialogModule
+],
     templateUrl: './my-applications.component.html',
     styleUrls: ['./my-applications.component.scss']
 })
 export class MyApplicationsComponent implements OnInit {
+  private applicationService = inject(ApplicationService);
+  private jobService = inject(JobService);
+  private messagingService = inject(MessagingService);
+  private router = inject(Router);
+  private snackBar = inject(MatSnackBar);
+  private dialog = inject(MatDialog);
+
   applications: JobApplication[] = [];
   filteredApplications: JobApplication[] = [];
   loading = false;
@@ -44,15 +50,6 @@ export class MyApplicationsComponent implements OnInit {
     accepted: 0,
     rejected: 0
   };
-
-  constructor(
-    private applicationService: ApplicationService,
-    private jobService: JobService,
-    private messagingService: MessagingService,
-    private router: Router,
-    private snackBar: MatSnackBar,
-    private dialog: MatDialog
-  ) {}
 
   ngOnInit(): void {
     this.loadApplications();

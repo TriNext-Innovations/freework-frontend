@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,7 +8,7 @@ import { PaymentProvider } from '../subscription.models';
 @Component({
   selector: 'app-provider-select-dialog',
   standalone: true,
-  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule],
+  imports: [MatDialogModule, MatButtonModule, MatIconModule],
   template: `
     <div class="provider-dialog">
       <h2 mat-dialog-title>Choose payment provider</h2>
@@ -54,7 +54,7 @@ import { PaymentProvider } from '../subscription.models';
   `]
 })
 export class ProviderSelectDialogComponent {
-  constructor(private dialogRef: MatDialogRef<ProviderSelectDialogComponent>) {}
+  private dialogRef = inject<MatDialogRef<ProviderSelectDialogComponent>>(MatDialogRef);
 
   select(provider: PaymentProvider): void {
     this.dialogRef.close(provider);

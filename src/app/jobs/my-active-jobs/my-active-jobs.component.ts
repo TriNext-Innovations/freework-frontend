@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -43,21 +43,19 @@ interface ActiveJob {
     styleUrl: './my-active-jobs.component.scss'
 })
 export class MyActiveJobsComponent implements OnInit {
+  private applicationService = inject(ApplicationService);
+  private jobService = inject(JobService);
+  private authService = inject(AuthService);
+  private messagingService = inject(MessagingService);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+
   activeJobs: ActiveJob[] = [];
   customerJobs: Job[] = [];
   loading = false;
   error: string | null = null;
   isCustomer = false;
-
-  constructor(
-    private applicationService: ApplicationService,
-    private jobService: JobService,
-    private authService: AuthService,
-    private messagingService: MessagingService,
-    private router: Router,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     const currentUser = this.authService.currentUserValue;

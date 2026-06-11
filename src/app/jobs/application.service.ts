@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { JobApplication, CreateApplicationDto, ApplicationResponse, ApplicationStatus } from './models/application.models';
@@ -8,9 +8,9 @@ import { buildApiEndpointUrl } from '../api.config';
   providedIn: 'root'
 })
 export class ApplicationService {
-  private apiUrl = buildApiEndpointUrl('/applications');
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private apiUrl = buildApiEndpointUrl('/applications');
 
   submitApplication(application: CreateApplicationDto): Observable<ApplicationResponse> {
     return this.http.post<ApplicationResponse>(this.apiUrl, application);

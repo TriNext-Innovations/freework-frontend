@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of, throwError } from 'rxjs';
 import { tap, catchError, delay } from 'rxjs/operators';
@@ -10,6 +10,9 @@ import { buildApiEndpointUrl } from '../api.config';
   providedIn: 'root'
 })
 export class ProfileService {
+  private http = inject(HttpClient);
+  private authService = inject(AuthService);
+
   private readonly API_URL = buildApiEndpointUrl('/profile');
   private useMockData = false; // Toggle for testing
 
@@ -19,10 +22,7 @@ export class ProfileService {
   // Mock data for testing
   private mockProfiles = new Map<string, Profile>();
 
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) {
+  constructor() {
     // Initialize mock data
     this.initializeMockData();
 

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,33 +17,30 @@ import { MessagingService } from '../../messaging/messaging.service';
 @Component({
     selector: 'app-job-applications',
     imports: [
-        CommonModule,
-        RouterLink,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatChipsModule,
-        MatProgressSpinnerModule,
-        MatDividerModule,
-        MatSnackBarModule
-    ],
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatSnackBarModule
+],
     templateUrl: './job-applications.component.html',
     styleUrl: './job-applications.component.scss'
 })
 export class JobApplicationsComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private applicationService = inject(ApplicationService);
+  private jobService = inject(JobService);
+  private messagingService = inject(MessagingService);
+  private snackBar = inject(MatSnackBar);
+
   job: Job | null = null;
   applications: JobApplication[] = [];
   loading = false;
   ApplicationStatus = ApplicationStatus;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private applicationService: ApplicationService,
-    private jobService: JobService,
-    private messagingService: MessagingService,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     const jobId = this.route.snapshot.paramMap.get('id');

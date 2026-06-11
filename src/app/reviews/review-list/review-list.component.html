@@ -1,12 +1,15 @@
 <div class="review-list-container">
   <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
+  @if (loading) {
+<div class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p>Loading reviews...</p>
   </div>
+}
 
   <!-- Error State -->
-  <div *ngIf="error && !loading" class="error-container">
+  @if (error && !loading) {
+<div class="error-container">
     <mat-icon class="error-icon">error_outline</mat-icon>
     <h3>Unable to Load Reviews</h3>
     <p>There was a problem loading the reviews. Please try again.</p>
@@ -15,11 +18,14 @@
       Retry
     </button>
   </div>
+}
 
   <!-- Reviews Content -->
-  <div *ngIf="!loading && !error">
+  @if (!loading && !error) {
+<div>
     <!-- Filters -->
-    <div class="filters-section" *ngIf="showFilters && reviews.length > 0">
+    @if (showFilters && reviews.length > 0) {
+<div class="filters-section">
       <mat-form-field appearance="outline" class="filter-field">
         <mat-label>Filter by Rating</mat-label>
         <mat-select [(ngModel)]="selectedRating" (selectionChange)="onRatingChange()">
@@ -48,26 +54,34 @@
         <span>{{ filteredReviews.length }} {{ filteredReviews.length === 1 ? 'review' : 'reviews' }}</span>
       </div>
     </div>
+}
 
     <!-- Empty State -->
-    <div *ngIf="reviews.length === 0" class="empty-state">
+    @if (reviews.length === 0) {
+<div class="empty-state">
       <mat-icon class="empty-icon">rate_review</mat-icon>
       <h3>No Reviews Yet</h3>
       <p>Be the first to share your experience!</p>
     </div>
+}
 
     <!-- Review Cards -->
-    <div class="reviews-grid" *ngIf="filteredReviews.length > 0">
-      <app-review-card
-        *ngFor="let review of filteredReviews"
+    @if (filteredReviews.length > 0) {
+<div class="reviews-grid">
+      @for (review of filteredReviews; track review) {
+<app-review-card
+       
         [review]="review"
         [showJobTitle]="showJobTitle"
         (helpful)="onMarkHelpful(review, $event)"
       ></app-review-card>
+}
     </div>
+}
 
     <!-- No Results After Filter -->
-    <div *ngIf="reviews.length > 0 && filteredReviews.length === 0" class="no-results">
+    @if (reviews.length > 0 && filteredReviews.length === 0) {
+<div class="no-results">
       <mat-icon class="no-results-icon">filter_list_off</mat-icon>
       <h3>No Reviews Match Your Filters</h3>
       <p>Try adjusting your filters to see more reviews.</p>
@@ -75,5 +89,7 @@
         Clear Filters
       </button>
     </div>
+}
   </div>
+}
 </div>

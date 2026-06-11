@@ -14,7 +14,10 @@ on:
 #             reach an API. When prod is ready, add a Cloudflare Pages prod deploy.
 
 env:
-  NODE_VERSION: '20'
+  # Node 24 (npm 11) matches the version the committed package-lock.json was
+  # generated with; Node 20 (npm 10) rejects the lock as out of sync. Also clears
+  # the Node-20 GitHub Actions deprecation. Angular 20 supports Node 24.
+  NODE_VERSION: '24'
 
 jobs:
   # ── CI: runs on every push and PR ────────────────────────────────────────────

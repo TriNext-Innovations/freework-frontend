@@ -430,6 +430,63 @@ mat-form-field {
   }
 }
 
+// ── Resend verification ───────────────────────────────────────────
+.resend-btn {
+  border-color: rgba(43, 184, 138, 0.35) !important;
+  color: #2BB88A !important;
+  border-radius: var(--radius-full) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  height: 36px;
+  padding: 0 var(--spacing-lg) !important;
+
+  mat-spinner { display: inline-block; margin-right: var(--spacing-xs); }
+
+  :host-context([data-theme="light"]) & {
+    border-color: var(--color-accent-300) !important;
+  }
+}
+
+.resend-sent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2BB88A;
+
+  mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
+}
+
+.resend-hint {
+  margin: calc(-1 * var(--spacing-sm)) 0 var(--spacing-md);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.50);
+  text-align: center;
+
+  a {
+    color: #2BB88A;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 4px;
+    &:hover { color: #1A8D6F; }
+    &.disabled { opacity: 0.5; cursor: default; }
+  }
+
+  .resend-confirmed {
+    color: #2BB88A;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-tertiary);
+  }
+}
+
+
 // ── Responsive ────────────────────────────────────────────────────
 // Tablet — register collapses to single column
 @media (max-width: 860px) {

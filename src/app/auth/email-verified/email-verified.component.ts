@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { AuthService } from '../auth.service';
 
@@ -27,7 +30,10 @@ import { AuthService } from '../auth.service';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatProgressSpinnerModule,
+    FormsModule,
     RouterLink
   ],
   template: `
@@ -47,9 +53,23 @@ import { AuthService } from '../auth.service';
             <mat-icon class="error-icon">error</mat-icon>
             <h2>Verification Failed</h2>
             <p>{{ errorMessage }}</p>
-            <div class="actions">
-              <a mat-raised-button color="primary" routerLink="/login">Sign In</a>
-              <a mat-stroked-button routerLink="/register">Register Again</a>
+            @if (!resendSent) {
+              <div class="resend-form">
+                <mat-form-field appearance="outline" style="width:100%">
+                  <mat-label>Your email address</mat-label>
+                  <input matInput type="email" [(ngModel)]="resendEmail" placeholder="you@example.com">
+                </mat-form-field>
+                <button mat-raised-button color="primary" [disabled]="resendLoading || !resendEmail" (click)="resend()">
+                  @if (resendLoading) { <mat-spinner diameter="18" style="display:inline-block;margin-right:8px"></mat-spinner> }
+                  Resend verification email
+                </button>
+              </div>
+            }
+            @if (resendSent) {
+              <p class="resend-ok"><mat-icon>check_circle</mat-icon> Verification email sent — check your inbox.</p>
+            }
+            <div class="actions" style="margin-top:1rem">
+              <a mat-stroked-button routerLink="/login">Sign In</a>
             </div>
           }
         </mat-card-content>
@@ -75,12 +95,26 @@ import { AuthService } from '../auth.service';
     .error-icon  { font-size: 4rem; width: 4rem; height: 4rem; color: #f44336; }
     h2 { margin: 0.5rem 0; }
     .actions { display: flex; gap: 1rem; justify-content: center; margin-top: 1.5rem; flex-wrap: wrap; }
+    .resend-form { width: 100%; margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; align-items: center; }
+    .resend-ok { display: flex; align-items: center; gap: 0.5rem; color: #2BB88A; font-weight: 600; margin-top: 1rem; }
+    .resend-ok mat-icon { font-size: 1.25rem; width: 1.25rem; height: 1.25rem; }
   `]
 })
 export class EmailVerifiedComponent implements OnInit {
   loading = true;
   success = false;
-  errorMessage = 'The verification link is invalid or has expired. Please register again or request a new verification email.';
+  errorMessage = 'The verification link is invalid or has expired. Enter your email below to request a new one.';
+  resendEmail = '';
+  resendLoading = false;
+  resendSent = false;
+
+  resend(): void {
+    this.resendLoading = true;
+    this.authService.resendVerification(this.resendEmail).subscribe({
+      next: () => { this.resendLoading = false; this.resendSent = true; },
+      error: () => { this.resendLoading = false; }
+    });
+  }
 
   constructor(
     private route: ActivatedRoute,

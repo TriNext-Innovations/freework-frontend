@@ -105,6 +105,11 @@
               <mat-error *ngIf="f['password'].hasError('pattern')">Must contain uppercase, lowercase and a number</mat-error>
             </mat-form-field>
 
+            <!-- Forgot password link — login mode only -->
+            <div class="forgot-link" *ngIf="!isRegister">
+              <a routerLink="/forgot-password">Forgot your password?</a>
+            </div>
+
             <!-- Register-only: Confirm Password -->
             <div class="extra-fields" [class.visible]="isRegister">
               <mat-form-field appearance="outline" class="full-width">

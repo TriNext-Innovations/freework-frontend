@@ -371,6 +371,26 @@ mat-form-field {
   }
 }
 
+// ── Forgot password link ──────────────────────────────────────────
+.forgot-link {
+  text-align: right;
+  margin-top: calc(-1 * var(--spacing-xs));
+  margin-bottom: var(--spacing-sm);
+
+  a {
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.50);
+    text-decoration: none;
+    cursor: pointer;
+    transition: color var(--transition-fast);
+    &:hover { color: #2BB88A; }
+  }
+
+  :host-context([data-theme="light"]) & a {
+    color: var(--color-text-secondary);
+  }
+}
+
 // ── Check-inbox screen ────────────────────────────────────────────
 .inbox-check {
   display: flex;

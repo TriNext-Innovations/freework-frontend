@@ -116,6 +116,16 @@ export class AuthService {
       .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
+  forgotPassword(email: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/forgot-password`, { email })
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
+  resetPassword(token: string, newPassword: string): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.API_URL}/reset-password`, { token, newPassword })
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
   /**
    * Exchange the one-time code (from the ?code= redirect after email verification)
    * for a JWT. The code is single-use and expires after 5 minutes.

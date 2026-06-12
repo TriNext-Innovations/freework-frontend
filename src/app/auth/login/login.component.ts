@@ -55,6 +55,9 @@ export class LoginComponent implements OnInit {
   returnUrl = '/';
   registrationComplete = false;
   registeredEmail = '';
+  resendLoading = false;
+  resendSent = false;
+  unverifiedLoginEmail = '';
 
   // Consent step (register only)
   tcVersion = '1.0';
@@ -97,6 +100,8 @@ export class LoginComponent implements OnInit {
   toggleMode(): void {
     this.isRegister = !this.isRegister;
     this.errorMessage = '';
+    this.unverifiedLoginEmail = '';
+    this.resendSent = false;
     this.authForm.reset({ role: 'FREELANCER' });
     this.hidePassword = true;
     this.hideConfirmPassword = true;
@@ -188,10 +193,27 @@ export class LoginComponent implements OnInit {
         },
         error: (err) => {
           this.loading = false;
+          if (err.status === 403) {
+            this.unverifiedLoginEmail = this.authForm.value.email;
+          }
           this.errorMessage = err.error?.message || 'Login failed. Please check your credentials.';
         }
       });
     }
+  }
+
+  resendVerification(email: string): void {
+    this.resendLoading = true;
+    this.authService.resendVerification(email).subscribe({
+      next: () => {
+        this.resendLoading = false;
+        this.resendSent = true;
+      },
+      error: () => {
+        this.resendLoading = false;
+        this.snackBar.open('Could not resend. Please try again shortly.', 'Dismiss', { duration: 4000 });
+      }
+    });
   }
 
   private passwordMatchValidator(group: FormGroup): Record<string, boolean> | null {

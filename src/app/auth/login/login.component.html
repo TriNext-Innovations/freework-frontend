@@ -45,6 +45,15 @@
             <strong>{{ registeredEmail }}</strong>
           </p>
           <p class="inbox-hint">Click the link in the email to verify your account and get started. Check your spam folder if you don't see it.</p>
+          @if (!resendSent) {
+            <button mat-stroked-button class="resend-btn" [disabled]="resendLoading" (click)="resendVerification(registeredEmail)">
+              @if (resendLoading) { <mat-spinner diameter="16"></mat-spinner> }
+              @if (!resendLoading) { Resend verification email }
+            </button>
+          }
+          @if (resendSent) {
+            <p class="resend-sent"><mat-icon>check_circle</mat-icon> Verification email resent!</p>
+          }
           <div class="toggle-link">
             <p>Already verified? <a tabindex="0" (click)="registrationComplete = false; isRegister = false" (keyup.enter)="registrationComplete = false; isRegister = false" (keydown.space)="registrationComplete = false; isRegister = false">Sign in</a></p>
           </div>
@@ -218,6 +227,15 @@
               <mat-icon>error</mat-icon>
               <span>{{ errorMessage }}</span>
             </div>
+            @if (unverifiedLoginEmail) {
+              <p class="resend-hint">
+                Didn't get the email?
+                @if (!resendSent) {
+                  <a tabindex="0" [class.disabled]="resendLoading" (click)="!resendLoading && resendVerification(unverifiedLoginEmail)" (keyup.enter)="!resendLoading && resendVerification(unverifiedLoginEmail)">Resend verification email</a>
+                }
+                @if (resendSent) { <span class="resend-confirmed">Sent!</span> }
+              </p>
+            }
           }
 
           <!-- Submit Button -->

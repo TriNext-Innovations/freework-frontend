@@ -111,6 +111,11 @@ export class AuthService {
       );
   }
 
+  resendVerification(email: string): Observable<unknown> {
+    return this.http.post<unknown>(`${this.API_URL}/resend-verification`, { email })
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
+  }
+
   /**
    * Exchange the one-time code (from the ?code= redirect after email verification)
    * for a JWT. The code is single-use and expires after 5 minutes.

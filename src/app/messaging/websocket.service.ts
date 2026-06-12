@@ -11,37 +11,31 @@ export class WebSocketService {
   private reconnectAttempts = 0;
   private maxReconnectAttempts = 5;
   private reconnectInterval = 3000;
+  private authFailed = false;
 
-  // Subjects for different message types
   private messageSubject = new Subject<Message>();
   private typingSubject = new Subject<TypingIndicator>();
   private notificationSubject = new Subject<MessageNotification>();
   private connectionSubject = new BehaviorSubject<boolean>(false);
 
-  // Public observables
   public message$ = this.messageSubject.asObservable();
   public typing$ = this.typingSubject.asObservable();
   public notification$ = this.notificationSubject.asObservable();
   public connected$ = this.connectionSubject.asObservable();
 
-  /**
-   * Connect to WebSocket server
-   */
   connect(token: string): void {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
-      console.log('WebSocket already connected');
       return;
     }
 
-    const wsUrl = `${WS_BASE_URL}/ws?token=${token}`;
+    this.authFailed = false;
 
     try {
-      this.socket = new WebSocket(wsUrl);
+      this.socket = new WebSocket(`${WS_BASE_URL}/ws`);
 
       this.socket.onopen = () => {
-        console.log('WebSocket connected');
-        this.connectionSubject.next(true);
         this.reconnectAttempts = 0;
+        this.socket!.send(JSON.stringify({ type: 'AUTH', token }));
       };
 
       this.socket.onmessage = (event) => {
@@ -54,9 +48,10 @@ export class WebSocketService {
       };
 
       this.socket.onclose = () => {
-        console.log('WebSocket disconnected');
         this.connectionSubject.next(false);
-        this.attemptReconnect(token);
+        if (!this.authFailed) {
+          this.attemptReconnect(token);
+        }
       };
     } catch (error) {
       console.error('Failed to create WebSocket connection:', error);
@@ -64,9 +59,6 @@ export class WebSocketService {
     }
   }
 
-  /**
-   * Disconnect from WebSocket server
-   */
   disconnect(): void {
     if (this.socket) {
       this.socket.close();
@@ -75,9 +67,6 @@ export class WebSocketService {
     }
   }
 
-  /**
-   * Send a message through WebSocket
-   */
   send(message: Record<string, unknown>): void {
     if (this.socket && this.socket.readyState === WebSocket.OPEN) {
       this.socket.send(JSON.stringify(message));
@@ -86,35 +75,31 @@ export class WebSocketService {
     }
   }
 
-  /**
-   * Send typing indicator
-   */
   sendTypingIndicator(conversationId: string, isTyping: boolean): void {
-    this.send({
-      type: 'TYPING',
-      conversationId,
-      isTyping
-    });
+    this.send({ type: 'TYPING', conversationId, isTyping });
   }
 
-  /**
-   * Mark messages as read
-   */
   markAsRead(conversationId: string): void {
-    this.send({
-      type: 'MARK_READ',
-      conversationId
-    });
+    this.send({ type: 'MARK_READ', conversationId });
   }
 
-  /**
-   * Handle incoming WebSocket messages
-   */
+  isConnected(): boolean {
+    return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
+  }
+
   private handleMessage(data: string): void {
     try {
       const payload = JSON.parse(data);
 
       switch (payload.type) {
+        case 'AUTH_OK':
+          this.connectionSubject.next(true);
+          break;
+        case 'AUTH_ERROR':
+          console.error('WebSocket auth failed:', payload.message);
+          this.authFailed = true;
+          this.socket?.close();
+          break;
         case 'MESSAGE':
           this.messageSubject.next(payload.message);
           break;
@@ -125,7 +110,6 @@ export class WebSocketService {
           this.notificationSubject.next(payload.notification);
           break;
         case 'READ_RECEIPT':
-          // Handle read receipts
           break;
         default:
           console.log('Unknown message type:', payload.type);
@@ -135,26 +119,13 @@ export class WebSocketService {
     }
   }
 
-  /**
-   * Attempt to reconnect to WebSocket
-   */
   private attemptReconnect(token: string): void {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       this.reconnectAttempts++;
       console.log(`Attempting to reconnect... (${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
-
-      setTimeout(() => {
-        this.connect(token);
-      }, this.reconnectInterval);
+      setTimeout(() => this.connect(token), this.reconnectInterval);
     } else {
       console.error('Max reconnection attempts reached');
     }
-  }
-
-  /**
-   * Check if WebSocket is connected
-   */
-  isConnected(): boolean {
-    return this.socket !== null && this.socket.readyState === WebSocket.OPEN;
   }
 }

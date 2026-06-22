@@ -176,7 +176,7 @@
                   type="number"
                   placeholder="0"
                 >
-                <span matPrefix>$&nbsp;</span>
+                <span matPrefix>R&nbsp;</span>
                 <span matSuffix *ngIf="job.budgetType === 'HOURLY'">/hr</span>
                 <mat-hint>Your rate for this project (optional)</mat-hint>
                 <mat-error *ngIf="applicationForm.get('proposedRate')?.hasError('min')">

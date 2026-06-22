@@ -85,10 +85,10 @@
               formControlName="budget"
               placeholder="1000"
               min="1">
-            <span matTextPrefix>$&nbsp;</span>
+            <span matTextPrefix>R&nbsp;</span>
             <mat-icon matPrefix>attach_money</mat-icon>
             <mat-error *ngIf="f['budget'].hasError('required')">Budget is required</mat-error>
-            <mat-error *ngIf="f['budget'].hasError('min')">Budget must be at least $1</mat-error>
+            <mat-error *ngIf="f['budget'].hasError('min')">Budget must be at least R1</mat-error>
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">

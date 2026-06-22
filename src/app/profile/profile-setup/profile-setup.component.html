@@ -84,7 +84,7 @@
 
               <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Hourly Rate (ZAR)</mat-label>
-                <mat-icon matPrefix>attach_money</mat-icon>
+                <mat-icon matPrefix>payments</mat-icon>
                 <input matInput type="number" formControlName="hourlyRate" placeholder="e.g. 50">
                 <mat-error *ngIf="setupForm.get('hourlyRate')?.hasError('required')">Hourly rate is required</mat-error>
                 <mat-error *ngIf="setupForm.get('hourlyRate')?.hasError('min')">Must be greater than 0</mat-error>

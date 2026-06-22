@@ -24,8 +24,8 @@ import { Job } from '../../jobs/models';
         MatDividerModule,
         MatSnackBarModule
     ],
-    templateUrl: './stripe-payment.component.html',
-    styleUrls: ['./stripe-payment.component.scss']
+    templateUrl: './payfast-payment.component.html',
+    styleUrls: ['./payfast-payment.component.scss']
 })
 export class CheckoutPaymentComponent implements OnInit {
   job: Job | null = null;

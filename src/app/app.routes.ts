@@ -112,7 +112,7 @@ export const routes: Routes = [
   },
   {
     path: 'payments/create/:jobId',
-    loadComponent: () => import('./payments/stripe-payment/stripe-payment.component').then(m => m.CheckoutPaymentComponent),
+    loadComponent: () => import('./payments/payfast-payment/payfast-payment.component').then(m => m.CheckoutPaymentComponent),
     canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
   {

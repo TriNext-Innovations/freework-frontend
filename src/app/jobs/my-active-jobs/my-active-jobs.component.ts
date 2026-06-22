@@ -74,13 +74,11 @@ export class MyActiveJobsComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Get jobs posted by the customer that are in progress
+    // Show ALL jobs the customer has posted — a freshly-posted OPEN job with no
+    // applications yet must still appear here, otherwise the owner loses track of it (#168).
     this.jobService.getMyJobs().subscribe({
       next: (response) => {
-        // Filter for jobs that are in progress or have accepted applications
-        this.customerJobs = response.content.filter(
-          job => job.status === 'IN_PROGRESS' || (job.applicationsCount && job.applicationsCount > 0)
-        );
+        this.customerJobs = response.content;
         this.loading = false;
       },
       error: (error) => {
@@ -166,6 +164,7 @@ export class MyActiveJobsComponent implements OnInit {
     const colors: Record<string, string> = {
       'OPEN': 'primary',
       'IN_PROGRESS': 'accent',
+      'REVIEW': 'accent',
       'COMPLETED': 'warn',
       'CANCELLED': ''
     };
@@ -176,6 +175,7 @@ export class MyActiveJobsComponent implements OnInit {
     const labels: Record<string, string> = {
       'OPEN': 'Open',
       'IN_PROGRESS': 'In Progress',
+      'REVIEW': 'In Review',
       'COMPLETED': 'Completed',
       'CANCELLED': 'Cancelled'
     };
@@ -186,6 +186,7 @@ export class MyActiveJobsComponent implements OnInit {
     const icons: Record<string, string> = {
       'OPEN': 'radio_button_unchecked',
       'IN_PROGRESS': 'pending',
+      'REVIEW': 'rate_review',
       'COMPLETED': 'check_circle',
       'CANCELLED': 'cancel'
     };
@@ -193,9 +194,9 @@ export class MyActiveJobsComponent implements OnInit {
   }
 
   formatBudget(job: Job): string {
-    const amount = new Intl.NumberFormat('en-US', {
+    const amount = new Intl.NumberFormat('en-ZA', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'ZAR',
       minimumFractionDigits: 0
     }).format(job.budget);
 
@@ -204,7 +205,7 @@ export class MyActiveJobsComponent implements OnInit {
 
   formatDate(date: Date | string | undefined): string {
     if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString('en-US', {
+    return new Date(date).toLocaleDateString('en-ZA', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'

@@ -18,6 +18,17 @@
   mat-card-content {
     padding-top: 0.5rem;
   }
+
+  // "Download My Data" is an action item (no routerLink) — keep the affordance,
+  // and dim it while the export is in flight.
+  a[role='button'] {
+    cursor: pointer;
+
+    &.list-item-busy {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+  }
 }
 
 .toggle-row {

@@ -40,7 +40,7 @@ export class ResetPasswordComponent implements OnInit {
   hidePassword = true;
   hideConfirm = true;
 
-  private readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_#\-]).+$/;
+  private readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&_#-]).+$/;
 
   constructor(
     private fb: FormBuilder,

@@ -13,6 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { JobService } from '../job.service';
 import { AuthService } from '../../auth/auth.service';
+import { MessagingService } from '../../messaging/messaging.service';
 import { Job, JOB_CATEGORIES } from '../models';
 import { RatingSummaryComponent } from '../../reviews/rating-summary/rating-summary.component';
 import { ReviewListComponent } from '../../reviews/review-list/review-list.component';
@@ -50,6 +51,7 @@ export class JobDetailComponent implements OnInit {
     private router: Router,
     private jobService: JobService,
     private authService: AuthService,
+    private messagingService: MessagingService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
@@ -163,8 +165,12 @@ export class JobDetailComponent implements OnInit {
   }
 
   contactCustomer(): void {
-    // TODO: Implement messaging functionality
-    this.showSuccess('Messaging feature coming soon!');
+    if (!this.job?.customerId) return;
+    this.messagingService.getOrCreateConversation(this.job.customerId, this.job.id)
+      .subscribe({
+        next: (conversation) => this.router.navigate(['/messages', conversation.id]),
+        error: () => this.showError('Failed to start conversation')
+      });
   }
 
   goBack(): void {

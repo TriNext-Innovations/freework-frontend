@@ -65,6 +65,14 @@ all other authenticated endpoints are under `/api/*` (use `buildApiEndpointUrl`)
   (`api.freework.co.za`) exists; then add a Cloudflare Pages prod deploy.
 
 Cloudflare Pages specifics:
+- **Direct Upload only — do NOT connect the Pages project's Git integration.**
+  We build in GitHub Actions (Node 24) and `wrangler pages deploy` the prebuilt
+  `dist/angular-app/browser`. CF's native Git-integration build is redundant and,
+  with no `.node-version`/`.nvmrc` in the repo, runs on CF's default (old) Node,
+  which Angular 20 + the npm 11 lockfile reject — so it fails on every branch and
+  posts a permanently-red **`Cloudflare Pages`** check (distinct from the green
+  GHA **`Deploy → Staging`** check). If you ever see that red check return, someone
+  re-connected the Git integration in the dashboard — disconnect it, don't "fix" it.
 - Secrets `CLOUDFLARE_API_TOKEN` + `CLOUDFLARE_ACCOUNT_ID` live in the `staging`
   GitHub environment. The Pages project auto-creates on first deploy.
 - `public/_redirects` (`/* /index.html 200`) gives SPA deep-link routing — do NOT

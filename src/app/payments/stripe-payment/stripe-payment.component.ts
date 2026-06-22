@@ -13,7 +13,7 @@ import { PaymentMethod, PaymentType } from '../models/payment.models';
 import { Job } from '../../jobs/models';
 
 @Component({
-    selector: 'app-stripe-payment',
+    selector: 'app-checkout-payment',
     imports: [
         CommonModule,
         RouterLink,
@@ -27,7 +27,7 @@ import { Job } from '../../jobs/models';
     templateUrl: './stripe-payment.component.html',
     styleUrls: ['./stripe-payment.component.scss']
 })
-export class StripePaymentComponent implements OnInit {
+export class CheckoutPaymentComponent implements OnInit {
   job: Job | null = null;
   loading = true;
   redirecting = false;

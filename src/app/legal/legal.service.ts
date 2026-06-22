@@ -98,4 +98,12 @@ export class LegalService {
       body: { confirmation }
     });
   }
+
+  /**
+   * POPIA right of access / data portability — downloads all personal data the backend
+   * holds about the current user as a JSON blob.
+   */
+  exportMyData(): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/api/account/export`, { responseType: 'blob' });
+  }
 }

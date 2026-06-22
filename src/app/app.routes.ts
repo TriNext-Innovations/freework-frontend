@@ -26,6 +26,14 @@ export const routes: Routes = [
     path: 'auth/verified',
     loadComponent: () => import('./auth/email-verified/email-verified.component').then(m => m.EmailVerifiedComponent)
   },
+  {
+    path: 'forgot-password',
+    loadComponent: () => import('./auth/forgot-password/forgot-password.component').then(m => m.ForgotPasswordComponent)
+  },
+  {
+    path: 'auth/reset-password',
+    loadComponent: () => import('./auth/reset-password/reset-password.component').then(m => m.ResetPasswordComponent)
+  },
 
   // Job routes
   {
@@ -104,7 +112,7 @@ export const routes: Routes = [
   },
   {
     path: 'payments/create/:jobId',
-    loadComponent: () => import('./payments/stripe-payment/stripe-payment.component').then(m => m.StripePaymentComponent),
+    loadComponent: () => import('./payments/stripe-payment/stripe-payment.component').then(m => m.CheckoutPaymentComponent),
     canActivate: [authGuard, roleGuard(['CUSTOMER'])]
   },
   {

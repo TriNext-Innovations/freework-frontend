@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+Disallow: /settings
+Disallow: /payments
+Disallow: /messages
+Disallow: /admin/
+Disallow: /profile/edit
+Disallow: /profile/setup
+
+Sitemap: https://freework.co.za/sitemap.xml

@@ -9,6 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { LegalService } from '../legal/legal.service';
@@ -27,6 +28,7 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog/delete-acc
         MatListModule,
         MatSlideToggleModule,
         MatDialogModule,
+        MatProgressSpinnerModule,
         MatSnackBarModule
     ],
     templateUrl: './settings.component.html',
@@ -37,6 +39,7 @@ export class SettingsComponent implements OnInit {
   marketingLoading = false;
   canDelete = false;
   blockingReason = '';
+  exportingData = false;
 
   constructor(
     private legalService: LegalService,
@@ -81,6 +84,27 @@ export class SettingsComponent implements OnInit {
         this.marketingLoading = false;
         this.marketingConsented = !value; // revert
         this.snackBar.open('Failed to update preference.', 'OK', { duration: 3000 });
+      }
+    });
+  }
+
+  downloadMyData(): void {
+    if (this.exportingData) return;
+    this.exportingData = true;
+    this.legalService.exportMyData().subscribe({
+      next: (blob) => {
+        this.exportingData = false;
+        const url = window.URL.createObjectURL(blob);
+        const anchor = document.createElement('a');
+        anchor.href = url;
+        anchor.download = `freework-data-export-${new Date().toISOString().slice(0, 10)}.json`;
+        anchor.click();
+        window.URL.revokeObjectURL(url);
+        this.snackBar.open('Your data export has downloaded.', 'OK', { duration: 3000 });
+      },
+      error: () => {
+        this.exportingData = false;
+        this.snackBar.open('Failed to export your data. Please try again.', 'OK', { duration: 4000 });
       }
     });
   }

@@ -138,15 +138,15 @@ export const LEGAL_CONTENT: {
           heading: '9. Your Rights Under POPIA',
           content: `<p>As a data subject under POPIA, you have the following rights:</p>
 <ul>
-  <li><strong>Right to access:</strong> Request a copy of the personal information we hold about you</li>
+  <li><strong>Right to access:</strong> Request a copy of the personal information we hold about you — or download it yourself instantly from <strong>Settings &rarr; Download My Data</strong></li>
   <li><strong>Right to correction:</strong> Request correction of inaccurate or incomplete personal information</li>
-  <li><strong>Right to deletion:</strong> Request deletion of your personal information (subject to legal retention requirements)</li>
+  <li><strong>Right to deletion:</strong> Request deletion of your personal information (subject to legal retention requirements). When you delete your account we anonymise your personal data rather than permanently erasing records we must keep for legal or financial compliance</li>
   <li><strong>Right to object:</strong> Object to the processing of your personal information for direct marketing</li>
-  <li><strong>Right to data portability:</strong> Request your data in a structured, machine-readable format</li>
+  <li><strong>Right to data portability:</strong> Obtain your data in a structured, machine-readable format — available immediately as a JSON export from <strong>Settings &rarr; Download My Data</strong></li>
   <li><strong>Right to withdraw consent:</strong> Withdraw consent at any time where processing is based on consent</li>
   <li><strong>Right to lodge a complaint:</strong> Lodge a complaint with the Information Regulator of South Africa</li>
 </ul>
-<p>To exercise any of these rights, submit a request at <strong>/legal/popia-request</strong> or email us at <a href="mailto:privacy@freework.co.za">privacy@freework.co.za</a>.</p>`,
+<p>You can access and export your own data immediately from <strong>Settings &rarr; Download My Data</strong>. To exercise any other right, submit a request at <strong>/legal/popia-request</strong> or email us at <a href="mailto:privacy@freework.co.za">privacy@freework.co.za</a>. We respond to formal requests within 30 days as required by POPIA; an access or portability request you have lodged is automatically marked complete once you download your data export.</p>`,
           callout: 'Information Regulator of South Africa: Email: inforeg@justice.gov.za | Phone: 010 023 5207 | Website: www.justice.gov.za/inforeg/',
           calloutType: 'info'
         },

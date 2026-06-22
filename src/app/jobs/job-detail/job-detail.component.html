@@ -31,6 +31,10 @@
 
         <!-- Owner Actions -->
         <div class="action-buttons" *ngIf="isOwner">
+          <button mat-raised-button color="primary" *ngIf="canAcceptWork()" (click)="acceptWork()">
+            <mat-icon>task_alt</mat-icon>
+            Accept Work
+          </button>
           <button mat-raised-button color="primary" (click)="editJob()">
             <mat-icon>edit</mat-icon>
             Edit Job
@@ -43,7 +47,11 @@
 
         <!-- Freelancer Actions -->
         <div class="action-buttons" *ngIf="!isOwner">
-          <button mat-raised-button color="primary" (click)="applyForJob()">
+          <button mat-raised-button color="primary" *ngIf="canSubmitForReview()" (click)="submitForReview()">
+            <mat-icon>rate_review</mat-icon>
+            Submit for Review
+          </button>
+          <button mat-raised-button color="primary" *ngIf="job?.status === 'OPEN'" (click)="applyForJob()">
             <mat-icon>send</mat-icon>
             Apply Now
           </button>
@@ -251,7 +259,7 @@
           color="primary"
           class="apply-button"
           (click)="applyForJob()"
-          *ngIf="!isOwner">
+          *ngIf="!isOwner && job.status === 'OPEN'">
           <mat-icon>send</mat-icon>
           Apply Now
         </button>

@@ -151,8 +151,9 @@ export class JobDetailComponent implements OnInit {
           this.showSuccess('Job deleted successfully');
           this.router.navigate(['/jobs']);
         },
-        error: () => {
-          this.showError('Failed to delete job');
+        error: (err) => {
+          // Backend blocks deleting in-progress/in-review jobs (#171) — surface its reason
+          this.showError(err?.error?.message || 'Failed to delete job');
         }
       });
     }
@@ -210,6 +211,7 @@ export class JobDetailComponent implements OnInit {
     const labels: Record<string, string> = {
       'OPEN': 'Open',
       'IN_PROGRESS': 'In Progress',
+      'REVIEW': 'In Review',
       'COMPLETED': 'Completed',
       'CANCELLED': 'Cancelled'
     };
@@ -220,10 +222,42 @@ export class JobDetailComponent implements OnInit {
     const colors: Record<string, string> = {
       'OPEN': 'primary',      // Blue - for open jobs
       'IN_PROGRESS': 'accent', // Green/Teal - for active work
+      'REVIEW': 'accent',      // awaiting customer acceptance
       'COMPLETED': 'warn',     // Orange/Amber - for finished jobs
       'CANCELLED': 'warn'      // Red - for cancelled jobs (changed from empty string)
     };
     return colors[status] || 'primary';
+  }
+
+  // ── Lifecycle actions (#167) ───────────────────────────────────────────────
+
+  /** Customer-only: accept the freelancer's submitted work (REVIEW → COMPLETED). */
+  canAcceptWork(): boolean {
+    return this.isOwner && this.job?.status === 'REVIEW';
+  }
+
+  /** Freelancer (assigned): submit work for the customer to review (IN_PROGRESS → REVIEW). */
+  canSubmitForReview(): boolean {
+    return !this.isOwner && this.job?.status === 'IN_PROGRESS';
+  }
+
+  submitForReview(): void {
+    this.changeStatus('REVIEW', 'Work submitted for review.');
+  }
+
+  acceptWork(): void {
+    this.changeStatus('COMPLETED', 'Work accepted — job marked complete.');
+  }
+
+  private changeStatus(status: string, successMsg: string): void {
+    if (!this.job) return;
+    this.jobService.updateJobStatus(this.job.id, status).subscribe({
+      next: (updated) => {
+        this.job = updated;
+        this.showSuccess(successMsg);
+      },
+      error: () => this.showError('Failed to update job status. Please try again.')
+    });
   }
 
   private showSuccess(message: string): void {

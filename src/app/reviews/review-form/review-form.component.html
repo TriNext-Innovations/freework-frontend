@@ -13,8 +13,9 @@
       <div class="rating-section">
         <span class="section-label">Overall Rating *</span>
         <div class="star-rating">
-          <button
-            *ngFor="let star of [1, 2, 3, 4, 5]"
+          @for (star of [1, 2, 3, 4, 5]; track star) {
+<button
+           
             type="button"
             mat-icon-button
             class="star-button"
@@ -27,14 +28,27 @@
               {{ getStarIcon(star) }}
             </mat-icon>
           </button>
+}
         </div>
-        <div class="rating-text" *ngIf="rating > 0">
-          <span *ngIf="rating === 5">Excellent!</span>
-          <span *ngIf="rating === 4">Very Good</span>
-          <span *ngIf="rating === 3">Good</span>
-          <span *ngIf="rating === 2">Fair</span>
-          <span *ngIf="rating === 1">Poor</span>
+        @if (rating > 0) {
+<div class="rating-text">
+          @if (rating === 5) {
+<span>Excellent!</span>
+}
+          @if (rating === 4) {
+<span>Very Good</span>
+}
+          @if (rating === 3) {
+<span>Good</span>
+}
+          @if (rating === 2) {
+<span>Fair</span>
+}
+          @if (rating === 1) {
+<span>Poor</span>
+}
         </div>
+}
       </div>
 
       <!-- Review Title -->
@@ -80,17 +94,21 @@
           </button>
         </div>
 
-        <div class="chips-container" *ngIf="pros.length > 0">
+        @if (pros.length > 0) {
+<div class="chips-container">
           <mat-chip-set>
-            <mat-chip *ngFor="let pro of pros; let i = index" (removed)="removePro(i)">
+            @for (pro of pros; track pro; let i = $index) {
+<mat-chip (removed)="removePro(i)">
               <mat-icon class="chip-icon positive">check_circle</mat-icon>
               {{ pro }}
               <button matChipRemove>
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip>
+}
           </mat-chip-set>
         </div>
+}
       </div>
 
       <!-- Cons Section -->
@@ -116,17 +134,21 @@
           </button>
         </div>
 
-        <div class="chips-container" *ngIf="cons.length > 0">
+        @if (cons.length > 0) {
+<div class="chips-container">
           <mat-chip-set>
-            <mat-chip *ngFor="let con of cons; let i = index" (removed)="removeCon(i)">
+            @for (con of cons; track con; let i = $index) {
+<mat-chip (removed)="removeCon(i)">
               <mat-icon class="chip-icon negative">info</mat-icon>
               {{ con }}
               <button matChipRemove>
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip>
+}
           </mat-chip-set>
         </div>
+}
       </div>
 
       <!-- Guidelines -->
@@ -156,8 +178,12 @@
         [matTooltip]="!canSubmit() ? getValidationMessage() : 'Submit your review'"
         matTooltipPosition="above"
       >
-        <mat-spinner *ngIf="submitting" diameter="20" class="button-spinner"></mat-spinner>
-        <mat-icon *ngIf="!submitting">send</mat-icon>
+        @if (submitting) {
+<mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+}
+        @if (!submitting) {
+<mat-icon>send</mat-icon>
+}
         {{ submitting ? 'Submitting...' : 'Submit Review' }}
       </button>
     </mat-card-actions>

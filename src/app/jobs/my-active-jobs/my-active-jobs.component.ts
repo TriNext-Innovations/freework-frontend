@@ -160,15 +160,9 @@ export class MyActiveJobsComponent implements OnInit {
     this.router.navigate(['/jobs', jobId]);
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'OPEN': 'primary',
-      'IN_PROGRESS': 'accent',
-      'REVIEW': 'accent',
-      'COMPLETED': 'warn',
-      'CANCELLED': ''
-    };
-    return colors[status] || '';
+  /** Brand status-pill class (custom span pill, not mat-chip). */
+  getStatusClass(status: string): string {
+    return 'jstatus-' + (status || '').toLowerCase();
   }
 
   getStatusLabel(status: string): string {

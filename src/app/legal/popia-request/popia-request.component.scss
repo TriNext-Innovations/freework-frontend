@@ -25,7 +25,7 @@
 }
 
 .popia-subtitle {
-  color: var(--mat-app-on-surface-variant, #aaa);
+  color: var(--color-text-secondary);
   margin: 0.25rem 0 0;
 }
 
@@ -57,9 +57,9 @@
 
 .regulator-note {
   font-size: 0.85rem;
-  color: var(--mat-app-on-surface-variant, #aaa);
+  color: var(--color-text-secondary);
   margin-top: 0.75rem !important;
-  border-top: 1px solid var(--mat-app-outline-variant, #333);
+  border-top: 1px solid var(--color-border);
   padding-top: 0.75rem;
 }
 
@@ -76,7 +76,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: var(--mat-warn-default, #f44336);
+  color: var(--mat-warn-default, var(--color-error-500));
   margin-bottom: 1rem;
   font-size: 0.875rem;
 }
@@ -127,12 +127,12 @@
 
   &.status-received {
     background: rgba(33, 150, 243, 0.15);
-    color: #2196F3;
+    color: var(--color-accent-500);
   }
 
   &.status-progress {
     background: rgba(255, 152, 0, 0.15);
-    color: #FF9800;
+    color: var(--color-warning-500);
   }
 
   &.status-completed {
@@ -142,13 +142,13 @@
 
   &.status-rejected {
     background: rgba(244, 67, 54, 0.15);
-    color: #f44336;
+    color: var(--color-error-500);
   }
 }
 
 .request-meta {
   font-size: 0.8rem;
-  color: var(--mat-app-on-surface-variant, #aaa);
+  color: var(--color-text-secondary);
   display: flex;
   gap: 0.5rem;
 }
@@ -160,5 +160,5 @@
 .response-notes {
   margin: 0.5rem 0 0;
   font-size: 0.875rem;
-  color: var(--mat-app-on-surface-variant, #ccc);
+  color: var(--color-text-secondary);
 }

@@ -1,4 +1,5 @@
-<div class="legal-page" *ngIf="document; else notFound">
+@if (document) {
+<div class="legal-page">
 
   <!-- Header bar -->
   <div class="legal-header">
@@ -26,10 +27,12 @@
         </button>
 
         <!-- Cookie Settings (only on cookie policy page) -->
-        <button *ngIf="isCookiePolicy" mat-flat-button color="primary" (click)="openCookieSettings()">
+        @if (isCookiePolicy) {
+<button mat-flat-button color="primary" (click)="openCookieSettings()">
           <mat-icon>cookie</mat-icon>
           Update Cookie Preferences
         </button>
+}
       </div>
     </div>
   </div>
@@ -39,27 +42,33 @@
     <aside class="legal-toc" role="navigation" aria-label="Table of contents">
       <h3>Contents</h3>
       <ul>
-        <li *ngFor="let section of document.sections">
+        @for (section of document.sections; track section) {
+<li>
           <a tabindex="0" (click)="scrollToSection(section.id)" (keyup.enter)="scrollToSection(section.id)" (keydown.space)="scrollToSection(section.id)" class="toc-link">{{ section.heading }}</a>
         </li>
+}
       </ul>
     </aside>
 
     <!-- Document Content -->
     <article class="legal-content">
-      <ng-container *ngFor="let section of document.sections">
+      @for (section of document.sections; track section) {
+
         <section [id]="section.id" class="legal-section">
           <h2>{{ section.heading }}</h2>
           <div class="section-content" [innerHTML]="section.content"></div>
 
           <!-- Callout box -->
-          <div *ngIf="section.callout" class="legal-callout" [class.callout-warning]="section.calloutType === 'warning'" [class.callout-info]="section.calloutType === 'info'">
+          @if (section.callout) {
+<div class="legal-callout" [class.callout-warning]="section.calloutType === 'warning'" [class.callout-info]="section.calloutType === 'info'">
             <mat-icon>{{ section.calloutType === 'warning' ? 'warning' : 'info' }}</mat-icon>
             <p>{{ section.callout }}</p>
           </div>
+}
         </section>
         <mat-divider></mat-divider>
-      </ng-container>
+      
+}
 
       <div class="legal-footer-note">
         <p>Last updated: {{ document.lastUpdated }} | Version {{ document.version }}</p>
@@ -68,12 +77,15 @@
     </article>
   </div>
 </div>
+} @else {
 
-<ng-template #notFound>
   <div class="legal-not-found">
     <mat-icon>description</mat-icon>
     <h2>Document not found</h2>
     <p>The requested legal document could not be found.</p>
     <button mat-flat-button color="primary" routerLink="/">Go Home</button>
   </div>
-</ng-template>
+
+}
+
+

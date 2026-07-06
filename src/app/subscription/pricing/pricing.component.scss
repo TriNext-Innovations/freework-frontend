@@ -95,21 +95,21 @@
 }
 
 .scale-ribbon {
-  background: #6366f1;
+  background: var(--color-accent-500);
   color: #fff;
 }
 
 .plan-card--scale {
-  border: 2px solid #6366f1;
+  border: 2px solid var(--color-accent-500);
   box-shadow: 0 8px 32px rgba(99, 102, 241, 0.15);
 }
 
 .plan-cta--scale {
-  background: #6366f1 !important;
+  background: var(--color-accent-500) !important;
   color: #fff !important;
 
   &:hover {
-    background: #4f46e5 !important;
+    background: var(--color-accent-600) !important;
   }
 }
 
@@ -165,7 +165,7 @@
 
   mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; }
 
-  &.feature-item--check mat-icon { color: #22c55e; }
+  &.feature-item--check mat-icon { color: var(--color-success-500); }
   &.feature-item--limit { color: var(--color-text-secondary); }
   &.feature-item--limit mat-icon { color: var(--color-text-tertiary); }
 }
@@ -188,7 +188,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  color: #22c55e;
+  color: var(--color-success-500);
   font-weight: 600;
   font-size: 14px;
 

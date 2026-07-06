@@ -1,169 +1,54 @@
-@import url("https://fonts.googleapis.com/css?family=Dosis:300,400,700,800");
-
-/** Styles for the 403 Page **/
-
-.particle-error,
-.permission_denied,
-#particles-js {
-  width: 100vw;
-  height: 100vh;
-  margin: 0 !important;
-}
-
-.permission_denied {
-  position: fixed;
-  inset: 0;
-  background: #24344c !important;
-  overflow: hidden;
-  z-index: 1000;
+.not-found {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-#particles-js {
-  position: fixed !important;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.23;
-}
-
-.permission_denied a {
-  text-decoration: none;
-}
-
-.denied__wrapper {
-  max-width: 390px;
-  width: 100%;
-  height: 390px;
-  position: relative;
-  margin-top: -40vh;
-}
-
-.permission_denied h1 {
+  min-height: 60vh;
+  padding: var(--spacing-3xl, 3rem) var(--spacing-lg, 1.5rem);
   text-align: center;
-  color: #fff;
-  font-family: "Dosis", sans-serif;
-  font-size: 100px;
-  margin-bottom: 0;
+}
+
+.not-found__inner {
+  max-width: 480px;
+}
+
+.not-found__logo {
+  margin-bottom: var(--spacing-lg, 1.5rem);
+}
+
+.not-found__code {
+  margin: 0;
+  font-size: clamp(4rem, 14vw, 7rem);
   font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #2bb88a, #1a8d6f);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
-.permission_denied h3 {
-  text-align: center;
-  color: #fff;
-  font-size: 19px;
-  line-height: 23px;
-  max-width: 330px;
-  margin: 0 auto 30px auto;
-  font-family: "Dosis", sans-serif;
-  font-weight: 400;
+.not-found__title {
+  margin: var(--spacing-md, 1rem) 0 var(--spacing-sm, 0.5rem);
+  font-size: 1.5rem;
+  font-weight: 600;
 }
 
-.permission_denied h3 .strike {
-  position: relative;
-  width: 65px;
-  display: inline-block;
+.not-found__text {
+  margin: 0 0 var(--spacing-xl, 2rem);
+  opacity: 0.75;
+  line-height: 1.6;
 }
 
-.permission_denied h3 .strike:after {
-  content: "";
-  border-bottom: 3px solid #ffbb39;
-  position: absolute;
-  left: 0;
-  top: 43%;
-  width: 100%;
-}
+.not-found__actions {
+  display: flex;
+  gap: var(--spacing-md, 1rem);
+  justify-content: center;
+  flex-wrap: wrap;
 
-.denied__link {
-  background: none;
-  color: #fff;
-  padding: 12px 0 10px 0;
-  border: 1px solid #fff;
-  outline: none;
-  border-radius: 7px;
-  width: 150px;
-  font-size: 15px;
-  text-align: center;
-  margin: 25px auto 40px auto;
-  vertical-align: middle;
-  display: block;
-  font-family: "Dosis", sans-serif;
-  font-weight: 400;
-}
-
-.denied__link:hover {
-  color: #ffbb39;
-  border-color: #ffbb39;
-  cursor: pointer;
-  opacity: 1;
-}
-
-.permission_denied .stars {
-  animation: sparkle 1.6s infinite ease-in-out alternate;
-}
-
-@keyframes sparkle {
-  0% {
-    opacity: 1;
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-xs, 0.25rem);
   }
-  100% {
-    opacity: 0.3;
-  }
-}
-
-#astronaut {
-  width: 43px;
-  position: absolute;
-  right: 20px;
-  top: 210px;
-  animation: spin 4.5s infinite linear;
-}
-
-@keyframes spin {
-  0% {
-    transform: rotateZ(0deg);
-  }
-  100% {
-    transform: rotateZ(360deg);
-  }
-}
-
-@media (max-width: 600px) {
-  .permission_denied h1 {
-    font-size: 75px;
-  }
-  .permission_denied h3 {
-    font-size: 16px;
-    width: 200px;
-    margin: 0 auto;
-    line-height: 23px;
-  }
-  .permission_denied h3 span {
-    width: 60px;
-  }
-  #astronaut {
-    width: 35px;
-    right: 40px;
-    top: 170px;
-  }
-}
-
-.saturn,
-.saturn-2,
-.hover {
-  animation: hover 2s infinite ease-in-out alternate;
-}
-
-@keyframes hover {
-  0% {
-    transform: translateY(3px);
-  }
-  100% {
-    transform: translateY(-3px);
-  }
-}
-
-.denied__freework {
-  font-size: 1.4em;
 }

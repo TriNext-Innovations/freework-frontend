@@ -16,31 +16,37 @@
     <mat-card-content>
 
       <!-- Loading -->
-      <div class="state-block" *ngIf="state === 'loading'">
-        <mat-spinner diameter="48"></mat-spinner>
-        <p class="state-text">Verifying your email…</p>
-      </div>
+      @if (state === 'loading') {
+        <div class="state-block">
+          <mat-spinner diameter="48"></mat-spinner>
+          <p class="state-text">Verifying your email…</p>
+        </div>
+      }
 
       <!-- Success -->
-      <div class="state-block" *ngIf="state === 'success'">
-        <div class="state-icon success">
-          <mat-icon>check_circle</mat-icon>
+      @if (state === 'success') {
+        <div class="state-block">
+          <div class="state-icon success">
+            <mat-icon>check_circle</mat-icon>
+          </div>
+          <h2 class="state-heading">Email verified!</h2>
+          <p class="state-text">Taking you to freework now…</p>
         </div>
-        <h2 class="state-heading">Email verified!</h2>
-        <p class="state-text">Taking you to freework now…</p>
-      </div>
+      }
 
       <!-- Error -->
-      <div class="state-block" *ngIf="state === 'error'">
-        <div class="state-icon error">
-          <mat-icon>error_outline</mat-icon>
+      @if (state === 'error') {
+        <div class="state-block">
+          <div class="state-icon error">
+            <mat-icon>error_outline</mat-icon>
+          </div>
+          <h2 class="state-heading">Verification failed</h2>
+          <p class="state-text error-text">{{ errorMessage }}</p>
+          <button mat-raised-button color="primary" (click)="goToLogin()">
+            Back to sign in
+          </button>
         </div>
-        <h2 class="state-heading">Verification failed</h2>
-        <p class="state-text error-text">{{ errorMessage }}</p>
-        <button mat-raised-button color="primary" (click)="goToLogin()">
-          Back to sign in
-        </button>
-      </div>
+      }
 
     </mat-card-content>
 

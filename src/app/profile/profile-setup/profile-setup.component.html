@@ -38,15 +38,23 @@
               <mat-form-field appearance="outline" class="half-width">
                 <mat-label>First Name</mat-label>
                 <input matInput formControlName="firstName" placeholder="John">
-                <mat-error *ngIf="setupForm.get('firstName')?.hasError('required')">First name is required</mat-error>
-                <mat-error *ngIf="setupForm.get('firstName')?.hasError('minlength')">Minimum 2 characters</mat-error>
+                @if (setupForm.get('firstName')?.hasError('required')) {
+<mat-error>First name is required</mat-error>
+}
+                @if (setupForm.get('firstName')?.hasError('minlength')) {
+<mat-error>Minimum 2 characters</mat-error>
+}
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="half-width">
                 <mat-label>Last Name</mat-label>
                 <input matInput formControlName="lastName" placeholder="Doe">
-                <mat-error *ngIf="setupForm.get('lastName')?.hasError('required')">Last name is required</mat-error>
-                <mat-error *ngIf="setupForm.get('lastName')?.hasError('minlength')">Minimum 2 characters</mat-error>
+                @if (setupForm.get('lastName')?.hasError('required')) {
+<mat-error>Last name is required</mat-error>
+}
+                @if (setupForm.get('lastName')?.hasError('minlength')) {
+<mat-error>Minimum 2 characters</mat-error>
+}
               </mat-form-field>
             </div>
 
@@ -68,7 +76,8 @@
           </div>
 
           <!-- Section: Freelancer-specific -->
-          <div class="form-section" *ngIf="isFreelancer">
+          @if (isFreelancer) {
+<div class="form-section">
             <h2 class="section-title">
               <mat-icon>work</mat-icon>
               Professional Details
@@ -79,15 +88,21 @@
                 <mat-label>Professional Title</mat-label>
                 <mat-icon matPrefix>badge</mat-icon>
                 <input matInput formControlName="title" placeholder="e.g. Full Stack Developer">
-                <mat-error *ngIf="setupForm.get('title')?.hasError('required')">Title is required</mat-error>
+                @if (setupForm.get('title')?.hasError('required')) {
+<mat-error>Title is required</mat-error>
+}
               </mat-form-field>
 
               <mat-form-field appearance="outline" class="half-width">
-                <mat-label>Hourly Rate (ZAR)</mat-label>
+                <mat-label>Hourly Rate (USD)</mat-label>
                 <mat-icon matPrefix>payments</mat-icon>
                 <input matInput type="number" formControlName="hourlyRate" placeholder="e.g. 50">
-                <mat-error *ngIf="setupForm.get('hourlyRate')?.hasError('required')">Hourly rate is required</mat-error>
-                <mat-error *ngIf="setupForm.get('hourlyRate')?.hasError('min')">Must be greater than 0</mat-error>
+                @if (setupForm.get('hourlyRate')?.hasError('required')) {
+<mat-error>Hourly rate is required</mat-error>
+}
+                @if (setupForm.get('hourlyRate')?.hasError('min')) {
+<mat-error>Must be greater than 0</mat-error>
+}
               </mat-form-field>
             </div>
 
@@ -95,9 +110,11 @@
               <mat-label>Availability</mat-label>
               <mat-icon matPrefix>schedule</mat-icon>
               <mat-select formControlName="availability">
-                <mat-option *ngFor="let opt of availabilityOptions" [value]="opt.value">
+                @for (opt of availabilityOptions; track opt) {
+<mat-option [value]="opt.value">
                   {{ opt.label }}
                 </mat-option>
+}
               </mat-select>
             </mat-form-field>
 
@@ -111,12 +128,14 @@
               <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Search and select skills</mat-label>
                 <mat-chip-grid #chipGrid>
-                  <mat-chip-row *ngFor="let skill of skills" (removed)="removeSkill(skill)">
+                  @for (skill of skills; track skill) {
+<mat-chip-row (removed)="removeSkill(skill)">
                     {{ skill }}
                     <button matChipRemove>
                       <mat-icon>cancel</mat-icon>
                     </button>
                   </mat-chip-row>
+}
                 </mat-chip-grid>
                 <input
                   placeholder="e.g. Angular, Python, Figma..."
@@ -125,21 +144,27 @@
                   [matAutocomplete]="skillAuto"
                 >
                 <mat-autocomplete #skillAuto="matAutocomplete" (optionSelected)="selectSkill($event)">
-                  <mat-option *ngFor="let skill of filteredSkills" [value]="skill">
+                  @for (skill of filteredSkills; track skill) {
+<mat-option [value]="skill">
                     {{ skill }}
                   </mat-option>
+}
                 </mat-autocomplete>
               </mat-form-field>
 
-              <p class="skills-hint" *ngIf="skills.length === 0">
+              @if (skills.length === 0) {
+<p class="skills-hint">
                 <mat-icon>info</mat-icon>
                 Add at least one skill to complete your profile
               </p>
+}
             </div>
           </div>
+}
 
           <!-- Section: Customer-specific -->
-          <div class="form-section" *ngIf="!isFreelancer">
+          @if (!isFreelancer) {
+<div class="form-section">
             <h2 class="section-title">
               <mat-icon>business</mat-icon>
               Company Details
@@ -149,16 +174,21 @@
               <mat-label>Company Name</mat-label>
               <mat-icon matPrefix>apartment</mat-icon>
               <input matInput formControlName="company" placeholder="e.g. Acme Corp">
-              <mat-error *ngIf="setupForm.get('company')?.hasError('required')">Company name is required</mat-error>
+              @if (setupForm.get('company')?.hasError('required')) {
+<mat-error>Company name is required</mat-error>
+}
             </mat-form-field>
 
             <mat-form-field appearance="outline" class="full-width">
               <mat-label>Industry</mat-label>
               <mat-icon matPrefix>category</mat-icon>
               <input matInput formControlName="industry" placeholder="e.g. Technology, Finance, Healthcare">
-              <mat-error *ngIf="setupForm.get('industry')?.hasError('required')">Industry is required</mat-error>
+              @if (setupForm.get('industry')?.hasError('required')) {
+<mat-error>Industry is required</mat-error>
+}
             </mat-form-field>
           </div>
+}
 
           <!-- Submit -->
           <div class="form-actions">
@@ -169,8 +199,12 @@
               class="submit-button"
               [disabled]="submitting"
             >
-              <mat-spinner *ngIf="submitting" diameter="20"></mat-spinner>
-              <mat-icon *ngIf="!submitting">check_circle</mat-icon>
+              @if (submitting) {
+<mat-spinner diameter="20"></mat-spinner>
+}
+              @if (!submitting) {
+<mat-icon>check_circle</mat-icon>
+}
               {{ submitting ? 'Saving...' : 'Complete Profile & Get Started' }}
             </button>
           </div>

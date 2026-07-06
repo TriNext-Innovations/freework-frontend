@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -10,16 +10,17 @@ import { ReviewSummary } from '../models';
 @Component({
     selector: 'app-rating-summary',
     imports: [
-        CommonModule,
-        MatCardModule,
-        MatIconModule,
-        MatProgressBarModule,
-        MatChipsModule
-    ],
+    MatCardModule,
+    MatIconModule,
+    MatProgressBarModule,
+    MatChipsModule
+],
     templateUrl: './rating-summary.component.html',
     styleUrls: ['./rating-summary.component.scss']
 })
 export class RatingSummaryComponent implements OnInit, OnChanges {
+  private reviewService = inject(ReviewService);
+
   @Input() targetId!: string;
   @Input() targetType: 'job' | 'user' = 'job';
   @Input() showTitle = true;
@@ -27,8 +28,6 @@ export class RatingSummaryComponent implements OnInit, OnChanges {
   summary?: ReviewSummary;
   loading = true;
   error = false;
-
-  constructor(private reviewService: ReviewService) {}
 
   ngOnInit(): void {
     this.loadSummary();

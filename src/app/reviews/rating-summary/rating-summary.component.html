@@ -1,43 +1,55 @@
 <mat-card class="rating-summary-card">
-  <mat-card-header *ngIf="showTitle">
+  @if (showTitle) {
+<mat-card-header>
     <mat-card-title>
       <mat-icon>star_rate</mat-icon>
       Ratings & Reviews
     </mat-card-title>
   </mat-card-header>
+}
 
   <mat-card-content>
     <!-- Loading State -->
-    <div *ngIf="loading" class="loading-state">
+    @if (loading) {
+<div class="loading-state">
       <mat-icon class="loading-icon">hourglass_empty</mat-icon>
       <p>Loading ratings...</p>
     </div>
+}
 
     <!-- Error State -->
-    <div *ngIf="error && !loading" class="error-state">
+    @if (error && !loading) {
+<div class="error-state">
       <mat-icon class="error-icon">error_outline</mat-icon>
       <p>Unable to load ratings</p>
     </div>
+}
 
     <!-- Rating Summary Content -->
-    <div *ngIf="summary && !loading && !error">
+    @if (summary && !loading && !error) {
+<div>
       <!-- No Reviews State -->
-      <div *ngIf="summary.totalReviews === 0" class="no-reviews">
+      @if (summary.totalReviews === 0) {
+<div class="no-reviews">
         <mat-icon class="no-reviews-icon">reviews</mat-icon>
         <h3>No reviews yet</h3>
         <p>Be the first to leave a review!</p>
       </div>
+}
 
       <!-- Has Reviews -->
-      <div *ngIf="summary.totalReviews > 0" class="summary-content">
+      @if (summary.totalReviews > 0) {
+<div class="summary-content">
         <!-- Overall Rating -->
         <div class="overall-rating">
           <div class="rating-number">{{ summary.averageRating.toFixed(1) }}</div>
           <div class="rating-details">
             <div class="stars">
-              <mat-icon *ngFor="let star of getStarArray()" color="primary" class="star-icon">
+              @for (star of getStarArray(); track star) {
+<mat-icon color="primary" class="star-icon">
                 {{ getStarIcon(star) }}
               </mat-icon>
+}
             </div>
             <div class="rating-label">{{ getRatingLabel() }}</div>
             <div class="total-reviews">{{ summary.totalReviews }} {{ summary.totalReviews === 1 ? 'review' : 'reviews' }}</div>
@@ -47,7 +59,8 @@
         <!-- Rating Distribution -->
         <div class="rating-distribution">
           <h3 class="distribution-title">Rating Breakdown</h3>
-          <div class="rating-bar" *ngFor="let stars of [5, 4, 3, 2, 1]">
+          @for (stars of [5, 4, 3, 2, 1]; track stars) {
+<div class="rating-bar">
             <div class="star-label">
               {{ stars }}
               <mat-icon class="small-star">star</mat-icon>
@@ -60,8 +73,11 @@
             ></mat-progress-bar>
             <div class="count-label">{{ getRatingCount(stars) }}</div>
           </div>
+}
         </div>
       </div>
+}
     </div>
+}
   </mat-card-content>
 </mat-card>

@@ -1,27 +1,34 @@
 <div class="edit-container">
   <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
+  @if (isLoading) {
+<div class="loading-container">
     <mat-spinner diameter="48"></mat-spinner>
     <p>Loading profile...</p>
   </div>
+}
 
   <!-- Error State -->
-  <div *ngIf="error && !isLoading && !profile" class="error-container">
+  @if (error && !isLoading && !profile) {
+<div class="error-container">
     <mat-icon class="error-state-icon">error_outline</mat-icon>
     <p>{{ error }}</p>
     <button mat-raised-button color="primary" (click)="loadProfile()">Try Again</button>
   </div>
+}
 
   <!-- Edit Form -->
-  <div *ngIf="!isLoading && profile" class="edit-content">
+  @if (!isLoading && profile) {
+<div class="edit-content">
     <!-- First Time Profile Completion Banner -->
-    <div *ngIf="isFirstTime" class="alert alert-info first-time-banner">
+    @if (isFirstTime) {
+<div class="alert alert-info first-time-banner">
       <mat-icon>info</mat-icon>
       <div>
         <h3>Welcome to Freework!</h3>
         <p>Please complete your profile to start {{ profile.role === 'FREELANCER' ? 'browsing and applying for jobs' : 'posting jobs and hiring freelancers' }}.</p>
       </div>
     </div>
+}
 
     <div class="page-header">
       <h1><mat-icon>manage_accounts</mat-icon> {{ isFirstTime ? 'Complete Your Profile' : 'Edit Profile' }}</h1>
@@ -29,16 +36,20 @@
     </div>
 
     <!-- Success Message -->
-    <div *ngIf="successMessage" class="alert alert-success">
+    @if (successMessage) {
+<div class="alert alert-success">
       <mat-icon>check_circle</mat-icon>
       {{ successMessage }}
     </div>
+}
 
     <!-- Error Message -->
-    <div *ngIf="error" class="alert alert-error">
+    @if (error) {
+<div class="alert alert-error">
       <mat-icon>error</mat-icon>
       {{ error }}
     </div>
+}
 
     <form [formGroup]="profileForm" (ngSubmit)="onSubmit()" class="profile-form">
       <!-- Profile Picture Section -->
@@ -46,14 +57,18 @@
         <h2>Profile Picture</h2>
         <div class="picture-upload">
           <div class="current-picture">
-            <img
-              *ngIf="previewUrl || profile.profilePicture"
+            @if (previewUrl || profile.profilePicture) {
+<img
+             
               [src]="previewUrl || profile.profilePicture"
               alt="Profile picture"
             />
-            <div *ngIf="!previewUrl && !profile.profilePicture" class="picture-placeholder">
+}
+            @if (!previewUrl && !profile.profilePicture) {
+<div class="picture-placeholder">
               <mat-icon>person</mat-icon>
             </div>
+}
           </div>
           <div class="upload-controls">
             <input
@@ -66,8 +81,9 @@
             <button type="button" mat-stroked-button (click)="fileInput.click()">
               <mat-icon>upload</mat-icon> Choose Photo
             </button>
-            <button
-              *ngIf="selectedFile"
+            @if (selectedFile) {
+<button
+             
               type="button"
               mat-raised-button
               color="primary"
@@ -76,6 +92,7 @@
             >
               <mat-icon>save</mat-icon> Upload Photo
             </button>
+}
             <p class="help-text">Recommended: Square image, at least 400×400px</p>
           </div>
         </div>
@@ -93,9 +110,11 @@
               formControlName="firstName"
               [class.invalid]="isFieldInvalid('firstName')"
             />
-            <span *ngIf="isFieldInvalid('firstName')" class="field-error">
+            @if (isFieldInvalid('firstName')) {
+<span class="field-error">
               {{ getErrorMessage('firstName') }}
             </span>
+}
           </div>
 
           <div class="form-group">
@@ -106,9 +125,11 @@
               formControlName="lastName"
               [class.invalid]="isFieldInvalid('lastName')"
             />
-            <span *ngIf="isFieldInvalid('lastName')" class="field-error">
+            @if (isFieldInvalid('lastName')) {
+<span class="field-error">
               {{ getErrorMessage('lastName') }}
             </span>
+}
           </div>
 
           <div class="form-group">
@@ -130,7 +151,8 @@
       </div>
 
       <!-- Freelancer Specific Fields -->
-      <ng-container *ngIf="isFreelancer()">
+      @if (isFreelancer()) {
+
         <div class="form-section">
           <h2>Professional Information</h2>
           <div class="form-grid">
@@ -147,9 +169,11 @@
             <div class="form-group full-width">
               <label for="availability">Availability</label>
               <select id="availability" formControlName="availability">
-                <option *ngFor="let option of availabilityOptions" [value]="option.value">
+                @for (option of availabilityOptions; track option) {
+<option [value]="option.value">
                   {{ option.label }}
                 </option>
+}
               </select>
             </div>
 
@@ -180,7 +204,8 @@
         <div class="form-section">
           <h2>Languages</h2>
           <div formArrayName="languages" class="languages-section">
-            <div *ngFor="let language of languages.controls; let i = index" [formGroupName]="i" class="language-item">
+            @for (language of languages.controls; track language; let i = $index) {
+<div [formGroupName]="i" class="language-item">
               <div class="language-item-fields">
                 <div class="form-group">
                   <label [for]="'languageName' + i">Language</label>
@@ -189,7 +214,9 @@
                 <div class="form-group">
                   <label [for]="'languageProficiency' + i">Proficiency</label>
                   <select [id]="'languageProficiency' + i" formControlName="proficiency">
-                    <option *ngFor="let option of proficiencyOptions" [value]="option.value">{{ option.label }}</option>
+                    @for (option of proficiencyOptions; track option) {
+<option [value]="option.value">{{ option.label }}</option>
+}
                   </select>
                 </div>
                 <button type="button" mat-icon-button color="warn" (click)="removeLanguage(i)" aria-label="Remove language" class="remove-language-btn">
@@ -197,15 +224,18 @@
                 </button>
               </div>
             </div>
+}
             <button type="button" mat-stroked-button (click)="addLanguage()" class="add-language-btn">
               <mat-icon>add</mat-icon> Add Language
             </button>
           </div>
         </div>
-      </ng-container>
+      
+}
 
       <!-- Customer Specific Fields -->
-      <ng-container *ngIf="isCustomer()">
+      @if (isCustomer()) {
+
         <div class="form-section">
           <h2>Company Information</h2>
           <div class="form-grid">
@@ -237,7 +267,8 @@
             </div>
           </div>
         </div>
-      </ng-container>
+      
+}
 
       <!-- Bio Section -->
       <div class="form-section">
@@ -264,10 +295,12 @@
             <input type="url" id="linkedin" formControlName="linkedin" placeholder="https://linkedin.com/in/yourprofile" />
           </div>
 
-          <div class="form-group" *ngIf="isFreelancer()">
+          @if (isFreelancer()) {
+<div class="form-group">
             <label for="github"><mat-icon class="label-icon">code</mat-icon> GitHub</label>
             <input type="url" id="github" formControlName="github" placeholder="https://github.com/yourusername" />
           </div>
+}
 
           <div class="form-group">
             <label for="twitter"><mat-icon class="label-icon">alternate_email</mat-icon> Twitter / X</label>
@@ -279,28 +312,34 @@
             <input type="url" id="websiteLink" formControlName="website" placeholder="https://yourwebsite.com" />
           </div>
 
-          <div class="form-group" *ngIf="isFreelancer()">
+          @if (isFreelancer()) {
+<div class="form-group">
             <label for="behance"><mat-icon class="label-icon">palette</mat-icon> Behance</label>
             <input type="url" id="behance" formControlName="behance" placeholder="https://behance.net/yourprofile" />
           </div>
+}
 
-          <div class="form-group" *ngIf="isFreelancer()">
+          @if (isFreelancer()) {
+<div class="form-group">
             <label for="dribbble"><mat-icon class="label-icon">sports_basketball</mat-icon> Dribbble</label>
             <input type="url" id="dribbble" formControlName="dribbble" placeholder="https://dribbble.com/yourusername" />
           </div>
+}
         </div>
       </div>
 
       <!-- Action Buttons -->
       <div class="form-actions">
-        <button
-          *ngIf="!isFirstTime"
+        @if (!isFirstTime) {
+<button
+         
           type="button"
           mat-stroked-button
           (click)="cancel()"
           [disabled]="isSaving">
           Cancel
         </button>
+}
         <button type="submit" mat-raised-button color="primary" [disabled]="isSaving || profileForm.invalid">
           <mat-icon>save</mat-icon>
           {{ isSaving ? 'Saving...' : (isFirstTime ? 'Complete Profile' : 'Save Changes') }}
@@ -308,4 +347,5 @@
       </div>
     </form>
   </div>
+}
 </div>

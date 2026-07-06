@@ -45,7 +45,7 @@
 
   &.error-icon {
     background: rgba(244, 67, 54, 0.15);
-    color: #f44336;
+    color: var(--color-error-500);
   }
 }
 
@@ -54,7 +54,7 @@ h2 {
 }
 
 p {
-  color: var(--mat-app-on-surface-variant, #aaa);
+  color: var(--color-text-secondary);
   margin: 0.5rem 0;
   line-height: 1.6;
 }

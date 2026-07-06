@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -39,9 +39,9 @@ export interface PopiaRequestResponse {
 
 @Injectable({ providedIn: 'root' })
 export class LegalService {
-  private apiUrl = environment.apiUrl;
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private apiUrl = environment.apiUrl;
 
   recordConsents(consents: ConsentItem[]): Observable<void> {
     return this.http.post<void>(`${this.apiUrl}/api/consent/record`, { consents });

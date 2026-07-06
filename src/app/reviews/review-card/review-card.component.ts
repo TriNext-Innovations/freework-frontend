@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,14 +11,13 @@ import { Review } from '../models';
 @Component({
     selector: 'app-review-card',
     imports: [
-        CommonModule,
-        MatCardModule,
-        MatIconModule,
-        MatButtonModule,
-        MatChipsModule,
-        MatDividerModule,
-        MatTooltipModule
-    ],
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatChipsModule,
+    MatDividerModule,
+    MatTooltipModule
+],
     templateUrl: './review-card.component.html',
     styleUrls: ['./review-card.component.scss']
 })

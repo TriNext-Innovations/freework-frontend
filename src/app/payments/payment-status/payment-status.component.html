@@ -9,16 +9,22 @@
 
     <mat-card-content>
       <!-- Current Status Badge -->
-      <div class="current-status" *ngIf="currentStatus">
-        <mat-chip [color]="getStatusColor(currentStatus)" class="status-chip">
+      @if (currentStatus) {
+<div class="current-status">
+        <span class="status-pill" [class]="getStatusClass(currentStatus)">
           <mat-icon>{{ statusSteps[getCurrentStep()].icon || 'info' }}</mat-icon>
-          {{ currentStatus }}
-        </mat-chip>
-        <p class="status-message" *ngIf="statusMessage">{{ statusMessage }}</p>
-        <p class="last-updated" *ngIf="lastUpdated">
+          {{ currentStatus | titlecase }}
+        </span>
+        @if (statusMessage) {
+<p class="status-message">{{ statusMessage }}</p>
+}
+        @if (lastUpdated) {
+<p class="last-updated">
           Last updated: {{ lastUpdated | date:'medium' }}
         </p>
+}
       </div>
+}
 
       <!-- Progress Bar -->
       <div class="progress-section">
@@ -31,25 +37,37 @@
 
       <!-- Status Timeline -->
       <div class="status-timeline">
-        <div
-          *ngFor="let step of statusSteps; let i = index"
+        @for (step of statusSteps; track step; let i = $index) {
+<div
+         
           class="timeline-step"
           [class.completed]="isStepCompleted(i)"
           [class.active]="isStepActive(i)"
         >
           <div class="step-indicator">
             <div class="step-circle">
-              <mat-icon *ngIf="isStepCompleted(i)">{{ step.icon }}</mat-icon>
-              <span *ngIf="!isStepCompleted(i)">{{ i + 1 }}</span>
+              @if (isStepCompleted(i)) {
+<mat-icon>{{ step.icon }}</mat-icon>
+}
+              @if (!isStepCompleted(i)) {
+<span>{{ i + 1 }}</span>
+}
             </div>
-            <div class="step-line" *ngIf="i < statusSteps.length - 1"></div>
+            @if (i < statusSteps.length - 1) {
+<div class="step-line"></div>
+}
           </div>
           <div class="step-content">
             <h4>{{ step.label }}</h4>
-            <p *ngIf="isStepActive(i)">Current Status</p>
-            <p *ngIf="isStepCompleted(i) && !isStepActive(i)">Completed</p>
+            @if (isStepActive(i)) {
+<p>Current Status</p>
+}
+            @if (isStepCompleted(i) && !isStepActive(i)) {
+<p>Completed</p>
+}
           </div>
         </div>
+}
       </div>
 
       <!-- Status Descriptions -->

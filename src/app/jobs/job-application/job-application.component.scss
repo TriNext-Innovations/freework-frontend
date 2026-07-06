@@ -145,8 +145,8 @@
 // Limit Card
 .limit-card {
   margin-bottom: var(--spacing-lg);
-  background: #fef3c7;
-  border: 1px solid #f59e0b;
+  background: var(--color-warning-50);
+  border: 1px solid var(--color-warning-500);
   border-radius: 12px !important;
 
   .warning-content {
@@ -155,9 +155,9 @@
     gap: var(--spacing-md);
     margin-bottom: var(--spacing-md);
 
-    mat-icon { color: #d97706; font-size: 1.5rem; width: 1.5rem; height: 1.5rem; flex-shrink: 0; }
-    strong { display: block; font-size: 0.9rem; margin-bottom: 4px; color: #92400e; }
-    p { color: #92400e; font-size: 0.813rem; margin: 0; line-height: 1.5; }
+    mat-icon { color: var(--color-warning-600); font-size: 1.5rem; width: 1.5rem; height: 1.5rem; flex-shrink: 0; }
+    strong { display: block; font-size: 0.9rem; margin-bottom: 4px; color: var(--color-warning-600); }
+    p { color: var(--color-warning-600); font-size: 0.813rem; margin: 0; line-height: 1.5; }
   }
 
   .upgrade-cta-btn {

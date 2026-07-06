@@ -1,10 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
+import { TitleCasePipe } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
@@ -17,33 +17,32 @@ import { MessagingService } from '../../messaging/messaging.service';
 @Component({
     selector: 'app-job-applications',
     imports: [
-        CommonModule,
-        RouterLink,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatChipsModule,
-        MatProgressSpinnerModule,
-        MatDividerModule,
-        MatSnackBarModule
-    ],
+    TitleCasePipe,
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatDividerModule,
+    MatSnackBarModule
+],
     templateUrl: './job-applications.component.html',
     styleUrl: './job-applications.component.scss'
 })
 export class JobApplicationsComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private applicationService = inject(ApplicationService);
+  private jobService = inject(JobService);
+  private messagingService = inject(MessagingService);
+  private snackBar = inject(MatSnackBar);
+
   job: Job | null = null;
   applications: JobApplication[] = [];
   loading = false;
+  loadFailed = false;
+  private jobId: string | null = null;
   ApplicationStatus = ApplicationStatus;
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private applicationService: ApplicationService,
-    private jobService: JobService,
-    private messagingService: MessagingService,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     const jobId = this.route.snapshot.paramMap.get('id');
@@ -51,8 +50,13 @@ export class JobApplicationsComponent implements OnInit {
       this.router.navigate(['/jobs']);
       return;
     }
+    this.jobId = jobId;
     this.loadJob(jobId);
     this.loadApplications(jobId);
+  }
+
+  retry(): void {
+    if (this.jobId) this.loadApplications(this.jobId);
   }
 
   loadJob(jobId: string): void {
@@ -64,6 +68,7 @@ export class JobApplicationsComponent implements OnInit {
 
   loadApplications(jobId: string): void {
     this.loading = true;
+    this.loadFailed = false;
     this.applicationService.getJobApplications(jobId).subscribe({
       next: (applications) => {
         this.applications = applications;
@@ -71,7 +76,7 @@ export class JobApplicationsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading applications:', error);
-        this.showError('Failed to load applications');
+        this.loadFailed = true;
         this.loading = false;
       }
     });
@@ -105,14 +110,8 @@ export class JobApplicationsComponent implements OnInit {
     });
   }
 
-  getStatusColor(status: ApplicationStatus): string {
-    const colors: Record<string, string> = {
-      [ApplicationStatus.PENDING]: 'primary',
-      [ApplicationStatus.ACCEPTED]: 'accent',
-      [ApplicationStatus.REJECTED]: 'warn',
-      [ApplicationStatus.WITHDRAWN]: ''
-    };
-    return colors[status] || '';
+  getStatusClass(status: ApplicationStatus): string {
+    return `status-${status.toLowerCase()}`;
   }
 
   getStatusIcon(status: ApplicationStatus): string {

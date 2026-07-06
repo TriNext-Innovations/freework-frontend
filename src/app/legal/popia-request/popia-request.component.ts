@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
@@ -29,6 +29,9 @@ import { LegalService, PopiaRequestResponse } from '../legal.service';
     styleUrl: './popia-request.component.scss'
 })
 export class PopiaRequestComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private legalService = inject(LegalService);
+
   form!: FormGroup;
   loading = false;
   submitted = false;
@@ -46,11 +49,6 @@ export class PopiaRequestComponent implements OnInit {
     { value: 'complaint', label: 'Lodge a complaint' },
     { value: 'other', label: 'Other' }
   ];
-
-  constructor(
-    private fb: FormBuilder,
-    private legalService: LegalService
-  ) {}
 
   ngOnInit(): void {
     this.form = this.fb.group({

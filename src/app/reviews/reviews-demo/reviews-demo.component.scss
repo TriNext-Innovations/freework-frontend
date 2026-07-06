@@ -2,7 +2,7 @@
   max-width: 1400px;
   margin: 0 auto;
   padding: 2rem;
-  background: #fafafa;
+  background: var(--color-surface);
   min-height: 100vh;
 }
 
@@ -24,7 +24,7 @@
       font-size: 3rem;
       width: 3rem;
       height: 3rem;
-      color: #ffa000;
+      color: var(--color-warning-500);
     }
   }
 
@@ -51,7 +51,7 @@
 
 .info-card {
   margin-bottom: 2rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-accent-600) 0%, var(--color-accent-700) 100%);
   color: white;
 
   mat-card-title {
@@ -86,7 +86,7 @@
     color: var(--color-text-primary);
     margin: 0 0 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid #e2e8f0;
+    border-bottom: 2px solid var(--color-border);
   }
 }
 
@@ -110,8 +110,8 @@
   justify-content: center;
   gap: 1rem;
   padding: 3rem;
-  background: #f7fafc;
-  border: 2px dashed #cbd5e0;
+  background: var(--color-surface);
+  border: 2px dashed var(--color-text-tertiary);
   border-radius: 12px;
   color: var(--color-text-secondary);
 
@@ -160,7 +160,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: var(--color-text-tertiary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -181,10 +181,10 @@
       right: 1rem;
       background: white;
       z-index: 10;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 2px 8px var(--color-border);
 
       &:hover {
-        background: #f5f5f5;
+        background: var(--color-surface);
       }
     }
   }
@@ -197,10 +197,10 @@
   margin: 1.5rem 0;
 
   .doc-section {
-    background: #f7fafc;
+    background: var(--color-surface);
     padding: 1.5rem;
     border-radius: 8px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid var(--color-accent-600);
 
     h4 {
       display: flex;
@@ -211,14 +211,14 @@
       color: var(--color-text-primary);
 
       mat-icon {
-        color: #667eea;
+        color: var(--color-accent-600);
       }
     }
 
     p {
       margin: 0.5rem 0;
       font-size: 0.9375rem;
-      color: #4a5568;
+      color: var(--color-text-secondary);
 
       strong {
         color: var(--color-text-primary);
@@ -237,12 +237,12 @@
     }
 
     code {
-      background: #e2e8f0;
+      background: var(--color-border);
       padding: 0.125rem 0.375rem;
       border-radius: 4px;
       font-family: 'Courier New', monospace;
       font-size: 0.875rem;
-      color: #667eea;
+      color: var(--color-accent-600);
     }
   }
 }
@@ -259,7 +259,7 @@
 
   pre {
     background: var(--color-text-primary);
-    color: #e2e8f0;
+    color: var(--color-border);
     padding: 1rem;
     border-radius: 8px;
     overflow-x: auto;
@@ -278,7 +278,7 @@
   padding: 1.5rem;
   background: #fff5e6;
   border-radius: 8px;
-  border-left: 4px solid #ffa000;
+  border-left: 4px solid var(--color-warning-500);
 
   h3 {
     font-size: 1.25rem;
@@ -288,15 +288,15 @@
 
   p {
     margin: 0.5rem 0;
-    color: #4a5568;
+    color: var(--color-text-secondary);
 
     code {
-      background: #ffe0b2;
+      background: var(--color-warning-50);
       padding: 0.125rem 0.375rem;
       border-radius: 4px;
       font-family: 'Courier New', monospace;
       font-size: 0.875rem;
-      color: #e65100;
+      color: var(--color-warning-600);
     }
   }
 
@@ -318,17 +318,17 @@
   margin-bottom: 2rem;
 
   .review-type-card {
-    border: 2px solid #e2e8f0;
+    border: 2px solid var(--color-border);
     transition: all 0.3s ease;
 
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-      border-color: #667eea;
+      border-color: var(--color-accent-600);
     }
 
     mat-card-header {
-      background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+      background: linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface) 100%);
       padding: 1.5rem;
       margin-bottom: 1rem;
 
@@ -339,11 +339,11 @@
         margin-bottom: 1rem;
 
         &.customer-icon {
-          color: #667eea;
+          color: var(--color-accent-600);
         }
 
         &.freelancer-icon {
-          color: #f56565;
+          color: var(--color-error-500);
         }
       }
 
@@ -360,7 +360,7 @@
       p {
         font-weight: 500;
         margin-bottom: 0.75rem;
-        color: #4a5568;
+        color: var(--color-text-secondary);
       }
 
       ul {
@@ -387,7 +387,7 @@
 }
 
 .form-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, var(--color-accent-600) 0%, var(--color-accent-700) 100%);
   color: white;
   padding: 1rem 1.5rem;
   border-radius: 8px 8px 0 0;

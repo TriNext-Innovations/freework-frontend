@@ -5,7 +5,7 @@
 }
 
 .danger-icon {
-  color: #f44336;
+  color: var(--color-error-500);
 }
 
 .warning-box {
@@ -19,20 +19,20 @@
   margin-bottom: 1.25rem;
 
   mat-icon {
-    color: #f44336;
+    color: var(--color-error-500);
     flex-shrink: 0;
   }
 
   p {
     margin: 0;
-    color: #ff8a80;
+    color: var(--color-error-500);
   }
 }
 
 h4 {
   font-size: 0.875rem;
   margin: 0.75rem 0 0.4rem;
-  color: var(--mat-app-on-surface, #fff);
+  color: var(--color-text-primary);
 }
 
 .deletion-list {
@@ -42,18 +42,18 @@ h4 {
   line-height: 1.6;
 
   &.deleted li {
-    color: var(--mat-app-on-surface-variant, #aaa);
+    color: var(--color-text-secondary);
   }
 
   &.retained li {
-    color: var(--mat-app-on-surface-variant, #aaa);
+    color: var(--color-text-secondary);
   }
 }
 
 .confirm-instruction {
   font-size: 0.875rem;
   margin: 1rem 0 0.5rem;
-  color: var(--mat-app-on-surface-variant, #ccc);
+  color: var(--color-text-secondary);
 }
 
 .full-width {
@@ -64,13 +64,13 @@ h4 {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  color: #f44336;
+  color: var(--color-error-500);
   font-size: 0.875rem;
   margin-top: 0.5rem;
 }
 
 .delete-btn {
-  background: #f44336 !important;
+  background: var(--color-error-500) !important;
   color: white !important;
   display: flex;
   align-items: center;

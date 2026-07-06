@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule, AsyncPipe } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -28,6 +28,9 @@ interface PricingVm {
   styleUrl: './pricing.component.scss'
 })
 export class PricingComponent implements OnInit {
+  authService = inject(AuthService);
+  subscriptionService = inject(SubscriptionService);
+
 
   readonly FREE_APPLICATION_LIMIT = 10;
   readonly FREE_JOB_LIMIT = 2;
@@ -50,11 +53,6 @@ export class PricingComponent implements OnInit {
       loading: false
     }))
   );
-
-  constructor(
-    public authService: AuthService,
-    public subscriptionService: SubscriptionService
-  ) {}
 
   ngOnInit(): void {
     if (this.authService.isLoggedIn()) {

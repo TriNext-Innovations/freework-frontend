@@ -1,5 +1,5 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, OnInit, OnChanges, SimpleChanges, inject } from '@angular/core';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,21 +15,23 @@ import { Review, ReviewType } from '../models';
 @Component({
     selector: 'app-review-list',
     imports: [
-        CommonModule,
-        FormsModule,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatSelectModule,
-        MatFormFieldModule,
-        MatProgressSpinnerModule,
-        MatSnackBarModule,
-        ReviewCardComponent
-    ],
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    ReviewCardComponent
+],
     templateUrl: './review-list.component.html',
     styleUrls: ['./review-list.component.scss']
 })
 export class ReviewListComponent implements OnInit, OnChanges {
+  private reviewService = inject(ReviewService);
+  private snackBar = inject(MatSnackBar);
+
   @Input() jobId?: string;
   @Input() userId?: string;
   @Input() reviewType?: ReviewType;
@@ -45,11 +47,6 @@ export class ReviewListComponent implements OnInit, OnChanges {
   // Filter options
   selectedRating = 'all';
   selectedSort = 'date-desc';
-
-  constructor(
-    private reviewService: ReviewService,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     this.loadReviews();

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
@@ -9,11 +9,11 @@ import { buildApiEndpointUrl } from '../api.config';
   providedIn: 'root'
 })
 export class MessagingService {
+  private http = inject(HttpClient);
+
   private apiUrl = buildApiEndpointUrl('/messages');
   private unreadCountSubject = new BehaviorSubject<number>(0);
   public unreadCount$ = this.unreadCountSubject.asObservable();
-
-  constructor(private http: HttpClient) {}
 
   getConversations(): Observable<ConversationListResponse> {
     return this.http.get<ConversationListResponse>(`${this.apiUrl}/conversations`).pipe(

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { FormBuilder, FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -21,23 +21,28 @@ import { SKILLS_DATABASE } from '../../jobs/models/job.models';
 @Component({
     selector: 'app-profile-setup',
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatSnackBarModule,
-        MatChipsModule,
-        MatSelectModule,
-        MatAutocompleteModule,
-    ],
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatChipsModule,
+    MatSelectModule,
+    MatAutocompleteModule
+],
     templateUrl: './profile-setup.component.html',
     styleUrls: ['./profile-setup.component.scss']
 })
 export class ProfileSetupComponent implements OnInit, CanDeactivateProfileSetup {
+  private fb = inject(FormBuilder);
+  private router = inject(Router);
+  private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
+  private snackBar = inject(MatSnackBar);
+
   setupForm!: FormGroup;
   skillInputControl = new FormControl('');
   submitting = false;
@@ -52,14 +57,6 @@ export class ProfileSetupComponent implements OnInit, CanDeactivateProfileSetup 
     { value: 'PART_TIME', label: 'Part Time' },
     { value: 'CONTRACT', label: 'Contract / Project Based' },
   ];
-
-  constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private authService: AuthService,
-    private profileService: ProfileService,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     const user = this.authService.currentUserValue;

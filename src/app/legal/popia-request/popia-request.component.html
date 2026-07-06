@@ -8,7 +8,8 @@
   </div>
 
   <!-- Submitted confirmation -->
-  <mat-card *ngIf="submitted && submittedRequest" class="success-card">
+  @if (submitted && submittedRequest) {
+<mat-card class="success-card">
     <mat-card-content>
       <div class="success-message">
         <mat-icon>check_circle</mat-icon>
@@ -26,9 +27,11 @@
       <button mat-stroked-button (click)="submitted = false" class="new-request-btn">Submit Another Request</button>
     </mat-card-content>
   </mat-card>
+}
 
   <!-- Request Form -->
-  <mat-card *ngIf="!submitted" class="popia-form-card">
+  @if (!submitted) {
+<mat-card class="popia-form-card">
     <mat-card-header>
       <mat-card-title>Submit a Data Request</mat-card-title>
       <mat-card-subtitle>Your request will be processed within 30 days as required by Section 23 of POPIA.</mat-card-subtitle>
@@ -38,11 +41,15 @@
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Request Type</mat-label>
           <mat-select formControlName="requestType">
-            <mat-option *ngFor="let type of requestTypes" [value]="type.value">
+            @for (type of requestTypes; track type) {
+<mat-option [value]="type.value">
               {{ type.label }}
             </mat-option>
+}
           </mat-select>
-          <mat-error *ngIf="form.get('requestType')?.hasError('required')">Please select a request type</mat-error>
+          @if (form.get('requestType')?.hasError('required')) {
+<mat-error>Please select a request type</mat-error>
+}
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
@@ -53,31 +60,44 @@
             rows="5"
             placeholder="Provide any additional context or specific information you require..."></textarea>
           <mat-hint align="end">{{ form.get('details')?.value?.length || 0 }}/2000</mat-hint>
-          <mat-error *ngIf="form.get('details')?.hasError('maxlength')">Maximum 2000 characters</mat-error>
+          @if (form.get('details')?.hasError('maxlength')) {
+<mat-error>Maximum 2000 characters</mat-error>
+}
         </mat-form-field>
 
-        <div *ngIf="errorMessage" class="error-box">
+        @if (errorMessage) {
+<div class="error-box">
           <mat-icon>error</mat-icon>
           <span>{{ errorMessage }}</span>
         </div>
+}
 
         <button mat-flat-button color="primary" type="submit" [disabled]="loading" class="submit-btn">
-          <mat-spinner *ngIf="loading" diameter="18"></mat-spinner>
-          <span *ngIf="!loading">Submit Request</span>
-          <span *ngIf="loading">Submitting...</span>
+          @if (loading) {
+<mat-spinner diameter="18"></mat-spinner>
+}
+          @if (!loading) {
+<span>Submit Request</span>
+}
+          @if (loading) {
+<span>Submitting...</span>
+}
         </button>
       </form>
     </mat-card-content>
   </mat-card>
+}
 
   <!-- Previous requests -->
-  <mat-card *ngIf="myRequests.length > 0" class="requests-card">
+  @if (myRequests.length > 0) {
+<mat-card class="requests-card">
     <mat-card-header>
       <mat-card-title>My Previous Requests</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <div class="request-list">
-        <div *ngFor="let req of myRequests" class="request-item">
+        @for (req of myRequests; track req) {
+<div class="request-item">
           <div class="request-header">
             <span class="request-type">{{ req.requestType }}</span>
             <span class="status-badge" [ngClass]="getStatusColor(req.status)">{{ getStatusLabel(req.status) }}</span>
@@ -87,12 +107,16 @@
             <span class="meta-sep">|</span>
             <span>Submitted {{ req.submittedAt | date:'d MMM yyyy' }}</span>
           </div>
-          <p *ngIf="req.responseNotes" class="response-notes">
+          @if (req.responseNotes) {
+<p class="response-notes">
             <strong>Response:</strong> {{ req.responseNotes }}
           </p>
+}
           <mat-divider></mat-divider>
         </div>
+}
       </div>
     </mat-card-content>
   </mat-card>
+}
 </div>

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -35,6 +35,14 @@ import { SubscriptionService } from '../../subscription/subscription.service';
     styleUrls: ['./job-application.component.scss']
 })
 export class JobApplicationComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private applicationService = inject(ApplicationService);
+  private jobService = inject(JobService);
+  private snackBar = inject(MatSnackBar);
+  subscriptionService = inject(SubscriptionService);
+
   applicationForm!: FormGroup;
   job: Job | null = null;
   jobId = '';
@@ -42,16 +50,6 @@ export class JobApplicationComponent implements OnInit {
   submitting = false;
   hasAlreadyApplied = false;
   atApplicationLimit = false;
-
-  constructor(
-    private fb: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router,
-    private applicationService: ApplicationService,
-    private jobService: JobService,
-    private snackBar: MatSnackBar,
-    public subscriptionService: SubscriptionService
-  ) {}
 
   ngOnInit(): void {
     this.jobId = this.route.snapshot.paramMap.get('id') || '';

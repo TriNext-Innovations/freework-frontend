@@ -3,11 +3,11 @@
     <mat-card-content>
 
       <!-- Success -->
-      <ng-container *ngIf="success">
+      @if (success) {
         <div class="result-icon result-icon--success">
           <mat-icon>check_circle</mat-icon>
         </div>
-        <h1>Payment Successful</h1>
+        <h1>Payment <em>successful</em></h1>
         <p class="result-desc">
           Your funds are now securely held in escrow. The freelancer will be notified and can begin work.
           You'll release the funds once you're happy with the result.
@@ -16,14 +16,12 @@
           <a mat-raised-button class="primary-btn" routerLink="/payments">View Payments</a>
           <a mat-stroked-button routerLink="/my-jobs">My Jobs</a>
         </div>
-      </ng-container>
-
-      <!-- Cancelled -->
-      <ng-container *ngIf="!success">
+      } @else {
+        <!-- Cancelled -->
         <div class="result-icon result-icon--cancel">
           <mat-icon>cancel</mat-icon>
         </div>
-        <h1>Payment Cancelled</h1>
+        <h1>Payment cancelled</h1>
         <p class="result-desc">
           No charge was made. Your payment was cancelled and you can try again whenever you're ready.
         </p>
@@ -31,7 +29,7 @@
           <a mat-raised-button class="primary-btn" routerLink="/payments">Back to Payments</a>
           <a mat-stroked-button routerLink="/jobs">Browse Jobs</a>
         </div>
-      </ng-container>
+      }
 
     </mat-card-content>
   </mat-card>

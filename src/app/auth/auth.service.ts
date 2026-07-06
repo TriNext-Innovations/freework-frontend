@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
@@ -33,6 +33,9 @@ interface RawUserPayload {
   providedIn: 'root'
 })
 export class AuthService {
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
   private readonly API_URL = buildApiUrl('/auth');
   private readonly PROFILE_API_URL = buildApiEndpointUrl('/profile');
   private readonly TOKEN_KEY = 'freework_access_token';
@@ -44,10 +47,7 @@ export class AuthService {
   private refreshTokenTimeout?: number;
   private authChannel = new BroadcastChannel('freework_auth');
 
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {
+  constructor() {
     const storedUser = this.getStoredUser();
     this.currentUserSubject = new BehaviorSubject<User | null>(storedUser);
     this.currentUser$ = this.currentUserSubject.asObservable();
@@ -109,6 +109,11 @@ export class AuthService {
           return throwError(() => error);
         })
       );
+  }
+
+  resendVerification(email: string): Observable<unknown> {
+    return this.http.post<unknown>(`${this.API_URL}/resend-verification`, { email })
+      .pipe(catchError((error: HttpErrorResponse) => throwError(() => error)));
   }
 
   /**

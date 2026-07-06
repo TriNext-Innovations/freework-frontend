@@ -8,7 +8,7 @@
       font-weight: 600;
 
       mat-icon {
-        color: #ffa000;
+        color: var(--color-warning-500);
       }
     }
   }
@@ -29,32 +29,32 @@
 
       p {
         margin: 0;
-        color: rgba(0, 0, 0, 0.6);
+        color: var(--color-text-secondary);
       }
     }
 
     .loading-state {
       .loading-icon {
-        color: #1976d2;
+        color: var(--color-accent-600);
         animation: spin 2s linear infinite;
       }
     }
 
     .error-state {
       .error-icon {
-        color: #f44336;
+        color: var(--color-error-500);
       }
     }
 
     .no-reviews {
       .no-reviews-icon {
-        color: rgba(0, 0, 0, 0.26);
+        color: var(--color-text-tertiary);
       }
 
       h3 {
         margin: 0 0 0.5rem;
         font-size: 1.25rem;
-        color: rgba(0, 0, 0, 0.87);
+        color: var(--color-text-primary);
       }
 
       p {
@@ -68,7 +68,7 @@
         align-items: center;
         gap: 2rem;
         padding: 1.5rem;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%);
         border-radius: 12px;
         color: white;
         margin-bottom: 2rem;
@@ -77,7 +77,7 @@
           font-size: 4rem;
           font-weight: 700;
           line-height: 1;
-          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          text-shadow: 0 2px 4px var(--color-border);
         }
 
         .rating-details {
@@ -92,8 +92,8 @@
               font-size: 1.75rem;
               width: 1.75rem;
               height: 1.75rem;
-              color: #ffd700;
-              text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+              color: var(--color-warning-500);
+              text-shadow: 0 1px 2px var(--color-border);
             }
           }
 
@@ -115,7 +115,7 @@
           font-size: 1rem;
           font-weight: 600;
           margin: 0 0 1rem;
-          color: rgba(0, 0, 0, 0.87);
+          color: var(--color-text-primary);
         }
 
         .rating-bar {
@@ -131,13 +131,13 @@
             font-size: 0.9375rem;
             font-weight: 500;
             min-width: 50px;
-            color: rgba(0, 0, 0, 0.87);
+            color: var(--color-text-primary);
 
             .small-star {
               font-size: 1rem;
               width: 1rem;
               height: 1rem;
-              color: #ffa000;
+              color: var(--color-warning-500);
             }
           }
 
@@ -151,7 +151,7 @@
             min-width: 40px;
             text-align: right;
             font-size: 0.875rem;
-            color: rgba(0, 0, 0, 0.6);
+            color: var(--color-text-secondary);
           }
         }
       }

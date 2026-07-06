@@ -1,8 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PaymentService } from '../payment.service';
 import { PaymentStatus, PaymentStatusUpdate } from '../models/payment.models';
@@ -13,13 +12,14 @@ import { PaymentStatus, PaymentStatusUpdate } from '../models/payment.models';
         CommonModule,
         MatCardModule,
         MatIconModule,
-        MatChipsModule,
         MatProgressBarModule
     ],
     templateUrl: './payment-status.component.html',
     styleUrls: ['./payment-status.component.scss']
 })
 export class PaymentStatusComponent implements OnInit {
+  private paymentService = inject(PaymentService);
+
   @Input() paymentId?: string;
   @Input() showRealTimeUpdates = true;
 
@@ -35,8 +35,6 @@ export class PaymentStatusComponent implements OnInit {
     { status: PaymentStatus.ESCROWED, label: 'Escrowed', icon: 'lock' },
     { status: PaymentStatus.RELEASED, label: 'Released', icon: 'check_circle' }
   ];
-
-  constructor(private paymentService: PaymentService) {}
 
   ngOnInit(): void {
     if (this.paymentId) {
@@ -72,6 +70,11 @@ export class PaymentStatusComponent implements OnInit {
         }
       }
     });
+  }
+
+  /** Brand status-pill class (custom span pill, not mat-chip). */
+  getStatusClass(status: PaymentStatus | undefined): string {
+    return 'pstatus-' + (status || '').toString().toLowerCase();
   }
 
   getStatusColor(status: PaymentStatus): string {

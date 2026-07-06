@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormBuilder, FormGroup, Validators, AbstractControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterLink } from '@angular/router';
@@ -20,25 +20,31 @@ import { LegalService } from '../../legal/legal.service';
 @Component({
     selector: 'app-login',
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatSnackBarModule,
-        MatRadioModule,
-        MatCheckboxModule,
-        FormsModule,
-        RouterLink,
-        MatDividerModule
-    ],
+    ReactiveFormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatRadioModule,
+    MatCheckboxModule,
+    FormsModule,
+    RouterLink,
+    MatDividerModule
+],
     templateUrl: './login.component.html',
     styleUrl: './login.component.scss'
 })
 export class LoginComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private snackBar = inject(MatSnackBar);
+  private legalService = inject(LegalService);
+
   authForm!: FormGroup;
 
   isRegister = false;
@@ -49,6 +55,9 @@ export class LoginComponent implements OnInit {
   returnUrl = '/';
   registrationComplete = false;
   registeredEmail = '';
+  resendLoading = false;
+  resendSent = false;
+  unverifiedLoginEmail = '';
 
   // Consent step (register only)
   tcVersion = '1.0';
@@ -56,15 +65,6 @@ export class LoginComponent implements OnInit {
   termsAccepted = false;
   privacyAccepted = false;
   marketingConsented = false;
-
-  constructor(
-    private fb: FormBuilder,
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute,
-    private snackBar: MatSnackBar,
-    private legalService: LegalService
-  ) {}
 
   get consentValid(): boolean {
     if (!this.isRegister) return true;
@@ -100,6 +100,8 @@ export class LoginComponent implements OnInit {
   toggleMode(): void {
     this.isRegister = !this.isRegister;
     this.errorMessage = '';
+    this.unverifiedLoginEmail = '';
+    this.resendSent = false;
     this.authForm.reset({ role: 'FREELANCER' });
     this.hidePassword = true;
     this.hideConfirmPassword = true;
@@ -191,10 +193,27 @@ export class LoginComponent implements OnInit {
         },
         error: (err) => {
           this.loading = false;
+          if (err.status === 403) {
+            this.unverifiedLoginEmail = this.authForm.value.email;
+          }
           this.errorMessage = err.error?.message || 'Login failed. Please check your credentials.';
         }
       });
     }
+  }
+
+  resendVerification(email: string): void {
+    this.resendLoading = true;
+    this.authService.resendVerification(email).subscribe({
+      next: () => {
+        this.resendLoading = false;
+        this.resendSent = true;
+      },
+      error: () => {
+        this.resendLoading = false;
+        this.snackBar.open('Could not resend. Please try again shortly.', 'Dismiss', { duration: 4000 });
+      }
+    });
   }
 
   private passwordMatchValidator(group: FormGroup): Record<string, boolean> | null {

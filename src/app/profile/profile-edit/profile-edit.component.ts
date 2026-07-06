@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { Router, RouterModule, ActivatedRoute } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,11 +11,17 @@ import { Profile, FreelancerProfile, CustomerProfile, UpdateProfileRequest, Lang
 
 @Component({
     selector: 'app-profile-edit',
-    imports: [CommonModule, ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
+    imports: [ReactiveFormsModule, RouterModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule],
     templateUrl: './profile-edit.component.html',
     styleUrls: ['./profile-edit.component.scss']
 })
 export class ProfileEditComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private profileService = inject(ProfileService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   profileForm!: FormGroup;
   profile: Profile | null = null;
   isLoading = true;
@@ -40,14 +46,6 @@ export class ProfileEditComponent implements OnInit {
     { value: 'FLUENT', label: 'Fluent' },
     { value: 'NATIVE', label: 'Native' }
   ];
-
-  constructor(
-    private fb: FormBuilder,
-    private profileService: ProfileService,
-    private authService: AuthService,
-    private router: Router,
-    private route: ActivatedRoute
-  ) {}
 
   ngOnInit() {
     // Check if this is first-time profile completion

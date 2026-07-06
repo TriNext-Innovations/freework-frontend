@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,9 +17,11 @@ import { MatIconModule } from '@angular/material/icon';
       <mat-dialog-content>
         <p>
           You'll keep PRO access until the end of your billing period
-          <ng-container *ngIf="data.currentPeriodEnd">
+          @if (data.currentPeriodEnd) {
+
             (<strong>{{ data.currentPeriodEnd | date:'MMM d, y' }}</strong>)
-          </ng-container>.
+          
+}.
           After that, your account reverts to the free plan and limits will apply.
         </p>
         <p class="reminder">Remember — on Freework, <strong>every cent you earn is yours</strong>. No commission, ever.</p>
@@ -45,9 +47,8 @@ import { MatIconModule } from '@angular/material/icon';
   `]
 })
 export class CancelConfirmDialogComponent {
-  constructor(
-    private dialogRef: MatDialogRef<CancelConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { currentPeriodEnd?: string }
-  ) {}
+  private dialogRef = inject<MatDialogRef<CancelConfirmDialogComponent>>(MatDialogRef);
+  data = inject<{ currentPeriodEnd?: string }>(MAT_DIALOG_DATA);
+
   close(confirmed: boolean): void { this.dialogRef.close(confirmed); }
 }

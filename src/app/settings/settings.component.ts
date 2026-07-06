@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -17,32 +17,29 @@ import { DeleteAccountDialogComponent } from './delete-account-dialog/delete-acc
 @Component({
     selector: 'app-settings',
     imports: [
-        CommonModule,
-        RouterLink,
-        FormsModule,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatDividerModule,
-        MatListModule,
-        MatSlideToggleModule,
-        MatDialogModule,
-        MatSnackBarModule
-    ],
+    RouterLink,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatListModule,
+    MatSlideToggleModule,
+    MatDialogModule,
+    MatSnackBarModule
+],
     templateUrl: './settings.component.html',
     styleUrl: './settings.component.scss'
 })
 export class SettingsComponent implements OnInit {
+  private legalService = inject(LegalService);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+
   marketingConsented = false;
   marketingLoading = false;
   canDelete = false;
   blockingReason = '';
-
-  constructor(
-    private legalService: LegalService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     this.loadMarketingConsent();

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
 import { MatCardModule } from '@angular/material/card';
@@ -10,27 +10,33 @@ import { RouterLink } from '@angular/router';
 
 @Component({
     selector: 'app-email-verify',
-    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
+    imports: [MatCardModule, MatButtonModule, MatIconModule, MatProgressSpinnerModule, RouterLink],
     template: `
     <div class="verify-container">
       <mat-card class="verify-card">
         <mat-card-content>
-          <ng-container *ngIf="loading">
+          @if (loading) {
+
             <mat-spinner diameter="48"></mat-spinner>
             <p>Verifying your email...</p>
-          </ng-container>
-          <ng-container *ngIf="!loading && success">
+          
+}
+          @if (!loading && success) {
+
             <mat-icon class="success-icon">check_circle</mat-icon>
             <h2>Email Verified!</h2>
             <p>Your account has been verified. You can now sign in.</p>
             <a mat-raised-button color="primary" routerLink="/login">Sign In</a>
-          </ng-container>
-          <ng-container *ngIf="!loading && !success">
+          
+}
+          @if (!loading && !success) {
+
             <mat-icon class="error-icon">error</mat-icon>
             <h2>Verification Failed</h2>
             <p>{{ errorMessage }}</p>
             <a mat-raised-button routerLink="/login">Back to Login</a>
-          </ng-container>
+          
+}
         </mat-card-content>
       </mat-card>
     </div>
@@ -43,15 +49,13 @@ import { RouterLink } from '@angular/router';
   `]
 })
 export class EmailVerifyComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private http = inject(HttpClient);
+  private router = inject(Router);
+
   loading = true;
   success = false;
   errorMessage = 'The verification link is invalid or has expired.';
-
-  constructor(
-    private route: ActivatedRoute,
-    private http: HttpClient,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParamMap.get('token');

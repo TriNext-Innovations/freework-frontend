@@ -21,7 +21,6 @@
     "@angular/platform-browser": "^20.3.23",
     "@angular/platform-browser-dynamic": "^20.3.23",
     "@angular/router": "^20.3.23",
-    "particles.js": "^2.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.15.1"

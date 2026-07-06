@@ -1,105 +1,219 @@
 .job-applications-container {
   max-width: 900px;
-  margin: 24px auto;
-  padding: 0 16px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-3xl);
 }
 
-.page-header {
-  margin-bottom: 24px;
+// ── Hero ────────────────────────────────────────────────────
+.page-hero {
+  margin-bottom: var(--spacing-2xl);
+
+  .back-button {
+    margin: 0 0 var(--spacing-md) calc(-1 * var(--spacing-sm));
+    color: var(--color-text-secondary);
+  }
+
+  &__eyebrow {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-accent-500);
+    margin-bottom: var(--spacing-sm);
+  }
 
   h1 {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin: 0 0 var(--spacing-xs);
+    color: var(--color-text-primary);
+
+    em {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      background: linear-gradient(120deg, #2BB88A 0%, #1A8D6F 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      padding-right: 0.06em;
+    }
+  }
+
+  &__sub {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 15px;
+  }
+}
+
+// ── State block ─────────────────────────────────────────────
+.state-block {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-xl);
+  max-width: 440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .state-icon {
+    width: 88px;
+    height: 88px;
+    margin: 0 auto var(--spacing-lg);
+    border-radius: 50%;
+    background: var(--color-gray-100);
+    border: 1px solid var(--color-border);
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin: 8px 0 0;
+    justify-content: center;
+
+    mat-icon {
+      font-size: 2.25rem;
+      width: 2.25rem;
+      height: 2.25rem;
+      color: var(--color-text-tertiary);
+    }
+
+    &--error {
+      background: var(--color-error-50);
+      border-color: transparent;
+      mat-icon { color: var(--color-error-500); }
+    }
   }
-}
 
-.back-button {
-  margin-bottom: 8px;
-}
-
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 48px;
-  gap: 16px;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 64px 16px;
-  text-align: center;
-  color: rgba(0, 0, 0, 0.6);
-
-  mat-icon {
-    font-size: 64px;
-    width: 64px;
-    height: 64px;
-    margin-bottom: 16px;
+  h3 {
+    font-size: 1.25rem;
+    color: var(--color-text-primary);
+    margin: 0 0 var(--spacing-sm);
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
+
+  p {
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-xl);
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 44ch;
+  }
+
+  button mat-icon { margin-right: var(--spacing-xs); }
 }
 
+// ── List ────────────────────────────────────────────────────
 .summary {
-  color: rgba(0, 0, 0, 0.6);
-  margin-bottom: 16px;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--spacing-md);
+  font-size: 14px;
 }
 
 .application-card {
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-md);
+  border-radius: var(--radius-lg) !important;
 
   mat-card-header {
     display: flex;
     align-items: flex-start;
-    margin-bottom: 16px;
+    margin-bottom: var(--spacing-md);
 
-    .status-badge {
-      margin-left: auto;
-    }
+    .status-badge { margin-left: auto; }
   }
 }
 
 .app-details {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .detail-item {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--spacing-xs);
   font-size: 14px;
+  color: var(--color-text-primary);
+
+  strong { font-weight: 600; }
 
   mat-icon {
     font-size: 18px;
     width: 18px;
     height: 18px;
-    color: rgba(0, 0, 0, 0.54);
+    color: var(--color-text-tertiary);
   }
 }
 
 .cover-letter,
 .message-section {
-  margin-top: 16px;
+  margin-top: var(--spacing-md);
 
   h4 {
-    margin: 0 0 8px;
-    color: rgba(0, 0, 0, 0.7);
+    margin: 0 0 var(--spacing-sm);
+    color: var(--color-text-primary);
+    font-size: 0.95rem;
+    font-weight: 600;
   }
 
   p {
     white-space: pre-line;
-    color: rgba(0, 0, 0, 0.87);
+    color: var(--color-text-secondary);
+    line-height: 1.6;
   }
 }
 
 mat-card-actions {
-  padding: 8px 16px 16px;
+  padding: var(--spacing-sm) var(--spacing-md) var(--spacing-md);
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-sm);
+
+  .reject-btn {
+    color: var(--color-error-500);
+    border-color: var(--color-error-500) !important;
+  }
+}
+
+// ── Status pill (custom span — not mat-chip) ────────────────
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.3rem 0.7rem;
+  border-radius: var(--radius-full);
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+
+  mat-icon { font-size: 0.95rem; width: 0.95rem; height: 0.95rem; }
+}
+
+.status-pending {
+  background: var(--chip-status-pending-bg);
+  color: var(--chip-status-pending-color);
+  border: 1px solid var(--chip-status-pending-border);
+}
+
+.status-accepted {
+  background: var(--chip-status-accepted-bg);
+  color: var(--chip-status-accepted-color);
+  border: 1px solid var(--chip-status-accepted-border);
+}
+
+.status-rejected {
+  background: var(--chip-status-rejected-bg);
+  color: var(--chip-status-rejected-color);
+  border: 1px solid var(--chip-status-rejected-border);
+}
+
+.status-withdrawn {
+  background: var(--chip-status-withdrawn-bg);
+  color: var(--chip-status-withdrawn-color);
+  border: 1px solid var(--chip-status-withdrawn-border);
 }

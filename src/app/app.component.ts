@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Inject, DOCUMENT } from '@angular/core';
+import { Component, OnInit, OnDestroy, DOCUMENT, inject } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { RouterOutlet, RouterLink, RouterLinkActive } from '@angular/router';
@@ -45,6 +45,12 @@ const DESKTOP_BREAKPOINT = '(min-width: 1024px)';
     styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
+  authService = inject(AuthService);
+  themeService = inject(ThemeService);
+  subscriptionService = inject(SubscriptionService);
+  private breakpointObserver = inject(BreakpointObserver);
+  private document = inject<Document>(DOCUMENT);
+
   title = 'Freework';
   sidenavOpened = false;
   isDesktop = false;
@@ -52,13 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   private bpSub?: Subscription;
 
-  constructor(
-    public authService: AuthService,
-    public themeService: ThemeService,
-    public subscriptionService: SubscriptionService,
-    private breakpointObserver: BreakpointObserver,
-    @Inject(DOCUMENT) private document: Document
-  ) {
+  constructor() {
     this.currentUser$ = this.authService.currentUser$;
   }
 

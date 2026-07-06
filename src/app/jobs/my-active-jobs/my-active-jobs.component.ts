@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -43,21 +43,19 @@ interface ActiveJob {
     styleUrl: './my-active-jobs.component.scss'
 })
 export class MyActiveJobsComponent implements OnInit {
+  private applicationService = inject(ApplicationService);
+  private jobService = inject(JobService);
+  private authService = inject(AuthService);
+  private messagingService = inject(MessagingService);
+  private router = inject(Router);
+  private dialog = inject(MatDialog);
+  private snackBar = inject(MatSnackBar);
+
   activeJobs: ActiveJob[] = [];
   customerJobs: Job[] = [];
   loading = false;
   error: string | null = null;
   isCustomer = false;
-
-  constructor(
-    private applicationService: ApplicationService,
-    private jobService: JobService,
-    private authService: AuthService,
-    private messagingService: MessagingService,
-    private router: Router,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar
-  ) {}
 
   ngOnInit(): void {
     const currentUser = this.authService.currentUserValue;
@@ -162,14 +160,8 @@ export class MyActiveJobsComponent implements OnInit {
     this.router.navigate(['/jobs', jobId]);
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'OPEN': 'primary',
-      'IN_PROGRESS': 'accent',
-      'COMPLETED': 'warn',
-      'CANCELLED': ''
-    };
-    return colors[status] || '';
+  getStatusClass(status: string): string {
+    return 'jstatus-' + (status || '').toLowerCase();
   }
 
   getStatusLabel(status: string): string {
@@ -193,9 +185,9 @@ export class MyActiveJobsComponent implements OnInit {
   }
 
   formatBudget(job: Job): string {
-    const amount = new Intl.NumberFormat('en-US', {
+    const amount = new Intl.NumberFormat('en-ZA', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'ZAR',
       minimumFractionDigits: 0
     }).format(job.budget);
 

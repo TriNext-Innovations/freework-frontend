@@ -1,13 +1,11 @@
 <div class="payment-list-container">
-  <mat-card class="header-card">
-    <mat-card-header>
-      <mat-card-title>
-        <mat-icon>account_balance</mat-icon>
-        Payment History
-      </mat-card-title>
-      <mat-card-subtitle>View and manage all your payments</mat-card-subtitle>
-    </mat-card-header>
+  <header class="page-hero">
+    <span class="page-hero__eyebrow">your money</span>
+    <h1>Payments, <em>tracked</em></h1>
+    <p>Every escrow, release, and refund in one place — no surprises.</p>
+  </header>
 
+  <mat-card class="header-card">
     <mat-card-content>
       <!-- Summary Cards -->
       <div class="summary-cards">
@@ -33,10 +31,10 @@
           </div>
         </div>
         <div class="summary-card total">
-          <mat-icon>attach_money</mat-icon>
+          <mat-icon>payments</mat-icon>
           <div class="summary-info">
             <span class="label">Total Amount</span>
-            <span class="value">${{ getTotalAmount().toFixed(2) }}</span>
+            <span class="value">R{{ getTotalAmount().toFixed(2) }}</span>
           </div>
         </div>
       </div>
@@ -71,13 +69,17 @@
 
   <!-- Payments List -->
   <mat-card class="payments-card">
-    <div *ngIf="loading" class="loading-state">
+    @if (loading) {
+<div class="loading-state">
       <mat-spinner diameter="50"></mat-spinner>
       <p>Loading payments...</p>
     </div>
+}
 
-    <div *ngIf="!loading && filteredPayments.length > 0" class="payments-list">
-      <div *ngFor="let payment of filteredPayments" class="payment-row">
+    @if (!loading && filteredPayments.length > 0) {
+<div class="payments-list">
+      @for (payment of filteredPayments; track payment) {
+<div class="payment-row">
         <div class="payment-main">
           <div class="payment-icon">
             <mat-icon [color]="getStatusColor(payment.status)">
@@ -99,14 +101,14 @@
           </div>
 
           <div class="payment-amount">
-            <span class="amount">${{ payment.amount.toFixed(2) }}</span>
+            <span class="amount">R{{ payment.amount.toFixed(2) }}</span>
             <span class="currency">{{ payment.currency }}</span>
           </div>
 
           <div class="payment-status-chip">
-            <mat-chip [color]="getStatusColor(payment.status)">
-              {{ payment.status }}
-            </mat-chip>
+            <span class="status-pill" [class]="getStatusClass(payment.status)">
+              {{ payment.status | titlecase }}
+            </span>
           </div>
         </div>
 
@@ -120,10 +122,12 @@
               <mat-icon>category</mat-icon>
               <span>{{ payment.paymentType }}</span>
             </div>
-            <div class="info-item" *ngIf="payment.transactionId">
+            @if (payment.transactionId) {
+<div class="info-item">
               <mat-icon>receipt</mat-icon>
               <span>{{ payment.transactionId }}</span>
             </div>
+}
           </div>
 
           <div class="payment-actions">
@@ -134,12 +138,16 @@
           </div>
         </div>
       </div>
+}
     </div>
+}
 
-    <div *ngIf="!loading && filteredPayments.length === 0" class="empty-state">
+    @if (!loading && filteredPayments.length === 0) {
+<div class="empty-state">
       <mat-icon>account_balance_wallet</mat-icon>
       <h3>No Payments Found</h3>
       <p>You don't have any payments matching the selected filter.</p>
     </div>
+}
   </mat-card>
 </div>

@@ -1,4 +1,5 @@
-<ng-container *ngIf="vm$ | async as vm">
+@if (vm$ | async; as vm) {
+
 <div class="pricing-page">
 
   <!-- Hero -->
@@ -19,7 +20,9 @@
 
     <!-- FREE -->
     <mat-card class="plan-card plan-card--free">
-      <div class="plan-badge current-badge" *ngIf="vm.user && !vm.isPaid">Your plan</div>
+      @if (vm.user && !vm.isPaid) {
+<div class="plan-badge current-badge">Your plan</div>
+}
       <mat-card-header>
         <mat-icon mat-card-avatar>person</mat-icon>
         <mat-card-title>Free</mat-card-title>
@@ -40,18 +43,22 @@
           <li class="feature-item feature-item--check">
             <mat-icon>check_circle</mat-icon>Browse all job listings
           </li>
-          <ng-container *ngIf="vm.isFreelancer || !vm.user">
+          @if (vm.isFreelancer || !vm.user) {
+
             <li class="feature-item feature-item--limit">
               <mat-icon>remove_circle_outline</mat-icon>
               {{ FREE_APPLICATION_LIMIT }} applications per month
             </li>
-          </ng-container>
-          <ng-container *ngIf="vm.isCustomer || !vm.user">
+          
+}
+          @if (vm.isCustomer || !vm.user) {
+
             <li class="feature-item feature-item--limit">
               <mat-icon>remove_circle_outline</mat-icon>
               {{ FREE_JOB_LIMIT }} active job posts
             </li>
-          </ng-container>
+          
+}
           <li class="feature-item feature-item--limit">
             <mat-icon>remove_circle_outline</mat-icon>3 conversations
           </li>
@@ -65,7 +72,9 @@
     <!-- GROWTH -->
     <mat-card class="plan-card plan-card--pro">
       <div class="plan-badge pro-ribbon">GROWTH</div>
-      <div class="plan-badge current-badge current-badge--pro" *ngIf="vm.isGrowth">Your plan</div>
+      @if (vm.isGrowth) {
+<div class="plan-badge current-badge current-badge--pro">Your plan</div>
+}
       <mat-card-header>
         <mat-icon mat-card-avatar>workspace_premium</mat-icon>
         <mat-card-title>Growth</mat-card-title>
@@ -86,16 +95,20 @@
           <li class="feature-item feature-item--check">
             <mat-icon>check_circle</mat-icon>Unlimited conversations
           </li>
-          <ng-container *ngIf="vm.isFreelancer || !vm.user">
+          @if (vm.isFreelancer || !vm.user) {
+
             <li class="feature-item feature-item--check">
               <mat-icon>check_circle</mat-icon>Unlimited applications
             </li>
-          </ng-container>
-          <ng-container *ngIf="vm.isCustomer || !vm.user">
+          
+}
+          @if (vm.isCustomer || !vm.user) {
+
             <li class="feature-item feature-item--check">
               <mat-icon>check_circle</mat-icon>{{ GROWTH_JOB_LIMIT }} active job posts
             </li>
-          </ng-container>
+          
+}
           <li class="feature-item feature-item--check">
             <mat-icon>check_circle</mat-icon>Growth badge on profile
           </li>
@@ -105,22 +118,32 @@
         </ul>
       </mat-card-content>
       <mat-card-actions>
-        <button *ngIf="!vm.isGrowth && !vm.isScale" mat-raised-button class="plan-cta plan-cta--pro"
+        @if (!vm.isGrowth && !vm.isScale) {
+<button mat-raised-button class="plan-cta plan-cta--pro"
           (click)="upgradeToPlan('GROWTH')" [disabled]="checkingOut">
-          <mat-spinner diameter="18" *ngIf="checkingOut"></mat-spinner>
-          <mat-icon *ngIf="!checkingOut">rocket_launch</mat-icon>
+          @if (checkingOut) {
+<mat-spinner diameter="18"></mat-spinner>
+}
+          @if (!checkingOut) {
+<mat-icon>rocket_launch</mat-icon>
+}
           {{ checkingOut ? 'Starting checkout...' : 'Upgrade to Growth — R149' }}
         </button>
-        <div *ngIf="vm.isGrowth" class="current-plan-note">
+}
+        @if (vm.isGrowth) {
+<div class="current-plan-note">
           <mat-icon>check_circle</mat-icon>You're on Growth
         </div>
+}
       </mat-card-actions>
     </mat-card>
 
     <!-- SCALE -->
     <mat-card class="plan-card plan-card--scale">
       <div class="plan-badge scale-ribbon">SCALE</div>
-      <div class="plan-badge current-badge current-badge--pro" *ngIf="vm.isScale">Your plan</div>
+      @if (vm.isScale) {
+<div class="plan-badge current-badge current-badge--pro">Your plan</div>
+}
       <mat-card-header>
         <mat-icon mat-card-avatar>bolt</mat-icon>
         <mat-card-title>Scale</mat-card-title>
@@ -153,15 +176,23 @@
         </ul>
       </mat-card-content>
       <mat-card-actions>
-        <button *ngIf="!vm.isScale" mat-raised-button class="plan-cta plan-cta--scale"
+        @if (!vm.isScale) {
+<button mat-raised-button class="plan-cta plan-cta--scale"
           (click)="upgradeToPlan('SCALE')" [disabled]="checkingOut">
-          <mat-spinner diameter="18" *ngIf="checkingOut"></mat-spinner>
-          <mat-icon *ngIf="!checkingOut">bolt</mat-icon>
+          @if (checkingOut) {
+<mat-spinner diameter="18"></mat-spinner>
+}
+          @if (!checkingOut) {
+<mat-icon>bolt</mat-icon>
+}
           {{ checkingOut ? 'Starting checkout...' : 'Upgrade to Scale — R349' }}
         </button>
-        <div *ngIf="vm.isScale" class="current-plan-note">
+}
+        @if (vm.isScale) {
+<div class="current-plan-note">
           <mat-icon>check_circle</mat-icon>You're on Scale
         </div>
+}
       </mat-card-actions>
     </mat-card>
 
@@ -187,4 +218,5 @@
   </div>
 
 </div>
-</ng-container>
+
+}

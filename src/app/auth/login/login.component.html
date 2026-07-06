@@ -11,198 +11,264 @@
           </svg>
           <span class="brand-wordmark"><strong>free</strong>work</span>
         </div>
-        <ng-container *ngIf="!registrationComplete">
-          <mat-card-title>{{ isRegister ? 'Join freework' : 'Welcome back' }}</mat-card-title>
-          <mat-card-subtitle>
-            <ng-container *ngIf="!isRegister"><em>doing what you love</em> — sign in to continue</ng-container>
-            <ng-container *ngIf="isRegister">Start <em>doing what you love</em> today</ng-container>
-          </mat-card-subtitle>
-        </ng-container>
-        <ng-container *ngIf="registrationComplete">
-          <mat-card-title>Check your inbox</mat-card-title>
-          <mat-card-subtitle>One step left to start <em>doing what you love</em></mat-card-subtitle>
-        </ng-container>
+
+        @if (!registrationComplete) {
+          <span class="auth-eyebrow">
+            <span class="live-dot" aria-hidden="true"></span>
+            South Africa's freelance marketplace
+          </span>
+          @if (!isRegister) {
+            <h1 class="auth-title">Welcome <em>back</em></h1>
+            <p class="auth-subtitle">Sign in to keep doing what you love.</p>
+          }
+          @if (isRegister) {
+            <h1 class="auth-title">Start doing what you <em>love</em></h1>
+            <p class="auth-subtitle">Join thousands of South African freelancers — 0% commission, always.</p>
+          }
+        }
+        @if (registrationComplete) {
+          <h1 class="auth-title">Check your <em>inbox</em></h1>
+          <p class="auth-subtitle">One step left to get started.</p>
+        }
       </div>
     </mat-card-header>
 
     <!-- Check Your Inbox Screen -->
-    <mat-card-content *ngIf="registrationComplete">
-      <div class="inbox-check">
-        <div class="inbox-icon">
-          <mat-icon>mark_email_unread</mat-icon>
+    @if (registrationComplete) {
+      <mat-card-content>
+        <div class="inbox-check">
+          <div class="inbox-icon">
+            <mat-icon>mark_email_unread</mat-icon>
+          </div>
+          <p class="inbox-message">
+            We've sent a verification link to<br>
+            <strong>{{ registeredEmail }}</strong>
+          </p>
+          <p class="inbox-hint">Click the link in the email to verify your account and get started. Check your spam folder if you don't see it.</p>
+          @if (!resendSent) {
+            <button mat-stroked-button class="resend-btn" [disabled]="resendLoading" (click)="resendVerification(registeredEmail)">
+              @if (resendLoading) { <mat-spinner diameter="16"></mat-spinner> }
+              @if (!resendLoading) { Resend verification email }
+            </button>
+          }
+          @if (resendSent) {
+            <p class="resend-sent"><mat-icon>check_circle</mat-icon> Verification email resent!</p>
+          }
+          <div class="toggle-link">
+            <p>Already verified? <a tabindex="0" (click)="registrationComplete = false; isRegister = false" (keyup.enter)="registrationComplete = false; isRegister = false" (keydown.space)="registrationComplete = false; isRegister = false">Sign in</a></p>
+          </div>
         </div>
-        <p class="inbox-message">
-          We've sent a verification link to<br>
-          <strong>{{ registeredEmail }}</strong>
-        </p>
-        <p class="inbox-hint">Click the link in the email to verify your account and get started. Check your spam folder if you don't see it.</p>
-        <div class="toggle-link">
-          <p>Already verified? <a tabindex="0" (click)="registrationComplete = false; isRegister = false" (keyup.enter)="registrationComplete = false; isRegister = false" (keydown.space)="registrationComplete = false; isRegister = false">Sign in</a></p>
-        </div>
-      </div>
-    </mat-card-content>
+      </mat-card-content>
+    }
 
-    <mat-card-content *ngIf="!registrationComplete">
-      <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
+    @if (!registrationComplete) {
+      <mat-card-content>
+        <form [formGroup]="authForm" (ngSubmit)="onSubmit()">
 
-        <!-- Two-column body: left = login + extra fields, right = role selection -->
-        <div class="form-columns">
+          <!-- Two-column body: left = login + extra fields, right = role selection -->
+          <div class="form-columns">
 
-          <!-- LEFT COLUMN — always visible -->
-          <div class="col-left">
+            <!-- LEFT COLUMN — always visible -->
+            <div class="col-left">
 
-            <!-- Register-only: First Name -->
-            <div class="extra-fields" [class.visible]="isRegister">
+              <!-- Register-only: First Name -->
+              <div class="extra-fields" [class.visible]="isRegister">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>First Name</mat-label>
+                  <input matInput formControlName="firstName" placeholder="Jane" autocomplete="given-name">
+                  <mat-icon matPrefix>person</mat-icon>
+                  @if (f['firstName'].hasError('required')) {
+                    <mat-error>Required</mat-error>
+                  }
+                  @if (f['firstName'].hasError('minlength')) {
+                    <mat-error>At least 2 characters</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <!-- Register-only: Last Name -->
+              <div class="extra-fields" [class.visible]="isRegister">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Last Name</mat-label>
+                  <input matInput formControlName="lastName" placeholder="Doe" autocomplete="family-name">
+                  <mat-icon matPrefix>person</mat-icon>
+                  @if (f['lastName'].hasError('required')) {
+                    <mat-error>Required</mat-error>
+                  }
+                  @if (f['lastName'].hasError('minlength')) {
+                    <mat-error>At least 2 characters</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
+              <!-- Email -->
               <mat-form-field appearance="outline" class="full-width">
-                <mat-label>First Name</mat-label>
-                <input matInput formControlName="firstName" placeholder="Jane" autocomplete="given-name">
-                <mat-icon matPrefix>person</mat-icon>
-                <mat-error *ngIf="f['firstName'].hasError('required')">Required</mat-error>
-                <mat-error *ngIf="f['firstName'].hasError('minlength')">At least 2 characters</mat-error>
+                <mat-label>Email</mat-label>
+                <input matInput type="email" formControlName="email" placeholder="your@email.com" autocomplete="email">
+                <mat-icon matPrefix>email</mat-icon>
+                @if (f['email'].hasError('required')) {
+                  <mat-error>Email is required</mat-error>
+                }
+                @if (f['email'].hasError('email')) {
+                  <mat-error>Please enter a valid email</mat-error>
+                }
               </mat-form-field>
-            </div>
 
-            <!-- Register-only: Last Name -->
-            <div class="extra-fields" [class.visible]="isRegister">
+              <!-- Password -->
               <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Last Name</mat-label>
-                <input matInput formControlName="lastName" placeholder="Doe" autocomplete="family-name">
-                <mat-icon matPrefix>person</mat-icon>
-                <mat-error *ngIf="f['lastName'].hasError('required')">Required</mat-error>
-                <mat-error *ngIf="f['lastName'].hasError('minlength')">At least 2 characters</mat-error>
-              </mat-form-field>
-            </div>
-
-            <!-- Email -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Email</mat-label>
-              <input matInput type="email" formControlName="email" placeholder="your@email.com" autocomplete="email">
-              <mat-icon matPrefix>email</mat-icon>
-              <mat-error *ngIf="f['email'].hasError('required')">Email is required</mat-error>
-              <mat-error *ngIf="f['email'].hasError('email')">Please enter a valid email</mat-error>
-            </mat-form-field>
-
-            <!-- Password -->
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Password</mat-label>
-              <input
-                matInput
-                [type]="hidePassword ? 'password' : 'text'"
-                formControlName="password"
-                placeholder="Enter your password"
-                autocomplete="current-password">
-              <mat-icon matPrefix>lock</mat-icon>
-              <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
-                <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-              </button>
-              <mat-error *ngIf="f['password'].hasError('required')">Password is required</mat-error>
-              <mat-error *ngIf="f['password'].hasError('minlength')">At least 6 characters</mat-error>
-              <mat-error *ngIf="f['password'].hasError('pattern')">Must contain uppercase, lowercase and a number</mat-error>
-            </mat-form-field>
-
-            <!-- Register-only: Confirm Password -->
-            <div class="extra-fields" [class.visible]="isRegister">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Confirm Password</mat-label>
+                <mat-label>Password</mat-label>
                 <input
                   matInput
-                  [type]="hideConfirmPassword ? 'password' : 'text'"
-                  formControlName="confirmPassword"
-                  placeholder="Re-enter your password"
-                  autocomplete="new-password">
+                  [type]="hidePassword ? 'password' : 'text'"
+                  formControlName="password"
+                  placeholder="Enter your password"
+                  autocomplete="current-password">
                 <mat-icon matPrefix>lock</mat-icon>
-                <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
-                  <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                <button mat-icon-button matSuffix type="button" (click)="hidePassword = !hidePassword">
+                  <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
-                <mat-error *ngIf="f['confirmPassword'].hasError('required')">Please confirm your password</mat-error>
-                <mat-error *ngIf="authForm.hasError('passwordMismatch') && f['confirmPassword'].touched">
-                  Passwords do not match
-                </mat-error>
+                @if (f['password'].hasError('required')) {
+                  <mat-error>Password is required</mat-error>
+                }
+                @if (f['password'].hasError('minlength')) {
+                  <mat-error>At least 6 characters</mat-error>
+                }
+                @if (f['password'].hasError('pattern')) {
+                  <mat-error>Must contain uppercase, lowercase and a number</mat-error>
+                }
               </mat-form-field>
+
+              <!-- Register-only: Confirm Password -->
+              <div class="extra-fields" [class.visible]="isRegister">
+                <mat-form-field appearance="outline" class="full-width">
+                  <mat-label>Confirm Password</mat-label>
+                  <input
+                    matInput
+                    [type]="hideConfirmPassword ? 'password' : 'text'"
+                    formControlName="confirmPassword"
+                    placeholder="Re-enter your password"
+                    autocomplete="new-password">
+                  <mat-icon matPrefix>lock</mat-icon>
+                  <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword = !hideConfirmPassword">
+                    <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                  </button>
+                  @if (f['confirmPassword'].hasError('required')) {
+                    <mat-error>Please confirm your password</mat-error>
+                  }
+                  @if (authForm.hasError('passwordMismatch') && f['confirmPassword'].touched) {
+                    <mat-error>Passwords do not match</mat-error>
+                  }
+                </mat-form-field>
+              </div>
+
             </div>
 
-          </div>
+            <!-- RIGHT COLUMN — slides in horizontally on register -->
+            <div class="col-right" [class.visible]="isRegister">
 
-          <!-- RIGHT COLUMN — slides in horizontally on register -->
-          <div class="col-right" [class.visible]="isRegister">
+              <!-- Role Selection -->
+              <div class="role-section">
+                <span class="role-label">I want to:</span>
+                <mat-radio-group formControlName="role" class="role-group" aria-label="I want to:">
+                  <mat-radio-button value="FREELANCER" class="role-option">
+                    <div class="role-content">
+                      <mat-icon>work</mat-icon>
+                      <div>
+                        <strong>Find Work</strong>
+                        <p>I'm a freelancer looking for projects</p>
+                      </div>
+                    </div>
+                  </mat-radio-button>
+                  <mat-radio-button value="CUSTOMER" class="role-option">
+                    <div class="role-content">
+                      <mat-icon>business</mat-icon>
+                      <div>
+                        <strong>Hire Talent</strong>
+                        <p>I need to hire freelancers</p>
+                      </div>
+                    </div>
+                  </mat-radio-button>
+                </mat-radio-group>
+              </div>
 
-            <!-- Role Selection -->
-            <div class="role-section">
-              <span class="role-label">I want to:</span>
-              <mat-radio-group formControlName="role" class="role-group" aria-label="I want to:">
-                <mat-radio-button value="FREELANCER" class="role-option">
-                  <div class="role-content">
-                    <mat-icon>work</mat-icon>
-                    <div>
-                      <strong>Find Work</strong>
-                      <p>I'm a freelancer looking for projects</p>
-                    </div>
-                  </div>
-                </mat-radio-button>
-                <mat-radio-button value="CUSTOMER" class="role-option">
-                  <div class="role-content">
-                    <mat-icon>business</mat-icon>
-                    <div>
-                      <strong>Hire Talent</strong>
-                      <p>I need to hire freelancers</p>
-                    </div>
-                  </div>
-                </mat-radio-button>
-              </mat-radio-group>
             </div>
-
           </div>
-        </div>
 
-        <!-- Register: Consent Checkboxes -->
-        <div class="extra-fields consent-section" [class.visible]="isRegister">
-          <mat-divider></mat-divider>
-          <p class="consent-heading">Before creating your account, please review and accept our terms:</p>
+          <!-- Register: Consent Checkboxes -->
+          <div class="extra-fields consent-section" [class.visible]="isRegister">
+            <mat-divider></mat-divider>
+            <p class="consent-heading">Before creating your account, please review and accept our terms:</p>
 
-          <mat-checkbox [(ngModel)]="termsAccepted" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
-            I have read and agree to the
-            <a routerLink="/legal/freelancer-terms" target="_blank" *ngIf="f['role'].value !== 'CUSTOMER'">Freelancer Terms and Conditions</a>
-            <a routerLink="/legal/business-terms" target="_blank" *ngIf="f['role'].value === 'CUSTOMER'">Business Terms and Conditions</a>
-            <span class="required-asterisk">*</span>
-          </mat-checkbox>
+            <mat-checkbox [(ngModel)]="termsAccepted" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
+              I have read and agree to the
+              @if (f['role'].value !== 'CUSTOMER') {
+                <a routerLink="/legal/freelancer-terms" target="_blank">Freelancer Terms and Conditions</a>
+              }
+              @if (f['role'].value === 'CUSTOMER') {
+                <a routerLink="/legal/business-terms" target="_blank">Business Terms and Conditions</a>
+              }
+              <span class="required-asterisk">*</span>
+            </mat-checkbox>
 
-          <mat-checkbox [(ngModel)]="privacyAccepted" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
-            I have read and agree to the
-            <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a>
-            <span class="required-asterisk">*</span>
-          </mat-checkbox>
+            <mat-checkbox [(ngModel)]="privacyAccepted" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
+              I have read and agree to the
+              <a routerLink="/legal/privacy-policy" target="_blank">Privacy Policy</a>
+              <span class="required-asterisk">*</span>
+            </mat-checkbox>
 
-          <mat-checkbox [(ngModel)]="marketingConsented" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
-            I would like to receive product updates and promotional emails from Freework (optional)
-          </mat-checkbox>
-        </div>
+            <mat-checkbox [(ngModel)]="marketingConsented" [ngModelOptions]="{standalone: true}" color="primary" class="consent-checkbox">
+              I would like to receive product updates and promotional emails from Freework (optional)
+            </mat-checkbox>
+          </div>
 
-        <!-- Error Message — full width below columns -->
-        <div *ngIf="errorMessage" class="error-message">
-          <mat-icon>error</mat-icon>
-          <span>{{ errorMessage }}</span>
-        </div>
+          <!-- Error Message — full width below columns -->
+          @if (errorMessage) {
+            <div class="error-message">
+              <mat-icon>error</mat-icon>
+              <span>{{ errorMessage }}</span>
+            </div>
+            @if (unverifiedLoginEmail) {
+              <p class="resend-hint">
+                Didn't get the email?
+                @if (!resendSent) {
+                  <a tabindex="0" [class.disabled]="resendLoading" (click)="!resendLoading && resendVerification(unverifiedLoginEmail)" (keyup.enter)="!resendLoading && resendVerification(unverifiedLoginEmail)">Resend verification email</a>
+                }
+                @if (resendSent) { <span class="resend-confirmed">Sent!</span> }
+              </p>
+            }
+          }
 
-        <!-- Submit Button -->
-        <button
-          mat-raised-button
-          color="primary"
-          type="submit"
-          class="full-width submit-button"
-          [disabled]="loading || (isRegister && !consentValid)">
-          <mat-spinner *ngIf="loading" diameter="20"></mat-spinner>
-          <span *ngIf="!loading">{{ isRegister ? 'Create Account' : 'Sign In' }}</span>
-          <span *ngIf="loading">{{ isRegister ? 'Creating account...' : 'Signing in...' }}</span>
-        </button>
+          <!-- Submit Button -->
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            class="full-width submit-button"
+            [disabled]="loading || (isRegister && !consentValid)">
+            @if (loading) {
+              <mat-spinner diameter="20"></mat-spinner>
+            }
+            @if (!loading) {
+              <span>{{ isRegister ? 'Create Account' : 'Sign In' }}</span>
+            }
+            @if (loading) {
+              <span>{{ isRegister ? 'Creating account...' : 'Signing in...' }}</span>
+            }
+          </button>
 
-        <!-- Toggle Link -->
-        <div class="toggle-link">
-          <p *ngIf="!isRegister">Don't have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Register here</a></p>
-          <p *ngIf="isRegister">Already have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Sign in</a></p>
-        </div>
+          <!-- Toggle Link -->
+          <div class="toggle-link">
+            @if (!isRegister) {
+              <p>Don't have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Register here</a></p>
+            }
+            @if (isRegister) {
+              <p>Already have an account? <a tabindex="0" (click)="toggleMode()" (keyup.enter)="toggleMode()" (keydown.space)="toggleMode()">Sign in</a></p>
+            }
+          </div>
 
-      </form>
-    </mat-card-content>
+        </form>
+      </mat-card-content>
+    }
 
   </mat-card>
 </div>

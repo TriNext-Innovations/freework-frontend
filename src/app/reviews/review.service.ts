@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
@@ -14,9 +14,9 @@ import { buildApiEndpointUrl } from '../api.config';
   providedIn: 'root'
 })
 export class ReviewService {
-  private apiUrl = buildApiEndpointUrl('/reviews');
+  private http = inject(HttpClient);
 
-  constructor(private http: HttpClient) {}
+  private apiUrl = buildApiEndpointUrl('/reviews');
 
   getReviews(): Observable<Review[]> {
     return this.http.get<Review[]>(this.apiUrl);

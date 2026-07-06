@@ -3,47 +3,58 @@
   <mat-sidenav #sidenav [(opened)]="sidenavOpened" [mode]="sidenavMode" [class.desktop-nav]="isDesktop">
     <mat-nav-list>
       <!-- Mobile only: logo header + close button -->
-      <div class="sidenav-header" *ngIf="!isDesktop">
-        <div class="sidenav-logo">
-          <svg viewBox="0 0 64 52" width="28" height="23" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
-            <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#1A8D6F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.75"/>
-          </svg>
-          <span class="sidenav-wordmark"><strong>free</strong>work</span>
+      @if (!isDesktop) {
+        <div class="sidenav-header">
+          <div class="sidenav-logo">
+            <svg viewBox="0 0 64 52" width="28" height="23" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+              <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#1A8D6F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.75"/>
+            </svg>
+            <span class="sidenav-wordmark"><strong>free</strong>work</span>
+          </div>
+          <button mat-icon-button (click)="closeSidenav()" aria-label="Close navigation menu">
+            <mat-icon>close</mat-icon>
+          </button>
         </div>
-        <button mat-icon-button (click)="closeSidenav()" aria-label="Close navigation menu">
-          <mat-icon>close</mat-icon>
-        </button>
-      </div>
+      }
 
-      <mat-divider *ngIf="!isDesktop"></mat-divider>
+      @if (!isDesktop) {
+        <mat-divider></mat-divider>
+      }
 
       <!-- User Info if Logged In -->
-      <div class="sidenav-user-info" *ngIf="currentUser$ | async as user">
-        <ng-container *ngIf="user.avatar || user.profilePicture; else sidenavDefaultAvatar">
-          <img
-            [src]="getAvatarUrl(user)"
-            [alt]="user.firstName"
-            class="sidenav-avatar"
-            (error)="onAvatarError($event)"
-          />
-        </ng-container>
-        <ng-template #sidenavDefaultAvatar>
-          <mat-icon>account_circle</mat-icon>
-        </ng-template>
-        <div>
-          <div class="sidenav-name-row">
-            <strong>{{ user.firstName }} {{ user.lastName }}</strong>
-            <span class="sidenav-pro-badge" *ngIf="subscriptionService.isProMember">PRO</span>
-          </div>
-          <small>{{ user.email }}</small>
-          <div class="sidenav-plan-link" *ngIf="!subscriptionService.isProMember">
-            <a routerLink="/settings/billing" (click)="closeSidenav()" class="upgrade-link">Upgrade to PRO</a>
+      @if (currentUser$ | async; as user) {
+        <div class="sidenav-user-info">
+          @if (user.avatar || user.profilePicture) {
+            <img
+              [src]="getAvatarUrl(user)"
+              [alt]="user.firstName"
+              class="sidenav-avatar"
+              (error)="onAvatarError($event)"
+            />
+          } @else {
+            <mat-icon>account_circle</mat-icon>
+          }
+          <div>
+            <div class="sidenav-name-row">
+              <strong>{{ user.firstName }} {{ user.lastName }}</strong>
+              @if (subscriptionService.isProMember) {
+                <span class="sidenav-pro-badge">PRO</span>
+              }
+            </div>
+            <small>{{ user.email }}</small>
+            @if (!subscriptionService.isProMember) {
+              <div class="sidenav-plan-link">
+                <a routerLink="/settings/billing" (click)="closeSidenav()" class="upgrade-link">Upgrade to PRO</a>
+              </div>
+            }
           </div>
         </div>
-      </div>
+      }
 
-      <mat-divider *ngIf="currentUser$ | async"></mat-divider>
+      @if (currentUser$ | async) {
+        <mat-divider></mat-divider>
+      }
 
       <!-- Navigation Links -->
       <a mat-list-item routerLink="/jobs" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeSidenav()">
@@ -57,14 +68,14 @@
       </a>
 
       <!-- Authenticated Links -->
-      <ng-container *ngIf="currentUser$ | async as user">
+      @if (currentUser$ | async; as user) {
         <a mat-list-item routerLink="/messages" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>message</mat-icon>
           <span matListItemTitle>Messages</span>
         </a>
 
         <!-- Customer Only -->
-        <ng-container *ngIf="user.role === 'CUSTOMER'">
+        @if (user.role === 'CUSTOMER') {
           <a mat-list-item routerLink="/jobs/new" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
             <mat-icon matListItemIcon>add</mat-icon>
             <span matListItemTitle>Post Job</span>
@@ -74,10 +85,10 @@
             <mat-icon matListItemIcon>work_outline</mat-icon>
             <span matListItemTitle>My Jobs</span>
           </a>
-        </ng-container>
+        }
 
         <!-- Freelancer Only -->
-        <ng-container *ngIf="user.role === 'FREELANCER'">
+        @if (user.role === 'FREELANCER') {
           <a mat-list-item routerLink="/my-active-jobs" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
             <mat-icon matListItemIcon>work</mat-icon>
             <span matListItemTitle>My Active Jobs</span>
@@ -87,7 +98,7 @@
             <mat-icon matListItemIcon>assignment</mat-icon>
             <span matListItemTitle>My Applications</span>
           </a>
-        </ng-container>
+        }
 
         <a mat-list-item routerLink="/payments" routerLinkActive="active" [routerLinkActiveOptions]="{exact: false}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>payment</mat-icon>
@@ -117,29 +128,32 @@
           <mat-icon matListItemIcon>logout</mat-icon>
           <span matListItemTitle>Logout</span>
         </a>
-      </ng-container>
+      }
 
       <!-- Not Logged In -->
-      <ng-container *ngIf="(currentUser$ | async) === null">
+      @if ((currentUser$ | async) === null) {
         <a mat-list-item routerLink="/login" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeSidenav()">
           <mat-icon matListItemIcon>login</mat-icon>
           <span matListItemTitle>Login</span>
         </a>
-      </ng-container>
+      }
     </mat-nav-list>
   </mat-sidenav>
 
   <!-- Main Content -->
   <mat-sidenav-content>
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <app-cookie-consent-banner></app-cookie-consent-banner>
     <div class="app-container">
       <!-- Navigation Bar -->
       <mat-toolbar color="primary" class="app-toolbar">
         <div class="toolbar-content">
           <!-- Burger Menu Button — mobile only -->
-          <button mat-icon-button (click)="sidenavOpened = !sidenavOpened" class="menu-button" *ngIf="!isDesktop" aria-label="Open navigation menu">
-            <mat-icon>menu</mat-icon>
-          </button>
+          @if (!isDesktop) {
+            <button mat-icon-button (click)="sidenavOpened = !sidenavOpened" class="menu-button" aria-label="Open navigation menu">
+              <mat-icon>menu</mat-icon>
+            </button>
+          }
 
           <!-- Logo -->
           <a routerLink="/" class="logo">
@@ -161,41 +175,39 @@
           <!-- User Menu -->
           <div class="user-menu">
             <!-- Not Logged In -->
-            <ng-container *ngIf="(currentUser$ | async) === null">
+            @if ((currentUser$ | async) === null) {
               <a mat-button routerLink="/login" class="login-button">
                 <mat-icon>login</mat-icon>
                 Login
               </a>
-            </ng-container>
+            }
 
             <!-- Logged In -->
-            <ng-container *ngIf="currentUser$ | async as user">
+            @if (currentUser$ | async; as user) {
               <button mat-icon-button [matMenuTriggerFor]="userMenu" class="profile-button" aria-label="Open user menu">
-                <ng-container *ngIf="user.avatar || user.profilePicture; else defaultAvatar">
+                @if (user.avatar || user.profilePicture) {
                   <img
                     [src]="getAvatarUrl(user)"
                     [alt]="user.firstName"
                     class="profile-avatar"
                     (error)="onAvatarError($event)"
                   />
-                </ng-container>
-                <ng-template #defaultAvatar>
+                } @else {
                   <mat-icon>account_circle</mat-icon>
-                </ng-template>
+                }
               </button>
               <mat-menu #userMenu="matMenu">
                 <div class="user-info">
-                  <ng-container *ngIf="user.avatar || user.profilePicture; else defaultMenuAvatar">
+                  @if (user.avatar || user.profilePicture) {
                     <img
                       [src]="getAvatarUrl(user)"
                       [alt]="user.firstName"
                       class="menu-avatar"
                       (error)="onAvatarError($event)"
                     />
-                  </ng-container>
-                  <ng-template #defaultMenuAvatar>
+                  } @else {
                     <mat-icon>account_circle</mat-icon>
-                  </ng-template>
+                  }
                   <div class="user-details">
                     <strong>{{ user.firstName }} {{ user.lastName }}</strong>
                     <small>{{ user.email }}</small>
@@ -220,13 +232,13 @@
                   Logout
                 </button>
               </mat-menu>
-            </ng-container>
+            }
           </div>
         </div>
       </mat-toolbar>
 
       <!-- Main Content -->
-      <main class="main-content">
+      <main id="main-content" class="main-content" tabindex="-1">
         <router-outlet></router-outlet>
       </main>
       <app-footer></app-footer>

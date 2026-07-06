@@ -1,7 +1,8 @@
 <div class="job-form-container">
 
   <!-- Job Limit Reached Banner -->
-  <mat-card *ngIf="atJobLimit && !isEditMode" class="limit-banner">
+  @if (atJobLimit && !isEditMode) {
+<mat-card class="limit-banner">
     <mat-card-content>
       <div class="limit-banner-inner">
         <div class="limit-info">
@@ -18,6 +19,7 @@
       </div>
     </mat-card-content>
   </mat-card>
+}
 
   <mat-card class="job-form-card" [class.form-card--disabled]="atJobLimit && !isEditMode">
     <mat-card-header>
@@ -43,21 +45,29 @@
             maxlength="100">
           <mat-icon matPrefix>work</mat-icon>
           <mat-hint align="end">{{ f['title'].value?.length || 0 }}/100</mat-hint>
-          <mat-error *ngIf="f['title'].hasError('required')">Job title is required</mat-error>
-          <mat-error *ngIf="f['title'].hasError('minlength')">Minimum 10 characters required</mat-error>
+          @if (f['title'].hasError('required')) {
+<mat-error>Job title is required</mat-error>
+}
+          @if (f['title'].hasError('minlength')) {
+<mat-error>Minimum 10 characters required</mat-error>
+}
         </mat-form-field>
 
         <!-- Category -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Category</mat-label>
           <mat-select formControlName="category">
-            <mat-option *ngFor="let category of categories" [value]="category.id">
+            @for (category of categories; track category) {
+<mat-option [value]="category.id">
               <mat-icon>{{ category.icon }}</mat-icon>
               {{ category.name }}
             </mat-option>
+}
           </mat-select>
           <mat-icon matPrefix>category</mat-icon>
-          <mat-error *ngIf="f['category'].hasError('required')">Category is required</mat-error>
+          @if (f['category'].hasError('required')) {
+<mat-error>Category is required</mat-error>
+}
         </mat-form-field>
 
         <!-- Description -->
@@ -71,8 +81,12 @@
             maxlength="5000"></textarea>
           <mat-icon matPrefix>description</mat-icon>
           <mat-hint align="end">{{ f['description'].value?.length || 0 }}/5000</mat-hint>
-          <mat-error *ngIf="f['description'].hasError('required')">Description is required</mat-error>
-          <mat-error *ngIf="f['description'].hasError('minlength')">Minimum 50 characters required</mat-error>
+          @if (f['description'].hasError('required')) {
+<mat-error>Description is required</mat-error>
+}
+          @if (f['description'].hasError('minlength')) {
+<mat-error>Minimum 50 characters required</mat-error>
+}
         </mat-form-field>
 
         <!-- Budget and Budget Type Row -->
@@ -85,10 +99,14 @@
               formControlName="budget"
               placeholder="1000"
               min="1">
-            <span matTextPrefix>$&nbsp;</span>
-            <mat-icon matPrefix>attach_money</mat-icon>
-            <mat-error *ngIf="f['budget'].hasError('required')">Budget is required</mat-error>
-            <mat-error *ngIf="f['budget'].hasError('min')">Budget must be at least $1</mat-error>
+            <span matTextPrefix>R&nbsp;</span>
+            <mat-icon matPrefix>payments</mat-icon>
+            @if (f['budget'].hasError('required')) {
+<mat-error>Budget is required</mat-error>
+}
+            @if (f['budget'].hasError('min')) {
+<mat-error>Budget must be at least $1</mat-error>
+}
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">
@@ -113,7 +131,9 @@
           <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           <mat-icon matPrefix>event</mat-icon>
-          <mat-error *ngIf="f['deadline'].hasError('required')">Deadline is required</mat-error>
+          @if (f['deadline'].hasError('required')) {
+<mat-error>Deadline is required</mat-error>
+}
         </mat-form-field>
 
         <!-- Location and Location Type -->
@@ -126,7 +146,9 @@
               placeholder="e.g., New York, USA"
               maxlength="100">
             <mat-icon matPrefix>location_on</mat-icon>
-            <mat-error *ngIf="f['location'].hasError('required')">Location is required</mat-error>
+            @if (f['location'].hasError('required')) {
+<mat-error>Location is required</mat-error>
+}
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="half-width">
@@ -148,9 +170,11 @@
           </span>
 
           <!-- Selected Skills -->
-          <mat-chip-set class="skills-chips" *ngIf="selectedSkills.length > 0">
-            <mat-chip
-              *ngFor="let skill of selectedSkills"
+          @if (selectedSkills.length > 0) {
+<mat-chip-set class="skills-chips">
+            @for (skill of selectedSkills; track skill) {
+<mat-chip
+             
               (removed)="removeSkill(skill)"
               [highlighted]="true">
               {{ skill }}
@@ -158,7 +182,9 @@
                 <mat-icon>cancel</mat-icon>
               </button>
             </mat-chip>
+}
           </mat-chip-set>
+}
 
           <!-- Skill Input with Autocomplete -->
           <mat-form-field appearance="outline" class="full-width">
@@ -172,16 +198,20 @@
             <mat-autocomplete
               #auto="matAutocomplete"
               (optionSelected)="onSkillSelected($event.option.value)">
-              <mat-option *ngFor="let skill of filteredSkills | async" [value]="skill">
+              @for (skill of filteredSkills | async; track skill) {
+<mat-option [value]="skill">
                 {{ skill }}
               </mat-option>
+}
             </mat-autocomplete>
           </mat-form-field>
 
-          <p class="hint-text" *ngIf="selectedSkills.length === 0">
+          @if (selectedSkills.length === 0) {
+<p class="hint-text">
             <mat-icon>info</mat-icon>
             Add at least one skill required for this job
           </p>
+}
         </div>
 
         <!-- Action Buttons -->
@@ -198,11 +228,15 @@
             color="primary"
             type="submit"
             [disabled]="loading">
-            <mat-spinner *ngIf="loading" diameter="20" class="button-spinner"></mat-spinner>
-            <span *ngIf="!loading">
+            @if (loading) {
+<mat-spinner diameter="20" class="button-spinner"></mat-spinner>
+}
+            @if (!loading) {
+<span>
               <mat-icon>{{ isEditMode ? 'save' : 'publish' }}</mat-icon>
               {{ isEditMode ? 'Update Job' : 'Post Job' }}
             </span>
+}
           </button>
         </div>
       </form>

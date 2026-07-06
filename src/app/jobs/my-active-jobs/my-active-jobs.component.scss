@@ -20,21 +20,34 @@
     .header-content {
       flex: 1;
 
+      .page-hero__eyebrow {
+        display: block;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: var(--color-accent-500);
+        margin-bottom: var(--spacing-sm);
+      }
+
       h1 {
-        display: flex;
-        align-items: center;
-        gap: var(--spacing-md);
-        margin: 0 0 var(--spacing-xs) 0;
-        font-size: 1.875rem;
+        margin: 0 0 var(--spacing-sm) 0;
+        font-size: clamp(1.9rem, 4vw, 2.6rem);
         font-weight: 700;
         color: var(--color-text-primary);
-        letter-spacing: -0.02em;
+        letter-spacing: -0.035em;
+        line-height: 1.1;
 
-        mat-icon {
-          font-size: 2rem;
-          width: 2rem;
-          height: 2rem;
-          color: var(--color-accent-600);
+        em {
+          font-family: 'Instrument Serif', Georgia, serif;
+          font-style: italic;
+          font-weight: 400;
+          background: linear-gradient(120deg, #2BB88A 0%, #1A8D6F 100%);
+          -webkit-background-clip: text;
+          background-clip: text;
+          -webkit-text-fill-color: transparent;
+          color: transparent;
+          padding-right: 0.06em;
         }
       }
 
@@ -284,77 +297,25 @@
           }
         }
 
-        // Bright Job Status chips styling
+        // Job status — custom span pill (not mat-chip)
         &.status-item {
-          mat-chip-set {
-            display: flex;
-            flex-wrap: wrap;
-            gap: var(--spacing-xs);
-          }
-
-          mat-chip {
-            font-size: 13px !important;
-            height: 32px !important;
-            padding: 0 var(--spacing-lg) !important;
-            font-weight: 600 !important;
-            border: none !important;
-            border-radius: var(--radius-md) !important;
-            text-transform: uppercase !important;
-            letter-spacing: 0.5px !important;
-
-            // Fix alignment of icon and text
-            ::ng-deep .mdc-evolution-chip__action--primary {
-              display: inline-flex !important;
-              align-items: center !important;
-              justify-content: center !important;
-              gap: var(--spacing-sm) !important;
-              padding: 0 var(--spacing-md) !important;
-            }
-
-            ::ng-deep .mdc-evolution-chip__text-label {
-              display: inline-flex !important;
-              align-items: center !important;
-              gap: 6px !important;
-            }
+          .status-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.35rem 0.75rem;
+            border-radius: var(--radius-full);
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
 
             mat-icon {
-              font-size: 16px !important;
-              width: 16px !important;
-              height: 16px !important;
-              line-height: 1 !important;
-              vertical-align: middle !important;
+              font-size: 0.95rem;
+              width: 0.95rem;
+              height: 0.95rem;
             }
-          }
-
-          // OPEN Status - Bright Blue
-          mat-chip[color="primary"],
-          .mat-mdc-chip.mat-primary {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%) !important;
-            color: white !important;
-            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4) !important;
-          }
-
-          // IN_PROGRESS Status - Bright Green
-          mat-chip[color="accent"],
-          .mat-mdc-chip.mat-accent {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%) !important;
-            color: white !important;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.4) !important;
-          }
-
-          // COMPLETED Status - Bright Orange/Amber
-          mat-chip[color="warn"],
-          .mat-mdc-chip.mat-warn {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%) !important;
-            color: white !important;
-            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.4) !important;
-          }
-
-          // CANCELLED Status - Gray (if needed)
-          mat-chip:not([color]) {
-            background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%) !important;
-            color: white !important;
-            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.4) !important;
           }
         }
       }
@@ -484,4 +445,35 @@
       }
     }
   }
+}
+
+// ── Job status pill colours (from semantic tokens) ──────────
+.status-pill.jstatus-open {
+  background: var(--color-accent-50);
+  color: var(--color-accent-600);
+  border: 1px solid var(--color-accent-200);
+}
+
+.status-pill.jstatus-in_progress {
+  background: var(--chip-status-pending-bg);
+  color: var(--chip-status-pending-color);
+  border: 1px solid var(--chip-status-pending-border);
+}
+
+.status-pill.jstatus-review {
+  background: var(--color-accent-50);
+  color: var(--color-accent-700);
+  border: 1px solid var(--color-accent-200);
+}
+
+.status-pill.jstatus-completed {
+  background: var(--chip-status-accepted-bg);
+  color: var(--chip-status-accepted-color);
+  border: 1px solid var(--chip-status-accepted-border);
+}
+
+.status-pill.jstatus-cancelled {
+  background: var(--chip-status-withdrawn-bg);
+  color: var(--chip-status-withdrawn-color);
+  border: 1px solid var(--chip-status-withdrawn-border);
 }

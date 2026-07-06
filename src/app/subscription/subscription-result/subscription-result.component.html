@@ -1,47 +1,52 @@
 <div class="result-container container">
 
-  <div *ngIf="loading" class="loading-state">
-    <mat-spinner diameter="48"></mat-spinner>
-    <p>Confirming your subscription...</p>
-  </div>
-
-  <!-- Success -->
-  <div *ngIf="!loading && isSuccess" class="result-card result-card--success">
-    <div class="result-icon success-icon">
-      <mat-icon>workspace_premium</mat-icon>
+  @if (loading) {
+    <div class="loading-state">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Confirming your subscription...</p>
     </div>
-    <h1>You're on PRO!</h1>
-    <p class="result-subtitle">
-      Welcome to Freework PRO. Your subscription is
-      <strong *ngIf="subscription?.status === 'ACTIVE'">now active</strong>
-      <strong *ngIf="subscription?.status !== 'ACTIVE'">being activated</strong>
-      — this may take a moment to reflect.
-    </p>
-    <ul class="perks-list">
-      <li><mat-icon>check_circle</mat-icon> Unlimited job applications / postings</li>
-      <li><mat-icon>check_circle</mat-icon> PRO badge on your profile</li>
-      <li><mat-icon>check_circle</mat-icon> 0% commission — always</li>
-    </ul>
-    <div class="result-actions">
-      <a mat-raised-button color="primary" routerLink="/jobs">Browse Jobs</a>
-      <a mat-stroked-button routerLink="/settings/billing">View Plan Details</a>
+  } @else if (isSuccess) {
+    <!-- Success -->
+    <div class="result-card result-card--success">
+      <div class="result-icon success-icon">
+        <mat-icon>workspace_premium</mat-icon>
+      </div>
+      <h1>You're on <em>PRO</em>!</h1>
+      <p class="result-subtitle">
+        Welcome to Freework PRO. Your subscription is
+        @if (subscription?.status === 'ACTIVE') {
+          <strong>now active</strong>
+        } @else {
+          <strong>being activated</strong>
+        }
+        — this may take a moment to reflect.
+      </p>
+      <ul class="perks-list">
+        <li><mat-icon>check_circle</mat-icon> Unlimited job applications / postings</li>
+        <li><mat-icon>check_circle</mat-icon> PRO badge on your profile</li>
+        <li><mat-icon>check_circle</mat-icon> 0% commission — always</li>
+      </ul>
+      <div class="result-actions">
+        <a mat-raised-button color="primary" routerLink="/jobs">Browse Jobs</a>
+        <a mat-stroked-button routerLink="/settings/billing">View Plan Details</a>
+      </div>
     </div>
-  </div>
-
-  <!-- Cancel -->
-  <div *ngIf="!loading && !isSuccess" class="result-card result-card--cancel">
-    <div class="result-icon cancel-icon">
-      <mat-icon>cancel</mat-icon>
+  } @else {
+    <!-- Cancel -->
+    <div class="result-card result-card--cancel">
+      <div class="result-icon cancel-icon">
+        <mat-icon>cancel</mat-icon>
+      </div>
+      <h1>Payment cancelled</h1>
+      <p class="result-subtitle">
+        No worries — your checkout was cancelled and you haven't been charged.
+        You can upgrade to PRO any time you're ready.
+      </p>
+      <div class="result-actions">
+        <a mat-raised-button color="primary" routerLink="/pricing">View Pricing</a>
+        <a mat-stroked-button routerLink="/jobs">Back to Jobs</a>
+      </div>
     </div>
-    <h1>Payment cancelled</h1>
-    <p class="result-subtitle">
-      No worries — your checkout was cancelled and you haven't been charged.
-      You can upgrade to PRO any time you're ready.
-    </p>
-    <div class="result-actions">
-      <a mat-raised-button color="primary" routerLink="/pricing">View Pricing</a>
-      <a mat-stroked-button routerLink="/jobs">Back to Jobs</a>
-    </div>
-  </div>
+  }
 
 </div>

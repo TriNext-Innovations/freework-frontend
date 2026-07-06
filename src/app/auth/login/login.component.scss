@@ -59,7 +59,7 @@ mat-card-header {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-md);
+  gap: var(--spacing-sm);
   width: 100%;
 }
 
@@ -88,34 +88,68 @@ mat-card-header {
   }
 }
 
-mat-card-title {
-  font-family: 'Bricolage Grotesque', sans-serif !important;
-  font-size: 1.625rem !important;
-  font-weight: 700 !important;
-  margin-bottom: var(--spacing-xs) !important;
-  color: #ffffff !important;
-  letter-spacing: -0.025em !important;
-  transition: all 0.3s ease !important;
-
-  :host-context([data-theme="light"]) & {
-    color: var(--color-text-primary) !important;
-  }
+// ── Hero eyebrow ──────────────────────────────────────────────────
+.auth-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--color-accent-500);
+  margin-bottom: var(--spacing-xs);
 }
 
-mat-card-subtitle {
-  font-size: 14px !important;
-  color: rgba(255, 255, 255, 0.65) !important;
-  font-weight: 400 !important;
-  line-height: 1.5 !important;
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent-500);
+  box-shadow: 0 0 0 0 rgba(43, 184, 138, 0.5);
+  animation: live-pulse 2.4s ease-out infinite;
+}
+
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(43, 184, 138, 0.45); }
+  70%  { box-shadow: 0 0 0 8px rgba(43, 184, 138, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(43, 184, 138, 0); }
+}
+
+// ── Page title h1 ─────────────────────────────────────────────────
+.auth-title {
+  font-size: clamp(1.5rem, 3.5vw, 1.875rem);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  margin: 0 0 var(--spacing-xs);
+  color: #ffffff;
 
   em {
     font-family: 'Instrument Serif', Georgia, serif;
     font-style: italic;
-    color: #2BB88A;
+    font-weight: 400;
+    background: linear-gradient(120deg, #2BB88A 0%, #1A8D6F 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    padding-right: 0.06em;
   }
 
   :host-context([data-theme="light"]) & {
-    color: var(--color-text-secondary) !important;
+    color: var(--color-text-primary);
+  }
+}
+
+.auth-subtitle {
+  margin: 0;
+  font-size: 13.5px;
+  color: rgba(255, 255, 255, 0.60);
+  line-height: 1.55;
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-secondary);
   }
 }
 
@@ -152,7 +186,6 @@ mat-form-field {
   width: 100%;
 }
 
-// Right column slides in — max-width + max-height collapse so it doesn't affect row height when hidden
 .col-right {
   flex: 1;
   min-width: 0;
@@ -173,7 +206,7 @@ mat-form-field {
   }
 }
 
-// ── Register-only vertical reveal (first name field) ──────────────
+// ── Register-only vertical reveal ──────────────────────────────────
 .extra-fields {
   overflow: hidden;
   max-height: 0;
@@ -187,7 +220,7 @@ mat-form-field {
     max-height: fit-content;
     opacity: 1;
     pointer-events: auto;
-    padding-top: 4px; // room for the floating label to rise above the field border
+    padding-top: 4px;
     overflow: visible;
   }
 }
@@ -208,14 +241,15 @@ mat-form-field {
 
 .role-label {
   display: block;
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
   margin-bottom: var(--spacing-md);
-  color: rgba(255, 255, 255, 0.85);
-  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.65);
 
   :host-context([data-theme="light"]) & {
-    color: var(--color-text-primary);
+    color: var(--color-text-tertiary);
   }
 }
 
@@ -295,26 +329,31 @@ mat-form-field {
   }
 }
 
-// ── Submit button ─────────────────────────────────────────────────
+// ── Submit button — pill gradient CTA ─────────────────────────────
 .submit-button {
   width: 100%;
   height: 44px;
   font-size: 15px;
   font-weight: 600;
   margin-bottom: var(--spacing-md);
-  background-color: var(--color-accent-600) !important;
-  color: white !important;
-  border-radius: var(--radius-md) !important;
-  box-shadow: none !important;
+  border-radius: var(--radius-full) !important;
+  background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(43, 184, 138, 0.35) !important;
   transition: all var(--transition-fast) !important;
 
   &:hover:not([disabled]) {
-    background-color: var(--color-accent-700) !important;
+    box-shadow: 0 6px 20px rgba(43, 184, 138, 0.45) !important;
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(26, 141, 111, 0.35) !important;
   }
 
   &:active { transform: translateY(0); }
+
+  &[disabled] {
+    opacity: 0.55;
+    background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%) !important;
+    box-shadow: none !important;
+  }
 
   mat-spinner {
     display: inline-block;
@@ -344,9 +383,7 @@ mat-form-field {
   }
 }
 
-// ── Mock credentials helper ───────────────────────────────────────
-
-// ── Toggle link (register/sign-in switch) ─────────────────────────
+// ── Toggle link ───────────────────────────────────────────────────
 .toggle-link {
   text-align: center;
   padding-top: var(--spacing-md);
@@ -430,8 +467,114 @@ mat-form-field {
   }
 }
 
+// ── Resend verification ───────────────────────────────────────────
+.resend-btn {
+  border-color: rgba(43, 184, 138, 0.35) !important;
+  color: #2BB88A !important;
+  border-radius: var(--radius-full) !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  height: 36px;
+  padding: 0 var(--spacing-lg) !important;
+
+  mat-spinner { display: inline-block; margin-right: var(--spacing-xs); }
+
+  :host-context([data-theme="light"]) & {
+    border-color: var(--color-accent-300) !important;
+  }
+}
+
+.resend-sent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-xs);
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #2BB88A;
+
+  mat-icon { font-size: 1rem; width: 1rem; height: 1rem; }
+}
+
+.resend-hint {
+  margin: calc(-1 * var(--spacing-sm)) 0 var(--spacing-md);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.50);
+  text-align: center;
+
+  a {
+    color: #2BB88A;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 4px;
+    &:hover { color: #1A8D6F; }
+    &.disabled { opacity: 0.5; cursor: default; }
+  }
+
+  .resend-confirmed {
+    color: #2BB88A;
+    font-weight: 600;
+    margin-left: 4px;
+  }
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-tertiary);
+  }
+}
+
+// ── Consent section ───────────────────────────────────────────────
+.consent-section {
+  padding-top: var(--spacing-md);
+  margin-top: var(--spacing-xs);
+
+  mat-divider {
+    margin-bottom: var(--spacing-md);
+    border-color: rgba(43, 184, 138, 0.15) !important;
+  }
+}
+
+.consent-heading {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.10em;
+  color: rgba(255, 255, 255, 0.45);
+  margin: 0 0 var(--spacing-sm);
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-tertiary);
+  }
+}
+
+.consent-checkbox {
+  display: block;
+  margin-bottom: var(--spacing-sm);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.65);
+
+  a {
+    color: #2BB88A;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  :host-context([data-theme="light"]) & {
+    color: var(--color-text-secondary);
+  }
+}
+
+.required-asterisk {
+  color: var(--color-error-500);
+  margin-left: 2px;
+}
+
 // ── Responsive ────────────────────────────────────────────────────
-// Tablet — register collapses to single column
 @media (max-width: 860px) {
   .login-card.is-register {
     width: calc(100vw - 2 * var(--spacing-xl));
@@ -447,7 +590,6 @@ mat-form-field {
   }
 }
 
-// Mobile — card fills screen, vertical scroll if needed
 @media (max-width: 600px) {
   .login-container {
     align-items: flex-start;
@@ -464,8 +606,6 @@ mat-form-field {
     padding: var(--spacing-xl) var(--spacing-md) var(--spacing-md) !important;
   }
 
-  mat-card-title { font-size: 1.375rem !important; }
-
   mat-card-content,
   ::ng-deep .mat-mdc-card-content {
     padding: 0 var(--spacing-md) var(--spacing-md) !important;
@@ -474,38 +614,9 @@ mat-form-field {
   .submit-button { height: 48px; }
 }
 
-.consent-section {
-  padding-top: 1rem;
-  margin-top: 0.5rem;
-
-  mat-divider {
-    margin-bottom: 1rem;
-  }
-}
-
-.consent-heading {
-  font-size: 0.875rem;
-  color: var(--mat-app-on-surface-variant, #aaa);
-  margin: 0 0 0.75rem;
-}
-
-.consent-checkbox {
-  display: block;
-  margin-bottom: 0.75rem;
-  font-size: 0.875rem;
-  line-height: 1.5;
-
-  a {
-    color: #2BB88A;
-    text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
-  }
-}
-
-.required-asterisk {
-  color: var(--mat-warn-default, #f44336);
-  margin-left: 2px;
+// ── Reduced motion ────────────────────────────────────────────────
+@media (prefers-reduced-motion: reduce) {
+  .live-dot { animation: none; }
+  .login-card, .submit-button { transition: none !important; }
+  .col-right, .extra-fields { transition: none !important; }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import {
@@ -16,12 +16,12 @@ import { buildApiEndpointUrl } from '../api.config';
   providedIn: 'root'
 })
 export class PaymentService {
+  private http = inject(HttpClient);
+
   private apiUrl = buildApiEndpointUrl('/payments');
 
   private paymentStatusSubject = new BehaviorSubject<PaymentStatusUpdate | null>(null);
   public paymentStatus$ = this.paymentStatusSubject.asObservable();
-
-  constructor(private http: HttpClient) {}
 
   getPayments(): Observable<Payment[]> {
     return this.http.get<Payment[]>(this.apiUrl);

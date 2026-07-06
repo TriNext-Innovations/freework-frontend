@@ -35,7 +35,7 @@
   align-items: center;
   gap: 0.4rem;
   padding: 0.3rem 0.75rem;
-  background: var(--mat-app-surface-variant, #2a2a2a);
+  background: var(--color-surface);
   border-radius: 16px;
   font-size: 0.85rem;
 
@@ -47,7 +47,7 @@
 
   &.stat-warning {
     background: rgba(255, 152, 0, 0.15);
-    color: #FF9800;
+    color: var(--color-warning-500);
   }
 
   &.stat-total {
@@ -101,12 +101,12 @@
 
   &.status-received {
     background: rgba(33, 150, 243, 0.15);
-    color: #2196F3;
+    color: var(--color-accent-500);
   }
 
   &.status-progress {
     background: rgba(255, 152, 0, 0.15);
-    color: #FF9800;
+    color: var(--color-warning-500);
   }
 
   &.status-completed {
@@ -116,12 +116,12 @@
 
   &.status-rejected {
     background: rgba(244, 67, 54, 0.15);
-    color: #f44336;
+    color: var(--color-error-500);
   }
 }
 
 .overdue-icon {
-  color: #FF9800;
+  color: var(--color-warning-500);
   font-size: 1.2rem;
 }
 
@@ -135,7 +135,7 @@
 
 .empty-state {
   text-align: center;
-  color: var(--mat-app-on-surface-variant, #aaa);
+  color: var(--color-text-secondary);
   padding: 2rem;
 }
 
@@ -158,7 +158,7 @@
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: var(--mat-app-on-surface-variant, #aaa);
+  color: var(--color-text-secondary);
   margin-bottom: 0.2rem;
 }
 
@@ -180,7 +180,7 @@
 }
 
 .error-msg {
-  color: var(--mat-warn-default, #f44336);
+  color: var(--mat-warn-default, var(--color-error-500));
 }
 
 .success-msg {

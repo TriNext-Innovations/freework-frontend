@@ -104,14 +104,14 @@
       margin: 0 0 var(--spacing-md);
       font-size: 1.25rem;
       font-weight: 600;
-      color: rgba(0, 0, 0, 0.87);
+      color: var(--color-text-primary);
     }
 
     .review-comment {
       margin: 0 0 1.5rem;
       font-size: 1rem;
       line-height: 1.6;
-      color: rgba(0, 0, 0, 0.7);
+      color: var(--color-text-secondary);
       white-space: pre-wrap;
     }
 
@@ -133,7 +133,7 @@
         }
 
         strong {
-          color: rgba(0, 0, 0, 0.87);
+          color: var(--color-text-primary);
         }
       }
 
@@ -157,30 +157,30 @@
 
     .pros-section {
       .positive-icon {
-        color: #4caf50;
+        color: var(--color-success-500);
       }
 
       .pro-chip {
-        background: #e8f5e9;
-        color: #2e7d32;
+        background: var(--color-success-50);
+        color: var(--color-success-600);
 
         .chip-icon {
-          color: #4caf50;
+          color: var(--color-success-500);
         }
       }
     }
 
     .cons-section {
       .negative-icon {
-        color: #ff9800;
+        color: var(--color-warning-500);
       }
 
       .con-chip {
         background: #fff3e0;
-        color: #e65100;
+        color: var(--color-warning-600);
 
         .chip-icon {
-          color: #ff9800;
+          color: var(--color-warning-500);
         }
       }
     }
@@ -190,17 +190,17 @@
     }
 
     .review-response {
-      background: #f5f5f5;
+      background: var(--color-surface);
       padding: 1rem;
       border-radius: 8px;
-      border-left: 4px solid #1976d2;
+      border-left: 4px solid var(--color-accent-600);
 
       .response-header {
         display: flex;
         align-items: center;
         gap: 0.5rem;
         margin-bottom: 0.75rem;
-        color: #1976d2;
+        color: var(--color-accent-600);
 
         mat-icon {
           font-size: 1.25rem;
@@ -217,14 +217,14 @@
         margin: 0;
         font-size: 0.9375rem;
         line-height: 1.5;
-        color: rgba(0, 0, 0, 0.7);
+        color: var(--color-text-secondary);
       }
     }
   }
 
   mat-card-actions {
     padding: 0.75rem 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.12);
+    border-top: 1px solid var(--color-border);
 
     .helpful-section {
       display: flex;
@@ -233,7 +233,7 @@
 
       .helpful-question {
         font-size: 0.875rem;
-        color: rgba(0, 0, 0, 0.6);
+        color: var(--color-text-secondary);
         font-weight: 500;
       }
 

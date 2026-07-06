@@ -31,10 +31,10 @@
         <mat-card-content>
           <div class="job-info-grid">
             <div class="info-item">
-              <mat-icon>attach_money</mat-icon>
+              <mat-icon>payments</mat-icon>
               <div>
                 <span class="info-label">Budget</span>
-                <span class="info-value">${{ job.budget }} {{ job.budgetType === 'HOURLY' ? '/hr' : '' }}</span>
+                <span class="info-value">R{{ job.budget }} {{ job.budgetType === 'HOURLY' ? '/hr' : '' }}</span>
               </div>
             </div>
             <div class="info-item">
@@ -202,7 +202,7 @@
                   type="number"
                   placeholder="0"
                 >
-                <span matPrefix>$&nbsp;</span>
+                <span matPrefix>R&nbsp;</span>
                 @if (job.budgetType === 'HOURLY') {
 <span matSuffix>/hr</span>
 }

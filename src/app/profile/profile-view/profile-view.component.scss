@@ -224,7 +224,7 @@
     font-size: 1.125rem !important;
     width: 1.125rem !important;
     height: 1.125rem !important;
-    color: #f59e0b;
+    color: var(--color-warning-500);
   }
 
   .rating-value {
@@ -583,7 +583,7 @@
     }
 
     &.verified {
-      color: #22c55e;
+      color: var(--color-success-500);
       font-weight: 500;
       display: flex;
       align-items: center;

@@ -3,19 +3,25 @@
   <div class="chat-sidebar" [class.mobile-hidden]="isMobileView && !showSidebarOnMobile">
     <div class="sidebar-header">
       <h2>Messages</h2>
-      <span class="unread-badge" *ngIf="totalUnreadCount > 0" [matBadge]="totalUnreadCount" matBadgeColor="warn"></span>
+      @if (totalUnreadCount > 0) {
+<span class="unread-badge" [matBadge]="totalUnreadCount" matBadgeColor="warn"></span>
+}
     </div>
 
     <!-- Loading State -->
-    <div *ngIf="loadingConversations" class="loading-state">
+    @if (loadingConversations) {
+<div class="loading-state">
       <mat-spinner diameter="40"></mat-spinner>
       <p>Loading conversations...</p>
     </div>
+}
 
     <!-- Conversations List -->
-    <div *ngIf="!loadingConversations" class="conversations-list">
-      <div
-        *ngFor="let conversation of conversations"
+    @if (!loadingConversations) {
+<div class="conversations-list">
+      @for (conversation of conversations; track conversation) {
+<div
+       
         class="conversation-item"
         [class.active]="selectedConversation?.id === conversation.id"
         [class.unread]="conversation.unreadCount > 0"
@@ -26,70 +32,99 @@
         (keydown.space)="selectConversation(conversation)"
       >
         <div class="conversation-avatar">
-          <img *ngIf="getConversationAvatar(conversation)" [src]="getConversationAvatar(conversation)" alt="Avatar">
-          <mat-icon *ngIf="!getConversationAvatar(conversation)">account_circle</mat-icon>
-          <span class="unread-indicator" *ngIf="conversation.unreadCount > 0"></span>
+          @if (getConversationAvatar(conversation)) {
+<img [src]="getConversationAvatar(conversation)" alt="Avatar">
+}
+          @if (!getConversationAvatar(conversation)) {
+<mat-icon>account_circle</mat-icon>
+}
+          @if (conversation.unreadCount > 0) {
+<span class="unread-indicator"></span>
+}
         </div>
 
         <div class="conversation-info">
           <div class="conversation-header">
             <h3 class="conversation-name">{{ getConversationName(conversation) }}</h3>
-            <span class="conversation-time" *ngIf="conversation.lastMessage">
+            @if (conversation.lastMessage) {
+<span class="conversation-time">
               {{ formatTime(conversation.lastMessage.timestamp) }}
             </span>
+}
           </div>
 
           <div class="conversation-preview">
             <div class="preview-row">
-              <p class="last-message" *ngIf="conversation.lastMessage">
+              @if (conversation.lastMessage) {
+<p class="last-message">
                 {{ conversation.lastMessage.content }}
               </p>
-              <span class="unread-count" *ngIf="conversation.unreadCount > 0">
+}
+              @if (conversation.unreadCount > 0) {
+<span class="unread-count">
                 {{ conversation.unreadCount }}
               </span>
+}
             </div>
-            <p class="job-title" *ngIf="conversation.jobTitle">
+            @if (conversation.jobTitle) {
+<p class="job-title">
               <mat-icon>work</mat-icon>
               {{ conversation.jobTitle }}
             </p>
+}
           </div>
         </div>
       </div>
+}
 
       <!-- Empty State -->
-      <div *ngIf="conversations.length === 0" class="empty-conversations">
+      @if (conversations.length === 0) {
+<div class="empty-conversations">
         <mat-icon>chat_bubble_outline</mat-icon>
         <h3>No Conversations Yet</h3>
         <p>Start a conversation with a freelancer or customer</p>
       </div>
+}
     </div>
+}
   </div>
 
   <!-- Main Chat Area -->
   <div class="chat-main" [class.mobile-hidden]="isMobileView && showSidebarOnMobile">
     <!-- No Conversation Selected -->
-    <div *ngIf="!selectedConversation" class="no-conversation-selected">
+    @if (!selectedConversation) {
+<div class="no-conversation-selected">
       <mat-icon>forum</mat-icon>
       <h2>Select a Conversation</h2>
       <p>Choose a conversation from the list to start messaging</p>
     </div>
+}
 
     <!-- Chat Header -->
-    <div *ngIf="selectedConversation" class="chat-header">
+    @if (selectedConversation) {
+<div class="chat-header">
       <!-- Mobile back button -->
-      <button mat-icon-button class="mobile-back-btn" (click)="backToConversations()" *ngIf="isMobileView">
+      @if (isMobileView) {
+<button mat-icon-button class="mobile-back-btn" (click)="backToConversations()">
         <mat-icon>arrow_back</mat-icon>
       </button>
+}
 
       <div class="chat-header-info">
-        <img *ngIf="getOtherParticipantAvatar()" [src]="getOtherParticipantAvatar()" alt="Avatar" class="header-avatar">
-        <mat-icon *ngIf="!getOtherParticipantAvatar()" class="header-avatar-icon">account_circle</mat-icon>
+        @if (getOtherParticipantAvatar()) {
+<img [src]="getOtherParticipantAvatar()" alt="Avatar" class="header-avatar">
+}
+        @if (!getOtherParticipantAvatar()) {
+<mat-icon class="header-avatar-icon">account_circle</mat-icon>
+}
         <div class="header-details">
           <h3>{{ getOtherParticipantName() }}</h3>
-          <p class="job-context" *ngIf="selectedConversation.jobTitle">
+          @if (selectedConversation.jobTitle) {
+<p class="job-context">
             <mat-icon>work</mat-icon>
             {{ selectedConversation.jobTitle }}
           </p>
+}
         </div>
       </div>
 
@@ -105,45 +140,67 @@
         </button>
       </div>
     </div>
+}
 
     <!-- Messages Area -->
-    <div *ngIf="selectedConversation" class="messages-container" #messagesContainer>
+    @if (selectedConversation) {
+<div class="messages-container" #messagesContainer>
       <!-- Loading Messages -->
-      <div *ngIf="loading" class="messages-loading">
+      @if (loading) {
+<div class="messages-loading">
         <mat-spinner diameter="40"></mat-spinner>
       </div>
+}
 
       <!-- Messages List -->
-      <div *ngIf="!loading" class="messages-list">
-        <div
-          *ngFor="let message of messages"
+      @if (!loading) {
+<div class="messages-list">
+        @for (message of messages; track message) {
+<div
+         
           class="message-wrapper"
           [class.own-message]="isMyMessage(message)"
           [class.other-message]="!isMyMessage(message)"
         >
-          <div class="message-avatar" *ngIf="!isMyMessage(message)">
-            <img *ngIf="getMessageAvatar(message)" [src]="getMessageAvatar(message)" alt="Avatar">
-            <mat-icon *ngIf="!getMessageAvatar(message)">account_circle</mat-icon>
+          @if (!isMyMessage(message)) {
+<div class="message-avatar">
+            @if (getMessageAvatar(message)) {
+<img [src]="getMessageAvatar(message)" alt="Avatar">
+}
+            @if (!getMessageAvatar(message)) {
+<mat-icon>account_circle</mat-icon>
+}
           </div>
+}
 
           <div class="message-bubble">
             <div class="message-content">{{ message.content }}</div>
             <div class="message-meta">
               <span class="message-time">{{ formatMessageTime(message.timestamp) }}</span>
-              <mat-icon *ngIf="isMyMessage(message)" class="read-indicator" [class.read]="message.read">
+              @if (isMyMessage(message)) {
+<mat-icon class="read-indicator" [class.read]="message.read">
                 {{ message.read ? 'done_all' : 'done' }}
               </mat-icon>
+}
             </div>
           </div>
 
-          <div class="message-avatar" *ngIf="isMyMessage(message)">
-            <img *ngIf="getMessageAvatar(message)" [src]="getMessageAvatar(message)" alt="Avatar">
-            <mat-icon *ngIf="!getMessageAvatar(message)">account_circle</mat-icon>
+          @if (isMyMessage(message)) {
+<div class="message-avatar">
+            @if (getMessageAvatar(message)) {
+<img [src]="getMessageAvatar(message)" alt="Avatar">
+}
+            @if (!getMessageAvatar(message)) {
+<mat-icon>account_circle</mat-icon>
+}
           </div>
+}
         </div>
+}
 
         <!-- Typing Indicator -->
-        <div *ngIf="typingUsers.size > 0" class="typing-indicator">
+        @if (typingUsers.size > 0) {
+<div class="typing-indicator">
           <div class="typing-avatar">
             <img [src]="getOtherParticipantAvatar()" alt="Avatar">
           </div>
@@ -156,11 +213,15 @@
             </div>
           </div>
         </div>
+}
       </div>
+}
     </div>
+}
 
     <!-- Message Input -->
-    <div *ngIf="selectedConversation" class="message-input-container">
+    @if (selectedConversation) {
+<div class="message-input-container">
       <mat-form-field appearance="outline" class="message-input-field">
         <mat-icon matPrefix>edit</mat-icon>
         <input
@@ -188,10 +249,15 @@
           [disabled]="!messageText.trim() || sendingMessage"
           class="send-button"
         >
-          <mat-spinner *ngIf="sendingMessage" diameter="24"></mat-spinner>
-          <mat-icon *ngIf="!sendingMessage">send</mat-icon>
+          @if (sendingMessage) {
+<mat-spinner diameter="24"></mat-spinner>
+}
+          @if (!sendingMessage) {
+<mat-icon>send</mat-icon>
+}
         </button>
       </div>
     </div>
+}
   </div>
 </div>

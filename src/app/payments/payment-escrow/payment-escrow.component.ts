@@ -1,5 +1,5 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, Input, inject } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -19,24 +19,27 @@ import { Payment, PaymentMethod, PaymentType, Milestone } from '../models/paymen
 @Component({
     selector: 'app-payment-escrow',
     imports: [
-        CommonModule,
-        FormsModule,
-        MatCardModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatSelectModule,
-        MatStepperModule,
-        MatIconModule,
-        MatProgressSpinnerModule,
-        MatSnackBarModule,
-        MatDividerModule,
-        MatChipsModule
-    ],
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    MatStepperModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatDividerModule,
+    MatChipsModule
+],
     templateUrl: './payment-escrow.component.html',
     styleUrls: ['./payment-escrow.component.scss']
 })
 export class PaymentEscrowComponent implements OnInit {
+  private paymentService = inject(PaymentService);
+  private snackBar = inject(MatSnackBar);
+  private router = inject(Router);
+
   @Input() jobId!: string;
   @Input() jobTitle!: string;
   @Input() jobAmount!: number;
@@ -62,12 +65,6 @@ export class PaymentEscrowComponent implements OnInit {
 
   PaymentMethod = PaymentMethod;
   PaymentType = PaymentType;
-
-  constructor(
-    private paymentService: PaymentService,
-    private snackBar: MatSnackBar,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     if (this.jobAmount) {

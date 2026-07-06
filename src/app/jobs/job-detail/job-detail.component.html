@@ -1,12 +1,15 @@
 <div class="job-detail-container">
   <!-- Loading State -->
-  <div class="loading-container" *ngIf="loading">
+  @if (loading) {
+<div class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p>Loading job details...</p>
   </div>
+}
 
   <!-- Job Detail Content -->
-  <div class="job-detail-content" *ngIf="!loading && job">
+  @if (!loading && job) {
+<div class="job-detail-content">
     <!-- Back Button -->
     <button mat-button class="back-button" (click)="goBack()">
       <mat-icon>arrow_back</mat-icon>
@@ -20,21 +23,18 @@
         <div class="title-section">
           <h1>{{ job.title }}</h1>
           <div class="job-status">
-            <mat-chip [highlighted]="true" [color]="getStatusColor(job.status)">
+            <span class="status-pill" [class]="getStatusClass(job.status)">
               {{ getStatusLabel(job.status) }}
-            </mat-chip>
-            <mat-chip *ngIf="job.locationType" [highlighted]="true" color="accent">
-              {{ getLocationTypeLabel(job.locationType!) }}
-            </mat-chip>
+            </span>
+            @if (job.locationType) {
+              <span class="loc-pill">{{ getLocationTypeLabel(job.locationType!) }}</span>
+            }
           </div>
         </div>
 
         <!-- Owner Actions -->
-        <div class="action-buttons" *ngIf="isOwner">
-          <button mat-raised-button color="primary" *ngIf="canAcceptWork()" (click)="acceptWork()">
-            <mat-icon>task_alt</mat-icon>
-            Accept Work
-          </button>
+        @if (isOwner) {
+<div class="action-buttons">
           <button mat-raised-button color="primary" (click)="editJob()">
             <mat-icon>edit</mat-icon>
             Edit Job
@@ -44,14 +44,12 @@
             Delete
           </button>
         </div>
+}
 
         <!-- Freelancer Actions -->
-        <div class="action-buttons" *ngIf="!isOwner">
-          <button mat-raised-button color="primary" *ngIf="canSubmitForReview()" (click)="submitForReview()">
-            <mat-icon>rate_review</mat-icon>
-            Submit for Review
-          </button>
-          <button mat-raised-button color="primary" *ngIf="job?.status === 'OPEN'" (click)="applyForJob()">
+        @if (!isOwner) {
+<div class="action-buttons">
+          <button mat-raised-button color="primary" (click)="applyForJob()">
             <mat-icon>send</mat-icon>
             Apply Now
           </button>
@@ -60,6 +58,7 @@
             Contact
           </button>
         </div>
+}
       </div>
 
       <mat-divider></mat-divider>
@@ -137,9 +136,11 @@
           Required Skills
         </h2>
         <mat-chip-set>
-          <mat-chip *ngFor="let skill of job.skills">
+          @for (skill of job.skills; track skill) {
+<mat-chip>
             {{ skill }}
           </mat-chip>
+}
         </mat-chip-set>
       </div>
 
@@ -153,17 +154,23 @@
         </h2>
         <div class="customer-card">
           <div class="customer-avatar">
-            <img *ngIf="job.customerAvatar" [src]="job.customerAvatar" [alt]="job.customerName">
-            <mat-icon *ngIf="!job.customerAvatar">account_circle</mat-icon>
+            @if (job.customerAvatar) {
+<img [src]="job.customerAvatar" [alt]="job.customerName">
+}
+            @if (!job.customerAvatar) {
+<mat-icon>account_circle</mat-icon>
+}
           </div>
           <div class="customer-info">
             <h3>{{ job.customerName }}</h3>
             <p>Member since {{ (job.createdAt || job.created_at) | date: 'MMMM yyyy' }}</p>
           </div>
-          <button mat-raised-button color="primary" (click)="contactCustomer()" *ngIf="!isOwner">
+          @if (!isOwner) {
+<button mat-raised-button color="primary" (click)="contactCustomer()">
             <mat-icon>message</mat-icon>
             Send Message
           </button>
+}
         </div>
       </div>
 
@@ -178,7 +185,8 @@
           </h2>
 
           <!-- Write Review Button (Only for completed jobs) -->
-          <div class="review-actions" *ngIf="canWriteReview()">
+          @if (canWriteReview()) {
+<div class="review-actions">
             <button
               mat-raised-button
               color="primary"
@@ -189,6 +197,7 @@
               {{ isOwner ? 'Review Freelancer' : 'Review Customer' }}
             </button>
           </div>
+}
         </div>
 
         <mat-tab-group class="reviews-tabs">
@@ -254,31 +263,38 @@
           </div>
         </div>
 
-        <button
+        @if (!isOwner) {
+<button
           mat-raised-button
           color="primary"
           class="apply-button"
           (click)="applyForJob()"
-          *ngIf="!isOwner && job.status === 'OPEN'">
+         >
           <mat-icon>send</mat-icon>
           Apply Now
         </button>
+}
 
-        <button
+        @if (isOwner) {
+<button
           mat-raised-button
           color="primary"
           class="apply-button"
           (click)="editJob()"
-          *ngIf="isOwner">
+         >
           <mat-icon>edit</mat-icon>
           Edit Job
         </button>
+}
 
-        <p class="info-text" *ngIf="!isOwner">
+        @if (!isOwner) {
+<p class="info-text">
           <mat-icon>info</mat-icon>
           Submit your proposal to get noticed by the customer
         </p>
+}
       </mat-card>
     </div>
   </div>
+}
 </div>

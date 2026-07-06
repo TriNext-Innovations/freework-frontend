@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject } from '@angular/core';
+
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,30 +14,29 @@ import { AuthService } from '../../auth/auth.service';
 @Component({
     selector: 'app-delete-account-dialog',
     imports: [
-        CommonModule,
-        ReactiveFormsModule,
-        MatDialogModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatIconModule,
-        MatProgressSpinnerModule
-    ],
+    ReactiveFormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatIconModule,
+    MatProgressSpinnerModule
+],
     templateUrl: './delete-account-dialog.component.html',
     styleUrl: './delete-account-dialog.component.scss'
 })
 export class DeleteAccountDialogComponent {
+  private dialogRef = inject<MatDialogRef<DeleteAccountDialogComponent>>(MatDialogRef);
+  private fb = inject(FormBuilder);
+  private legalService = inject(LegalService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   form: FormGroup;
   loading = false;
   error = '';
 
-  constructor(
-    private dialogRef: MatDialogRef<DeleteAccountDialogComponent>,
-    private fb: FormBuilder,
-    private legalService: LegalService,
-    private authService: AuthService,
-    private router: Router
-  ) {
+  constructor() {
     this.form = this.fb.group({
       confirmation: ['', [Validators.required, Validators.pattern(/^DELETE$/)]]
     });

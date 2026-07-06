@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -39,8 +39,14 @@ import { debounceTime } from 'rxjs/operators';
     styleUrl: './job-list.component.scss'
 })
 export class JobListComponent implements OnInit {
+  private fb = inject(FormBuilder);
+  private jobService = inject(JobService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   jobs: Job[] = [];
   loading = false;
+  loadFailed = false;
   totalElements = 0;
   pageSize = 10;
   pageIndex = 0;
@@ -48,12 +54,12 @@ export class JobListComponent implements OnInit {
   filterForm!: FormGroup;
   categories = JOB_CATEGORIES;
 
-  constructor(
-    private fb: FormBuilder,
-    private jobService: JobService,
-    private authService: AuthService,
-    private router: Router
-  ) {}
+  readonly workTypes = [
+    { value: '', label: 'All' },
+    { value: 'REMOTE', label: 'Remote' },
+    { value: 'ONSITE', label: 'On-site' },
+    { value: 'HYBRID', label: 'Hybrid' }
+  ];
 
   ngOnInit(): void {
     this.initFilterForm();
@@ -77,25 +83,36 @@ export class JobListComponent implements OnInit {
     // Subscribe to form changes and reload jobs
     this.filterForm.valueChanges
       .pipe(debounceTime(300))
-      .subscribe((values) => {
-        console.log('🔔 Form values changed:', values);
+      .subscribe(() => {
         this.pageIndex = 0;
         this.loadJobs();
       });
   }
 
+  setLocationType(value: string): void {
+    this.filterForm.patchValue({ locationType: value });
+  }
+
+  get activeLocationType(): string {
+    return this.filterForm?.get('locationType')?.value || '';
+  }
+
+  get hasActiveFilters(): boolean {
+    if (!this.filterForm) return false;
+    const v = this.filterForm.value;
+    return !!(v.search || v.category || v.locationType || v.budgetType || v.minBudget || v.maxBudget);
+  }
+
   loadJobs(): void {
     // Guard against calling loadJobs before form is initialized
     if (!this.filterForm) {
-      console.warn('⚠️ filterForm not initialized yet');
       return;
     }
 
     this.loading = true;
+    this.loadFailed = false;
 
-    // Get raw form values
     const formValues = this.filterForm.value;
-    console.log('📝 Raw form values in loadJobs:', formValues);
 
     // Build filters object - convert empty strings to undefined
     const filters: JobFilters = {};
@@ -131,34 +148,18 @@ export class JobListComponent implements OnInit {
       filters.customerId = currentUser.id;
     }
 
-    // If user is a CUSTOMER, only show their posted jobs
-    if (currentUser?.role === 'CUSTOMER') {
-      filters.customerId = currentUser.id;
-    }
-
-    console.log('✅ Final filters being applied:', filters);
-
     this.jobService.getJobs(this.pageIndex, this.pageSize, filters).subscribe({
       next: (response) => {
         this.jobs = response.content;
         this.totalElements = response.totalElements;
-        this.totalElements = response.totalElements;
         this.loading = false;
-        console.log(`✅ Found ${response.totalElements} jobs matching filters`);
-        console.log(`✅ Found ${response.totalElements} jobs matching filters`);
-        console.log('📋 Full jobs data:', this.jobs);
-        if (this.jobs.length > 0) {
-          console.log('🔍 First job budget details:', {
-            id: this.jobs[0].id,
-            title: this.jobs[0].title,
-            budget: this.jobs[0].budget,
-            budgetType: this.jobs[0].budgetType
-          });
-        }
       },
       error: (error) => {
-        console.error('❌ Error loading jobs:', error);
+        console.error('Error loading jobs:', error);
+        this.jobs = [];
+        this.totalElements = 0;
         this.loading = false;
+        this.loadFailed = true;
       }
     });
   }
@@ -199,10 +200,7 @@ export class JobListComponent implements OnInit {
   }
 
   formatBudget(job: Job): string {
-    console.log('💰 formatBudget called with:', { budget: job.budget, budgetType: job.budgetType });
-
     if (!job || !job.budget) {
-      console.warn('⚠️ No budget available for job');
       return 'Not specified';
     }
 
@@ -212,10 +210,7 @@ export class JobListComponent implements OnInit {
       minimumFractionDigits: 0
     }).format(job.budget);
 
-    const result = job.budgetType === 'HOURLY' ? `${amount}/hr` : amount;
-    console.log('✅ Formatted budget:', result);
-
-    return result;
+    return job.budgetType === 'HOURLY' ? `${amount}/hr` : amount;
   }
 
   getTimeSincePosted(createdAt: string | undefined): string {

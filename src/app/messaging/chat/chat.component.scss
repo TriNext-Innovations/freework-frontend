@@ -341,7 +341,7 @@
 
         .read-indicator {
           color: rgba(255, 255, 255, 0.8);
-          &.read { color: #10b981; }
+          &.read { color: var(--color-success-500); }
         }
       }
     }

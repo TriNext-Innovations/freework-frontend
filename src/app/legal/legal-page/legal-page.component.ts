@@ -1,5 +1,5 @@
 import { Component, OnInit, PLATFORM_ID, inject } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { isPlatformBrowser } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,28 +12,25 @@ import { CookieConsentService } from '../cookie-consent.service';
 @Component({
     selector: 'app-legal-page',
     imports: [
-        CommonModule,
-        RouterLink,
-        MatButtonModule,
-        MatIconModule,
-        MatDividerModule,
-        MatButtonToggleModule,
-        FormsModule
-    ],
+    RouterLink,
+    MatButtonModule,
+    MatIconModule,
+    MatDividerModule,
+    MatButtonToggleModule,
+    FormsModule
+],
     templateUrl: './legal-page.component.html',
     styleUrl: './legal-page.component.scss'
 })
 export class LegalPageComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private cookieConsentService = inject(CookieConsentService);
+
   document: LegalDocument | null = null;
   documentKey = '';
   language: 'en' | 'af' = 'en';
   private readonly platformId = inject(PLATFORM_ID);
-
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private cookieConsentService: CookieConsentService
-  ) {}
 
   ngOnInit(): void {
     this.documentKey = this.route.snapshot.data['documentKey'] || '';

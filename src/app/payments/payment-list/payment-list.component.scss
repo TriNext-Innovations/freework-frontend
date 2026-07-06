@@ -2,8 +2,50 @@
   padding: var(--spacing-2xl);
   max-width: 1400px;
   margin: 0 auto;
-  background: var(--color-surface);
   min-height: 100vh;
+}
+
+.page-hero {
+  max-width: 640px;
+  margin-bottom: var(--spacing-xl);
+
+  &__eyebrow {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-accent-500);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  h1 {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin: 0 0 var(--spacing-sm);
+    color: var(--color-text-primary);
+
+    em {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      background: linear-gradient(120deg, #2BB88A 0%, #1A8D6F 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      padding-right: 0.06em;
+    }
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
+  }
 }
 
 .header-card {
@@ -113,8 +155,8 @@
       transition: box-shadow 0.2s, border-color 0.2s;
 
       &:hover {
-        border-color: #1976d2;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        border-color: var(--color-accent-500);
+        box-shadow: var(--shadow-md);
       }
 
       .payment-main {
@@ -137,7 +179,7 @@
           .payment-job {
             margin: 0 0 0.5rem 0;
             font-size: 1.1rem;
-            color: rgba(0, 0, 0, 0.87);
+            color: var(--color-text-primary);
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -149,10 +191,10 @@
             gap: 0.5rem;
             margin-bottom: 0.5rem;
             font-size: 0.875rem;
-            color: rgba(0, 0, 0, 0.6);
+            color: var(--color-text-secondary);
 
             .separator {
-              color: rgba(0, 0, 0, 0.3);
+              color: var(--color-text-tertiary);
             }
           }
 
@@ -161,7 +203,7 @@
             flex-wrap: wrap;
             gap: 0.5rem 1.5rem;
             font-size: 0.875rem;
-            color: rgba(0, 0, 0, 0.6);
+            color: var(--color-text-secondary);
 
             span {
               display: flex;
@@ -185,19 +227,36 @@
           .amount {
             font-size: 1.5rem;
             font-weight: 600;
-            color: #1976d2;
+            color: var(--color-accent-600);
           }
 
           .currency {
             font-size: 0.875rem;
-            color: rgba(0, 0, 0, 0.6);
+            color: var(--color-text-secondary);
           }
         }
 
         .payment-status-chip {
-          mat-chip {
-            font-weight: 500;
+          .status-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.35rem 0.8rem;
+            border-radius: var(--radius-full);
+            font-size: 10.5px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            white-space: nowrap;
           }
+
+          .pstatus-pending   { background: var(--chip-status-pending-bg);  color: var(--chip-status-pending-color);  border: 1px solid var(--chip-status-pending-border); }
+          .pstatus-processing,
+          .pstatus-escrowed  { background: var(--color-accent-50); color: var(--color-accent-600); border: 1px solid var(--color-accent-200); }
+          .pstatus-released,
+          .pstatus-completed { background: var(--chip-status-accepted-bg); color: var(--chip-status-accepted-color); border: 1px solid var(--chip-status-accepted-border); }
+          .pstatus-failed,
+          .pstatus-cancelled { background: var(--chip-status-rejected-bg); color: var(--chip-status-rejected-color); border: 1px solid var(--chip-status-rejected-border); }
+          .pstatus-refunded  { background: var(--chip-status-withdrawn-bg); color: var(--chip-status-withdrawn-color); border: 1px solid var(--chip-status-withdrawn-border); }
         }
       }
 
@@ -207,7 +266,7 @@
         align-items: center;
         margin-top: 1rem;
         padding-top: 1rem;
-        border-top: 1px solid rgba(0, 0, 0, 0.12);
+        border-top: 1px solid var(--color-border);
 
         .payment-info {
           display: flex;
@@ -218,7 +277,7 @@
             align-items: center;
             gap: 0.25rem;
             font-size: 0.875rem;
-            color: rgba(0, 0, 0, 0.6);
+            color: var(--color-text-secondary);
 
             mat-icon {
               font-size: 1rem;
@@ -239,14 +298,14 @@
   align-items: center;
   justify-content: center;
   padding: 4rem 2rem;
-  color: rgba(0, 0, 0, 0.5);
+  color: var(--color-text-tertiary);
 
   mat-icon {
     font-size: 5rem;
     width: 5rem;
     height: 5rem;
     margin-bottom: 1rem;
-    color: rgba(0, 0, 0, 0.3);
+    color: var(--color-text-tertiary);
   }
 
   h3 {

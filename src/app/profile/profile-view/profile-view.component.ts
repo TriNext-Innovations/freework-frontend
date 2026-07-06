@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,17 +15,15 @@ import { Profile, FreelancerProfile, CustomerProfile } from '../models/profile.m
     styleUrls: ['./profile-view.component.scss']
 })
 export class ProfileViewComponent implements OnInit {
+  private profileService = inject(ProfileService);
+  private authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+
   profile: Profile | null = null;
   isOwnProfile = false;
   isLoading = true;
   error: string | null = null;
-
-  constructor(
-    private profileService: ProfileService,
-    private authService: AuthService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {}
 
   ngOnInit() {
     const userId = this.route.snapshot.paramMap.get('userId');

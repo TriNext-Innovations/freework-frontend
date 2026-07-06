@@ -10,15 +10,18 @@
       <div class="reviewer-details">
         <h3 class="reviewer-name">
           {{ review.reviewerName }}
-          <mat-icon *ngIf="review.isVerified" class="verified-badge" matTooltip="Verified Review">
+          @if (review.isVerified) {
+<mat-icon class="verified-badge" matTooltip="Verified Review">
             verified
           </mat-icon>
+}
         </h3>
         <p class="review-date">{{ getTimeAgo() }}</p>
       </div>
     </div>
 
-    <div class="card-actions" *ngIf="canEdit">
+    @if (canEdit) {
+<div class="card-actions">
       <button mat-icon-button (click)="onEdit()" matTooltip="Edit Review">
         <mat-icon>edit</mat-icon>
       </button>
@@ -26,24 +29,29 @@
         <mat-icon>delete</mat-icon>
       </button>
     </div>
+}
   </mat-card-header>
 
   <mat-card-content>
     <!-- Job Title (if shown) -->
-    <div class="job-title" *ngIf="showJobTitle && review.jobTitle">
+    @if (showJobTitle && review.jobTitle) {
+<div class="job-title">
       <mat-icon>work</mat-icon>
       <span>{{ review.jobTitle }}</span>
     </div>
+}
 
     <!-- Star Rating -->
     <div class="star-rating">
-      <mat-icon
-        *ngFor="let star of getStarArray()"
+      @for (star of getStarArray(); track star) {
+<mat-icon
+       
         [color]="getRatingColor()"
         class="star-icon"
       >
         {{ getStarIcon(star) }}
       </mat-icon>
+}
       <span class="rating-value">{{ review.rating }}.0</span>
     </div>
 
@@ -54,43 +62,53 @@
     <p class="review-comment">{{ review.comment }}</p>
 
     <!-- Pros Section -->
-    <div class="pros-section" *ngIf="review.pros && review.pros.length > 0">
+    @if (review.pros && review.pros.length > 0) {
+<div class="pros-section">
       <div class="section-header">
         <mat-icon class="positive-icon">thumb_up</mat-icon>
         <strong>Positives</strong>
       </div>
       <mat-chip-set>
-        <mat-chip *ngFor="let pro of review.pros" class="pro-chip">
+        @for (pro of review.pros; track pro) {
+<mat-chip class="pro-chip">
           <mat-icon class="chip-icon">check_circle</mat-icon>
           {{ pro }}
         </mat-chip>
+}
       </mat-chip-set>
     </div>
+}
 
     <!-- Cons Section -->
-    <div class="cons-section" *ngIf="review.cons && review.cons.length > 0">
+    @if (review.cons && review.cons.length > 0) {
+<div class="cons-section">
       <div class="section-header">
         <mat-icon class="negative-icon">info</mat-icon>
         <strong>Areas for Improvement</strong>
       </div>
       <mat-chip-set>
-        <mat-chip *ngFor="let con of review.cons" class="con-chip">
+        @for (con of review.cons; track con) {
+<mat-chip class="con-chip">
           <mat-icon class="chip-icon">info_outline</mat-icon>
           {{ con }}
         </mat-chip>
+}
       </mat-chip-set>
     </div>
+}
 
     <mat-divider class="divider"></mat-divider>
 
     <!-- Review Response (if exists) -->
-    <div class="review-response" *ngIf="review.response">
+    @if (review.response) {
+<div class="review-response">
       <div class="response-header">
         <mat-icon>reply</mat-icon>
         <strong>Response from {{ review.response.responderName }}</strong>
       </div>
       <p class="response-text">{{ review.response.comment }}</p>
     </div>
+}
   </mat-card-content>
 
   <mat-card-actions>

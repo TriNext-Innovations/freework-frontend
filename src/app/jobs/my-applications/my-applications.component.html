@@ -1,195 +1,194 @@
 <div class="applications-container container">
-  <!-- Header -->
-  <div class="applications-header">
-    <div class="header-content">
-      <h1>My Applications</h1>
-      <p class="subtitle">Track and manage all your job applications</p>
-    </div>
-  </div>
+  <!-- Hero -->
+  <header class="page-hero">
+    <span class="page-hero__eyebrow">your pipeline</span>
+    <h1>Applications you're <em>chasing</em></h1>
+    <p>Track every proposal you've sent and pick up the conversation the moment a client says yes.</p>
+  </header>
 
   <!-- Loading State -->
   @if (loading) {
-<div class="loading-state">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p>Loading your applications...</p>
-  </div>
-}
+    <div class="state-block" aria-busy="true">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading your applications...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (!loading && loadFailed) {
+    <div class="state-block" role="alert">
+      <div class="state-icon state-icon--error">
+        <mat-icon>cloud_off</mat-icon>
+      </div>
+      <h3>Couldn't load your applications</h3>
+      <p>Something went wrong on our side. Check your connection and try again.</p>
+      <button mat-raised-button color="primary" (click)="loadApplications()">
+        <mat-icon>refresh</mat-icon>
+        Try again
+      </button>
+    </div>
+  }
 
   <!-- Content -->
-  @if (!loading) {
-<div class="applications-content">
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
-      <mat-card class="stat-card total-card" (click)="filterByStatus('ALL')">
-        <mat-card-content>
-          <div class="stat-icon">
-            <mat-icon>folder_open</mat-icon>
-          </div>
-          <div class="stat-details">
-            <span class="stat-value">{{ stats.total }}</span>
-            <span class="stat-label">Total Applications</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+  @if (!loading && !loadFailed) {
+    <div class="applications-content">
+      <!-- Statistics Cards -->
+      <div class="stats-grid">
+        <mat-card class="stat-card total-card" [class.stat-card--active]="selectedStatus === 'ALL'"
+                  role="button" tabindex="0" (click)="filterByStatus('ALL')" (keyup.enter)="filterByStatus('ALL')">
+          <mat-card-content>
+            <div class="stat-icon"><mat-icon>folder_open</mat-icon></div>
+            <div class="stat-details">
+              <span class="stat-value">{{ stats.total }}</span>
+              <span class="stat-label">Total Applications</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card class="stat-card pending-card" (click)="filterByStatus(ApplicationStatus.PENDING)">
-        <mat-card-content>
-          <div class="stat-icon">
-            <mat-icon>schedule</mat-icon>
-          </div>
-          <div class="stat-details">
-            <span class="stat-value">{{ stats.pending }}</span>
-            <span class="stat-label">Pending Review</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        <mat-card class="stat-card pending-card" [class.stat-card--active]="selectedStatus === ApplicationStatus.PENDING"
+                  role="button" tabindex="0" (click)="filterByStatus(ApplicationStatus.PENDING)" (keyup.enter)="filterByStatus(ApplicationStatus.PENDING)">
+          <mat-card-content>
+            <div class="stat-icon"><mat-icon>schedule</mat-icon></div>
+            <div class="stat-details">
+              <span class="stat-value">{{ stats.pending }}</span>
+              <span class="stat-label">Pending Review</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card class="stat-card accepted-card" (click)="filterByStatus(ApplicationStatus.ACCEPTED)">
-        <mat-card-content>
-          <div class="stat-icon">
-            <mat-icon>check_circle</mat-icon>
-          </div>
-          <div class="stat-details">
-            <span class="stat-value">{{ stats.accepted }}</span>
-            <span class="stat-label">Accepted</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        <mat-card class="stat-card accepted-card" [class.stat-card--active]="selectedStatus === ApplicationStatus.ACCEPTED"
+                  role="button" tabindex="0" (click)="filterByStatus(ApplicationStatus.ACCEPTED)" (keyup.enter)="filterByStatus(ApplicationStatus.ACCEPTED)">
+          <mat-card-content>
+            <div class="stat-icon"><mat-icon>check_circle</mat-icon></div>
+            <div class="stat-details">
+              <span class="stat-value">{{ stats.accepted }}</span>
+              <span class="stat-label">Accepted</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
 
-      <mat-card class="stat-card rejected-card" (click)="filterByStatus(ApplicationStatus.REJECTED)">
-        <mat-card-content>
-          <div class="stat-icon">
-            <mat-icon>cancel</mat-icon>
-          </div>
-          <div class="stat-details">
-            <span class="stat-value">{{ stats.rejected }}</span>
-            <span class="stat-label">Rejected</span>
-          </div>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <!-- Empty State -->
-    @if (applications.length === 0) {
-<div class="empty-state">
-      <mat-icon>work_off</mat-icon>
-      <h2>No Applications Yet</h2>
-      <p>You haven't applied to any jobs yet. Start browsing available opportunities!</p>
-      <button mat-raised-button color="primary" routerLink="/jobs">
-        <mat-icon>search</mat-icon>
-        Browse Jobs
-      </button>
-    </div>
-}
-
-    <!-- Applications List -->
-    @if (filteredApplications.length > 0) {
-<div class="applications-list">
-      <div class="list-header">
-        <h2>
-          {{ selectedStatus === 'ALL' ? 'All Applications' : selectedStatus + ' Applications' }}
-          <span class="count">({{ filteredApplications.length }})</span>
-        </h2>
+        <mat-card class="stat-card rejected-card" [class.stat-card--active]="selectedStatus === ApplicationStatus.REJECTED"
+                  role="button" tabindex="0" (click)="filterByStatus(ApplicationStatus.REJECTED)" (keyup.enter)="filterByStatus(ApplicationStatus.REJECTED)">
+          <mat-card-content>
+            <div class="stat-icon"><mat-icon>cancel</mat-icon></div>
+            <div class="stat-details">
+              <span class="stat-value">{{ stats.rejected }}</span>
+              <span class="stat-label">Rejected</span>
+            </div>
+          </mat-card-content>
+        </mat-card>
       </div>
 
-      @for (application of filteredApplications; track application) {
-<mat-card class="application-card elevation-1">
-        <mat-card-content>
-          <div class="application-main">
-            <!-- Job Info -->
-            <div class="job-info">
-              <h3 class="job-title">{{ application.jobTitle || 'Untitled Job' }}</h3>
-              <p class="job-meta">
-                <span class="applied-date">
-                  <mat-icon>schedule</mat-icon>
-                  Applied {{ getTimeAgo(application.appliedAt) }}
-                </span>
-                @if (application.proposedRate) {
-<span class="proposed-rate">
-                  <mat-icon>attach_money</mat-icon>
-                  ${{ application.proposedRate }}
-                </span>
-}
-              </p>
+      <!-- Empty State -->
+      @if (applications.length === 0) {
+        <div class="state-block">
+          <div class="state-icon">
+            <mat-icon>work_off</mat-icon>
+          </div>
+          <h3>No applications yet</h3>
+          <p>You haven't applied to any jobs yet. Start browsing available opportunities — the right project could be one click away.</p>
+          <button mat-raised-button color="primary" routerLink="/jobs">
+            <mat-icon>search</mat-icon>
+            Browse Jobs
+          </button>
+        </div>
+      }
 
-              <!-- Cover Letter Preview -->
-              <div class="cover-letter-preview">
-                <p class="preview-text">{{ application.message }}</p>
-              </div>
-
-              <!-- Portfolio Link -->
-              @if (application.portfolioLink) {
-<div class="portfolio-link">
-                <mat-icon>link</mat-icon>
-                <a [href]="application.portfolioLink" target="_blank" rel="noopener">
-                  View Portfolio
-                </a>
-              </div>
-}
-            </div>
-
-            <!-- Status Badge -->
-            <div class="application-status">
-              <mat-chip-set>
-                <mat-chip [class]="getStatusClass(application.status)">
-                  <mat-icon>{{ getStatusIcon(application.status) }}</mat-icon>
-                  {{ application.status }}
-                </mat-chip>
-              </mat-chip-set>
-            </div>
+      <!-- Applications List -->
+      @if (filteredApplications.length > 0) {
+        <div class="applications-list">
+          <div class="list-header">
+            <h2>
+              {{ selectedStatus === 'ALL' ? 'All applications' : (selectedStatus | titlecase) + ' applications' }}
+              <span class="count">({{ filteredApplications.length }})</span>
+            </h2>
           </div>
 
-          <!-- Actions -->
-          <div class="application-actions">
-            <button
-              mat-button
-              (click)="viewJobDetails(application.jobId)"
-            >
-              <mat-icon>visibility</mat-icon>
-              View Job
-            </button>
+          @for (application of filteredApplications; track application.id) {
+            <mat-card class="application-card">
+              <mat-card-content>
+                <div class="application-main">
+                  <!-- Job Info -->
+                  <div class="job-info">
+                    <h3 class="job-title" role="link" tabindex="0"
+                        (click)="viewJobDetails(application.jobId)"
+                        (keyup.enter)="viewJobDetails(application.jobId)">{{ application.jobTitle || 'Untitled Job' }}</h3>
+                    <p class="job-meta">
+                      <span class="applied-date">
+                        <mat-icon>schedule</mat-icon>
+                        Applied {{ getTimeAgo(application.appliedAt) }}
+                      </span>
+                      @if (application.proposedRate) {
+                        <span class="proposed-rate">
+                          <mat-icon>payments</mat-icon>
+                          {{ formatRate(application.proposedRate) }}
+                        </span>
+                      }
+                    </p>
 
-            @if (application.status === ApplicationStatus.PENDING) {
-<button
-              mat-button
-             
-              (click)="withdrawApplication(application)"
-              class="withdraw-button"
-            >
-              <mat-icon>remove_circle</mat-icon>
-              Withdraw
-            </button>
-}
+                    <!-- Cover Letter Preview -->
+                    <div class="cover-letter-preview">
+                      <p class="preview-text">{{ application.message }}</p>
+                    </div>
 
-            @if (application.status === ApplicationStatus.ACCEPTED) {
-<button
-              mat-raised-button
-              color="primary"
-             
-              (click)="openChat(application)"
-            >
-              <mat-icon>message</mat-icon>
-              Contact Client
-            </button>
-}
+                    <!-- Portfolio Link -->
+                    @if (application.portfolioLink) {
+                      <div class="portfolio-link">
+                        <mat-icon>link</mat-icon>
+                        <a [href]="application.portfolioLink" target="_blank" rel="noopener">View Portfolio</a>
+                      </div>
+                    }
+                  </div>
+
+                  <!-- Status Badge -->
+                  <div class="application-status">
+                    <span class="status-pill" [class]="getStatusClass(application.status)">
+                      <mat-icon>{{ getStatusIcon(application.status) }}</mat-icon>
+                      {{ application.status | titlecase }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="application-actions">
+                  <button mat-button (click)="viewJobDetails(application.jobId)">
+                    <mat-icon>visibility</mat-icon>
+                    View Job
+                  </button>
+
+                  @if (application.status === ApplicationStatus.PENDING) {
+                    <button mat-button (click)="withdrawApplication(application)" class="withdraw-button">
+                      <mat-icon>remove_circle</mat-icon>
+                      Withdraw
+                    </button>
+                  }
+
+                  @if (application.status === ApplicationStatus.ACCEPTED) {
+                    <button mat-raised-button color="primary" (click)="openChat(application)">
+                      <mat-icon>message</mat-icon>
+                      Contact Client
+                    </button>
+                  }
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      }
+
+      <!-- No Results for Filter -->
+      @if (filteredApplications.length === 0 && applications.length > 0) {
+        <div class="state-block">
+          <div class="state-icon">
+            <mat-icon>filter_list_off</mat-icon>
           </div>
-        </mat-card-content>
-      </mat-card>
-}
+          <h3>No {{ selectedStatus | titlecase }} applications</h3>
+          <p>Try selecting a different filter to view your applications.</p>
+          <button mat-raised-button color="primary" (click)="filterByStatus('ALL')">
+            Show all applications
+          </button>
+        </div>
+      }
     </div>
-}
-
-    <!-- No Results for Filter -->
-    @if (filteredApplications.length === 0 && applications.length > 0) {
-<div class="no-results">
-      <mat-icon>filter_list_off</mat-icon>
-      <h3>No {{ selectedStatus }} Applications</h3>
-      <p>Try selecting a different filter to view your applications.</p>
-      <button mat-button color="primary" (click)="filterByStatus('ALL')">
-        Show All Applications
-      </button>
-    </div>
-}
-  </div>
-}
+  }
 </div>

@@ -3,15 +3,15 @@
   justify-content: center;
   align-items: center;
   min-height: 70vh;
-  padding: 40px 16px;
+  padding: var(--spacing-xl) var(--spacing-md);
 }
 
 .loading-state {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 16px;
-  color: var(--mat-sys-on-surface-variant, #666);
+  gap: var(--spacing-md);
+  color: var(--color-text-secondary);
 }
 
 .result-card {
@@ -19,16 +19,30 @@
   width: 100%;
   text-align: center;
   padding: 48px 40px;
-  border-radius: 16px;
-  background: var(--mat-sys-surface, #fff);
-  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-lg);
 
-  h1 { margin: 16px 0 12px; font-size: 28px; }
+  h1 {
+    margin: var(--spacing-md) 0 var(--spacing-sm);
+    font-size: 28px;
+
+    em {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
 
   .result-subtitle {
-    color: var(--mat-sys-on-surface-variant, #555);
+    color: var(--color-text-secondary);
     line-height: 1.6;
-    margin: 0 0 24px;
+    margin: 0 0 var(--spacing-lg);
   }
 }
 
@@ -42,31 +56,32 @@
   }
 }
 
-.success-icon mat-icon { color: #22c55e; }
-.cancel-icon mat-icon { color: #ef4444; }
+.success-icon mat-icon { color: var(--color-accent-500); }
+.cancel-icon mat-icon { color: var(--color-text-tertiary); }
 
 .perks-list {
   list-style: none;
   padding: 0;
-  margin: 0 0 28px;
+  margin: 0 0 var(--spacing-xl);
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 10px;
+  gap: var(--spacing-sm);
   text-align: left;
 
   li {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: var(--spacing-sm);
     font-size: 14px;
-    mat-icon { color: #22c55e; font-size: 18px; width: 18px; height: 18px; }
+    color: var(--color-text-primary);
+    mat-icon { color: var(--color-accent-500); font-size: 18px; width: 18px; height: 18px; }
   }
 }
 
 .result-actions {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-sm);
   justify-content: center;
   flex-wrap: wrap;
 }

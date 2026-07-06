@@ -23,14 +23,12 @@
         <div class="title-section">
           <h1>{{ job.title }}</h1>
           <div class="job-status">
-            <mat-chip [highlighted]="true" [color]="getStatusColor(job.status)">
+            <span class="status-pill" [class]="getStatusClass(job.status)">
               {{ getStatusLabel(job.status) }}
-            </mat-chip>
+            </span>
             @if (job.locationType) {
-<mat-chip [highlighted]="true" color="accent">
-              {{ getLocationTypeLabel(job.locationType!) }}
-            </mat-chip>
-}
+              <span class="loc-pill">{{ getLocationTypeLabel(job.locationType!) }}</span>
+            }
           </div>
         </div>
 

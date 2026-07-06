@@ -1,16 +1,14 @@
 <div class="my-active-jobs-container">
   <div class="page-header">
     <div class="header-content">
-      <h1>
-        <mat-icon>work</mat-icon>
-        My Active Jobs
-      </h1>
+      <span class="page-hero__eyebrow">work in motion</span>
+      <h1>Jobs <em>underway</em></h1>
       @if (!isCustomer) {
-<p class="subtitle">View and manage jobs where your application has been accepted</p>
-}
+        <p class="subtitle">View and manage jobs where your application has been accepted.</p>
+      }
       @if (isCustomer) {
-<p class="subtitle">Monitor and manage jobs you've posted that are in progress</p>
-}
+        <p class="subtitle">Monitor and manage the jobs you've posted that are in progress.</p>
+      }
     </div>
     @if (!isCustomer) {
 <button mat-raised-button color="primary" routerLink="/jobs">
@@ -107,14 +105,10 @@
               <mat-icon>assignment</mat-icon>
               Job Status
             </div>
-            <mat-chip-set>
-              <mat-chip
-                [highlighted]="true"
-                [color]="getStatusColor(activeJob.job.status)">
-                <mat-icon>{{ getStatusIcon(activeJob.job.status) }}</mat-icon>
-                {{ getStatusLabel(activeJob.job.status) }}
-              </mat-chip>
-            </mat-chip-set>
+            <span class="status-pill" [class]="getStatusClass(activeJob.job.status)">
+              <mat-icon>{{ getStatusIcon(activeJob.job.status) }}</mat-icon>
+              {{ getStatusLabel(activeJob.job.status) }}
+            </span>
           </div>
 
           <!-- Budget -->
@@ -136,7 +130,7 @@
               Your Rate
             </div>
             <div class="info-value">
-              ${{ activeJob.application.proposedRate }}{{ activeJob.job.budgetType === 'HOURLY' ? '/hr' : '' }}
+              R{{ activeJob.application.proposedRate }}{{ activeJob.job.budgetType === 'HOURLY' ? '/hr' : '' }}
             </div>
           </div>
 }
@@ -264,14 +258,10 @@
               <mat-icon>assignment</mat-icon>
               Status
             </div>
-            <mat-chip-set>
-              <mat-chip
-                [highlighted]="true"
-                [color]="getStatusColor(job.status)">
-                <mat-icon>{{ getStatusIcon(job.status) }}</mat-icon>
-                {{ getStatusLabel(job.status) }}
-              </mat-chip>
-            </mat-chip-set>
+            <span class="status-pill" [class]="getStatusClass(job.status)">
+              <mat-icon>{{ getStatusIcon(job.status) }}</mat-icon>
+              {{ getStatusLabel(job.status) }}
+            </span>
           </div>
 
           <!-- Budget -->

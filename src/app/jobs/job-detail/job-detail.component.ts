@@ -208,14 +208,9 @@ export class JobDetailComponent implements OnInit {
     return labels[status] || status;
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'OPEN': 'primary',      // Blue - for open jobs
-      'IN_PROGRESS': 'accent', // Green/Teal - for active work
-      'COMPLETED': 'warn',     // Orange/Amber - for finished jobs
-      'CANCELLED': 'warn'      // Red - for cancelled jobs (changed from empty string)
-    };
-    return colors[status] || 'primary';
+  /** Brand status-pill class (custom span pill, not mat-chip). */
+  getStatusClass(status: string): string {
+    return 'jstatus-' + (status || '').toLowerCase();
   }
 
   private showSuccess(message: string): void {

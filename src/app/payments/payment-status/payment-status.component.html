@@ -11,10 +11,10 @@
       <!-- Current Status Badge -->
       @if (currentStatus) {
 <div class="current-status">
-        <mat-chip [color]="getStatusColor(currentStatus)" class="status-chip">
+        <span class="status-pill" [class]="getStatusClass(currentStatus)">
           <mat-icon>{{ statusSteps[getCurrentStep()].icon || 'info' }}</mat-icon>
-          {{ currentStatus }}
-        </mat-chip>
+          {{ currentStatus | titlecase }}
+        </span>
         @if (statusMessage) {
 <p class="status-message">{{ statusMessage }}</p>
 }

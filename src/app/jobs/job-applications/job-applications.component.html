@@ -1,102 +1,119 @@
 <div class="job-applications-container">
-  <div class="page-header">
+  <!-- Header -->
+  <header class="page-hero">
     <button mat-button [routerLink]="['/jobs', job?.id]" class="back-button">
       <mat-icon>arrow_back</mat-icon>
       Back to Job
     </button>
-    <h1>
-      <mat-icon>people</mat-icon>
-      Applications for: {{ job?.title || 'Loading...' }}
-    </h1>
-  </div>
+    <span class="page-hero__eyebrow">reviewing applicants</span>
+    <h1>The <em>shortlist</em></h1>
+    <p class="page-hero__sub">Applications for {{ job?.title || '…' }}</p>
+  </header>
 
   <!-- Loading -->
   @if (loading) {
-<div class="loading-container">
-    <mat-spinner diameter="50"></mat-spinner>
-    <p>Loading applications...</p>
-  </div>
-}
+    <div class="state-block" aria-busy="true">
+      <mat-spinner diameter="48"></mat-spinner>
+      <p>Loading applications...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (!loading && loadFailed) {
+    <div class="state-block" role="alert">
+      <div class="state-icon state-icon--error">
+        <mat-icon>cloud_off</mat-icon>
+      </div>
+      <h3>Couldn't load applications</h3>
+      <p>Something went wrong on our side. Check your connection and try again.</p>
+      <button mat-raised-button color="primary" (click)="retry()">
+        <mat-icon>refresh</mat-icon>
+        Try again
+      </button>
+    </div>
+  }
 
   <!-- Empty state -->
-  @if (!loading && applications.length === 0) {
-<div class="empty-state">
-    <mat-icon>inbox</mat-icon>
-    <h2>No Applications Yet</h2>
-    <p>No one has applied to this job yet. Check back later.</p>
-  </div>
-}
+  @if (!loading && !loadFailed && applications.length === 0) {
+    <div class="state-block">
+      <div class="state-icon">
+        <mat-icon>inbox</mat-icon>
+      </div>
+      <h3>No applications yet</h3>
+      <p>No one has applied to this job yet. Share it around — the right freelancer is out there.</p>
+    </div>
+  }
 
   <!-- Applications list -->
-  @if (!loading && applications.length > 0) {
-<div class="applications-list">
-    <p class="summary">{{ applications.length }} application{{ applications.length !== 1 ? 's' : '' }} received</p>
+  @if (!loading && !loadFailed && applications.length > 0) {
+    <div class="applications-list">
+      <p class="summary">{{ applications.length }} application{{ applications.length !== 1 ? 's' : '' }} received</p>
 
-    @for (app of applications; track app) {
-<mat-card class="application-card">
-      <mat-card-header>
-        <mat-card-title>{{ app.freelancerName || 'Freelancer' }}</mat-card-title>
-        <mat-card-subtitle>Applied {{ formatDate(app.appliedAt) }}</mat-card-subtitle>
-        <div class="status-badge">
-          <mat-chip [highlighted]="true" [color]="getStatusColor(app.status)">
-            <mat-icon>{{ getStatusIcon(app.status) }}</mat-icon>
-            {{ app.status }}
-          </mat-chip>
-        </div>
-      </mat-card-header>
+      @for (app of applications; track app.id) {
+        <mat-card class="application-card">
+          <mat-card-header>
+            <mat-card-title>{{ app.freelancerName || 'Freelancer' }}</mat-card-title>
+            <mat-card-subtitle>Applied {{ formatDate(app.appliedAt) }}</mat-card-subtitle>
+            <div class="status-badge">
+              <span class="status-pill" [class]="getStatusClass(app.status)">
+                <mat-icon>{{ getStatusIcon(app.status) }}</mat-icon>
+                {{ app.status | titlecase }}
+              </span>
+            </div>
+          </mat-card-header>
 
-      <mat-card-content>
-        <div class="app-details">
-          @if (app.proposedRate) {
-<div class="detail-item">
-            <mat-icon>local_offer</mat-icon>
-            <strong>Proposed Rate:</strong> ${{ app.proposedRate }}
-          </div>
-}
-          @if (app.estimatedDuration) {
-<div class="detail-item">
-            <mat-icon>schedule</mat-icon>
-            <strong>Estimated Duration:</strong> {{ app.estimatedDuration }}
-          </div>
-}
-          @if (app.portfolioLink) {
-<div class="detail-item">
-            <mat-icon>link</mat-icon>
-            <strong>Portfolio:</strong>
-            <a [href]="app.portfolioLink" target="_blank" rel="noopener">{{ app.portfolioLink }}</a>
-          </div>
-}
-        </div>
+          <mat-card-content>
+            <div class="app-details">
+              @if (app.proposedRate) {
+                <div class="detail-item">
+                  <mat-icon>local_offer</mat-icon>
+                  <strong>Proposed Rate:</strong> R{{ app.proposedRate }}
+                </div>
+              }
+              @if (app.estimatedDuration) {
+                <div class="detail-item">
+                  <mat-icon>schedule</mat-icon>
+                  <strong>Estimated Duration:</strong> {{ app.estimatedDuration }}
+                </div>
+              }
+              @if (app.portfolioLink) {
+                <div class="detail-item">
+                  <mat-icon>link</mat-icon>
+                  <strong>Portfolio:</strong>
+                  <a [href]="app.portfolioLink" target="_blank" rel="noopener">{{ app.portfolioLink }}</a>
+                </div>
+              }
+            </div>
 
-        <mat-divider></mat-divider>
+            <mat-divider></mat-divider>
 
-        <div class="cover-letter">
-          <h4>Cover Letter</h4>
-          <p>{{ app.coverLetter }}</p>
-        </div>
+            <div class="cover-letter">
+              <h4>Cover Letter</h4>
+              <p>{{ app.coverLetter }}</p>
+            </div>
 
-        @if (app.message && app.message !== app.coverLetter) {
-<div class="message-section">
-          <h4>Message</h4>
-          <p>{{ app.message }}</p>
-        </div>
-}
-      </mat-card-content>
+            @if (app.message && app.message !== app.coverLetter) {
+              <div class="message-section">
+                <h4>Message</h4>
+                <p>{{ app.message }}</p>
+              </div>
+            }
+          </mat-card-content>
 
-      @if (app.status === ApplicationStatus.PENDING) {
-<mat-card-actions>
-        <button mat-raised-button color="accent" (click)="updateStatus(app, ApplicationStatus.ACCEPTED)">
-          <mat-icon>check_circle</mat-icon>
-          Accept
-        </button>
-        <button mat-stroked-button color="warn" (click)="updateStatus(app, ApplicationStatus.REJECTED)">
-          <mat-icon>cancel</mat-icon>
-          Reject
-        </button>
-      </mat-card-actions>
-}
-    </mat-card>
-}
-  </div>
-}
+          @if (app.status === ApplicationStatus.PENDING) {
+            <mat-card-actions>
+              <button mat-raised-button color="primary" (click)="updateStatus(app, ApplicationStatus.ACCEPTED)">
+                <mat-icon>check_circle</mat-icon>
+                Accept
+              </button>
+              <button mat-stroked-button (click)="updateStatus(app, ApplicationStatus.REJECTED)" class="reject-btn">
+                <mat-icon>cancel</mat-icon>
+                Reject
+              </button>
+            </mat-card-actions>
+          }
+        </mat-card>
+      }
+    </div>
+  }
 </div>

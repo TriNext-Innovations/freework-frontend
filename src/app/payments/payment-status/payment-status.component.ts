@@ -2,7 +2,6 @@ import { Component, OnInit, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { PaymentService } from '../payment.service';
 import { PaymentStatus, PaymentStatusUpdate } from '../models/payment.models';
@@ -13,7 +12,6 @@ import { PaymentStatus, PaymentStatusUpdate } from '../models/payment.models';
         CommonModule,
         MatCardModule,
         MatIconModule,
-        MatChipsModule,
         MatProgressBarModule
     ],
     templateUrl: './payment-status.component.html',
@@ -72,6 +70,11 @@ export class PaymentStatusComponent implements OnInit {
         }
       }
     });
+  }
+
+  /** Brand status-pill class (custom span pill, not mat-chip). */
+  getStatusClass(status: PaymentStatus | undefined): string {
+    return 'pstatus-' + (status || '').toString().toLowerCase();
   }
 
   getStatusColor(status: PaymentStatus): string {

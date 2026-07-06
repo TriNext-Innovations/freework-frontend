@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 
+import { TitleCasePipe } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +18,7 @@ import { MessagingService } from '../../messaging/messaging.service';
 @Component({
     selector: 'app-my-applications',
     imports: [
+    TitleCasePipe,
     RouterModule,
     MatCardModule,
     MatButtonModule,
@@ -41,6 +43,7 @@ export class MyApplicationsComponent implements OnInit {
   applications: JobApplication[] = [];
   filteredApplications: JobApplication[] = [];
   loading = false;
+  loadFailed = false;
   selectedStatus: ApplicationStatus | 'ALL' = 'ALL';
   ApplicationStatus = ApplicationStatus;
 
@@ -57,6 +60,7 @@ export class MyApplicationsComponent implements OnInit {
 
   loadApplications(): void {
     this.loading = true;
+    this.loadFailed = false;
     this.applicationService.getMyApplications().subscribe({
       next: (applications) => {
         this.applications = applications;
@@ -66,10 +70,16 @@ export class MyApplicationsComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading applications:', error);
-        this.showError('Failed to load applications');
+        this.loadFailed = true;
         this.loading = false;
       }
     });
+  }
+
+  /** Formats a proposed rate in ZAR (this is a South African marketplace — never `$`). */
+  formatRate(rate: number | undefined): string {
+    if (rate == null) return '';
+    return 'R ' + rate.toLocaleString('en-ZA');
   }
 
   calculateStats(): void {

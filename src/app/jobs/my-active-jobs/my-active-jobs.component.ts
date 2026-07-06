@@ -160,14 +160,8 @@ export class MyActiveJobsComponent implements OnInit {
     this.router.navigate(['/jobs', jobId]);
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'OPEN': 'primary',
-      'IN_PROGRESS': 'accent',
-      'COMPLETED': 'warn',
-      'CANCELLED': ''
-    };
-    return colors[status] || '';
+  getStatusClass(status: string): string {
+    return 'jstatus-' + (status || '').toLowerCase();
   }
 
   getStatusLabel(status: string): string {
@@ -191,9 +185,9 @@ export class MyActiveJobsComponent implements OnInit {
   }
 
   formatBudget(job: Job): string {
-    const amount = new Intl.NumberFormat('en-US', {
+    const amount = new Intl.NumberFormat('en-ZA', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'ZAR',
       minimumFractionDigits: 0
     }).format(job.budget);
 

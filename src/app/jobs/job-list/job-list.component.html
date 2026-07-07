@@ -1,7 +1,7 @@
 <div class="job-list-container">
 
   <!-- Hero -->
-  <header class="jobs-hero">
+  <header class="jobs-hero aura-hero">
     <div class="jobs-hero__text">
       <span class="jobs-hero__eyebrow">
         <span class="live-dot" aria-hidden="true"></span>
@@ -14,6 +14,21 @@
         <h1>Find work you'll <em>love</em></h1>
         <p>Real projects from real clients across South Africa — and every rand you earn is yours. 0% commission, always.</p>
       }
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat__num">{{ totalElements || 0 }}</span>
+          <span class="hero-stat__label">live {{ totalElements === 1 ? 'opportunity' : 'opportunities' }}</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__num">0%</span>
+          <span class="hero-stat__label">commission, always</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__num">100%</span>
+          <span class="hero-stat__label">yours to keep</span>
+        </div>
+      </div>
     </div>
     @if (isCustomer()) {
       <button

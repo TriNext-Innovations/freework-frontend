@@ -35,6 +35,18 @@
         <!-- Owner Actions -->
         @if (isOwner) {
 <div class="action-buttons">
+          @if (canAcceptWork()) {
+            <button mat-raised-button color="primary" (click)="acceptWork()">
+              <mat-icon>check_circle</mat-icon>
+              Mark as Completed
+            </button>
+          }
+          @if (canRequestChanges()) {
+            <button mat-stroked-button (click)="requestChanges()">
+              <mat-icon>undo</mat-icon>
+              Request Changes
+            </button>
+          }
           <button mat-raised-button color="primary" (click)="editJob()">
             <mat-icon>edit</mat-icon>
             Edit Job
@@ -49,6 +61,12 @@
         <!-- Freelancer Actions -->
         @if (!isOwner) {
 <div class="action-buttons">
+          @if (canSubmitForReview()) {
+            <button mat-raised-button color="primary" (click)="submitForReview()">
+              <mat-icon>rate_review</mat-icon>
+              Submit for Review
+            </button>
+          }
           <button mat-raised-button color="primary" (click)="applyForJob()">
             <mat-icon>send</mat-icon>
             Apply Now

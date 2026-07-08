@@ -477,3 +477,19 @@
   color: var(--chip-status-withdrawn-color);
   border: 1px solid var(--chip-status-withdrawn-border);
 }
+
+.awaiting-approval {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 0 var(--spacing-sm);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-accent-600);
+
+  mat-icon {
+    font-size: 1.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}

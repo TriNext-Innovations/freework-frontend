@@ -216,6 +216,18 @@
           Message Client
         </button>
 }
+        @if (activeJob.job.status === 'IN_PROGRESS') {
+          <button mat-raised-button color="primary" (click)="submitForReview(activeJob)">
+            <mat-icon>rate_review</mat-icon>
+            Submit for Review
+          </button>
+        }
+        @if (activeJob.job.status === 'REVIEW') {
+          <span class="awaiting-approval">
+            <mat-icon>hourglass_top</mat-icon>
+            Awaiting client approval
+          </span>
+        }
         @if (activeJob.job.status === 'COMPLETED') {
 <button mat-button (click)="writeReview(activeJob)">
           <mat-icon>rate_review</mat-icon>

@@ -31,6 +31,16 @@
 
         <!-- Owner Actions -->
         <div class="action-buttons" *ngIf="isOwner">
+          @if (isInReview()) {
+            <button mat-raised-button color="primary" (click)="markAsCompleted()">
+              <mat-icon>check_circle</mat-icon>
+              Mark as Completed
+            </button>
+            <button mat-stroked-button (click)="requestChanges()">
+              <mat-icon>undo</mat-icon>
+              Request Changes
+            </button>
+          }
           <button mat-raised-button color="primary" (click)="editJob()">
             <mat-icon>edit</mat-icon>
             Edit Job

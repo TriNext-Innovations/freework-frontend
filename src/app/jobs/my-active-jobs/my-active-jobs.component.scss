@@ -485,3 +485,19 @@
     }
   }
 }
+
+.awaiting-approval {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: 0 var(--spacing-sm);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--mat-sys-tertiary, #6a5acd);
+
+  mat-icon {
+    font-size: 1.125rem;
+    width: 1.125rem;
+    height: 1.125rem;
+  }
+}

@@ -77,9 +77,9 @@ export class MyActiveJobsComponent implements OnInit {
     // Get jobs posted by the customer that are in progress
     this.jobService.getMyJobs().subscribe({
       next: (response) => {
-        // Filter for jobs that are in progress or have accepted applications
+        // Filter for jobs that are in progress, awaiting review, or have accepted applications
         this.customerJobs = response.content.filter(
-          job => job.status === 'IN_PROGRESS' || (job.applicationsCount && job.applicationsCount > 0)
+          job => job.status === 'IN_PROGRESS' || job.status === 'REVIEW' || (job.applicationsCount && job.applicationsCount > 0)
         );
         this.loading = false;
       },
@@ -166,6 +166,7 @@ export class MyActiveJobsComponent implements OnInit {
     const colors: Record<string, string> = {
       'OPEN': 'primary',
       'IN_PROGRESS': 'accent',
+      'REVIEW': 'accent',
       'COMPLETED': 'warn',
       'CANCELLED': ''
     };
@@ -176,6 +177,7 @@ export class MyActiveJobsComponent implements OnInit {
     const labels: Record<string, string> = {
       'OPEN': 'Open',
       'IN_PROGRESS': 'In Progress',
+      'REVIEW': 'In Review',
       'COMPLETED': 'Completed',
       'CANCELLED': 'Cancelled'
     };
@@ -186,6 +188,7 @@ export class MyActiveJobsComponent implements OnInit {
     const icons: Record<string, string> = {
       'OPEN': 'radio_button_unchecked',
       'IN_PROGRESS': 'pending',
+      'REVIEW': 'rate_review',
       'COMPLETED': 'check_circle',
       'CANCELLED': 'cancel'
     };
@@ -232,6 +235,19 @@ export class MyActiveJobsComponent implements OnInit {
     });
   }
 
+  submitForReview(activeJob: ActiveJob): void {
+    this.jobService.updateJobStatus(activeJob.job.id, 'REVIEW').subscribe({
+      next: (job) => {
+        activeJob.job.status = job.status;
+        this.showSuccess('Work submitted for review. The client has been asked to approve it.');
+      },
+      error: (error) => {
+        console.error('Error submitting job for review:', error);
+        this.showError('Could not submit your work for review. Please try again.');
+      }
+    });
+  }
+
   writeReview(activeJob: ActiveJob): void {
     const dialogData: ReviewDialogData = {
       jobId: activeJob.job.id,
@@ -263,6 +279,15 @@ export class MyActiveJobsComponent implements OnInit {
       horizontalPosition: 'end',
       verticalPosition: 'top',
       panelClass: ['success-snackbar']
+    });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar']
     });
   }
 }

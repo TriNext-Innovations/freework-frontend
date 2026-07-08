@@ -204,6 +204,7 @@ export class JobDetailComponent implements OnInit {
     const labels: Record<string, string> = {
       'OPEN': 'Open',
       'IN_PROGRESS': 'In Progress',
+      'REVIEW': 'In Review',
       'COMPLETED': 'Completed',
       'CANCELLED': 'Cancelled'
     };
@@ -214,10 +215,48 @@ export class JobDetailComponent implements OnInit {
     const colors: Record<string, string> = {
       'OPEN': 'primary',      // Blue - for open jobs
       'IN_PROGRESS': 'accent', // Green/Teal - for active work
+      'REVIEW': 'accent',      // Awaiting customer approval
       'COMPLETED': 'warn',     // Orange/Amber - for finished jobs
       'CANCELLED': 'warn'      // Red - for cancelled jobs (changed from empty string)
     };
     return colors[status] || 'primary';
+  }
+
+  isInReview(): boolean {
+    return this.job?.status === 'REVIEW';
+  }
+
+  markAsCompleted(): void {
+    if (!this.job) return;
+
+    const confirmed = confirm('Accept this work and mark the job as completed? This confirms the freelancer has delivered.');
+    if (!confirmed) return;
+
+    this.jobService.updateJobStatus(this.job.id, 'COMPLETED').subscribe({
+      next: (job) => {
+        this.job = job;
+        this.showSuccess('Job marked as completed. You can now leave a review.');
+      },
+      error: (error) => {
+        console.error('Error completing job:', error);
+        this.showError('Could not mark the job as completed. Please try again.');
+      }
+    });
+  }
+
+  requestChanges(): void {
+    if (!this.job) return;
+
+    this.jobService.updateJobStatus(this.job.id, 'IN_PROGRESS').subscribe({
+      next: (job) => {
+        this.job = job;
+        this.showSuccess('Sent back to the freelancer for changes.');
+      },
+      error: (error) => {
+        console.error('Error requesting changes:', error);
+        this.showError('Could not send the job back for changes. Please try again.');
+      }
+    });
   }
 
   private showSuccess(message: string): void {

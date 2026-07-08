@@ -11,7 +11,7 @@ export interface Job {
   location?: string;
   locationType?: 'REMOTE' | 'ONSITE' | 'HYBRID';
   skills?: string[];
-  status: 'OPEN' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED';
+  status: 'OPEN' | 'IN_PROGRESS' | 'REVIEW' | 'COMPLETED' | 'CANCELLED';
   customerId?: string;
   customerName?: string;
   customerAvatar?: string;

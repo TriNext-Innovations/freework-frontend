@@ -235,12 +235,21 @@ export class JobDetailComponent implements OnInit {
     return !this.isOwner && this.job?.status === 'IN_PROGRESS';
   }
 
+  /** Customer-only: send submitted work back to the freelancer (REVIEW → IN_PROGRESS). */
+  canRequestChanges(): boolean {
+    return this.isOwner && this.job?.status === 'REVIEW';
+  }
+
   submitForReview(): void {
     this.changeStatus('REVIEW', 'Work submitted for review.');
   }
 
   acceptWork(): void {
     this.changeStatus('COMPLETED', 'Work accepted — job marked complete.');
+  }
+
+  requestChanges(): void {
+    this.changeStatus('IN_PROGRESS', 'Sent back to the freelancer for changes.');
   }
 
   private changeStatus(status: string, successMsg: string): void {

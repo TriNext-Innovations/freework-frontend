@@ -227,6 +227,20 @@ export class MyActiveJobsComponent implements OnInit {
     });
   }
 
+  /** Freelancer (assigned): submit work for the customer to review (IN_PROGRESS → REVIEW). */
+  submitForReview(activeJob: ActiveJob): void {
+    this.jobService.updateJobStatus(activeJob.job.id, 'REVIEW').subscribe({
+      next: (job) => {
+        activeJob.job.status = job.status;
+        this.showSuccess('Work submitted for review. The client has been asked to approve it.');
+      },
+      error: (error) => {
+        console.error('Error submitting job for review:', error);
+        this.showError('Could not submit your work for review. Please try again.');
+      }
+    });
+  }
+
   writeReview(activeJob: ActiveJob): void {
     const dialogData: ReviewDialogData = {
       jobId: activeJob.job.id,
@@ -258,6 +272,15 @@ export class MyActiveJobsComponent implements OnInit {
       horizontalPosition: 'end',
       verticalPosition: 'top',
       panelClass: ['success-snackbar']
+    });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Close', {
+      duration: 5000,
+      horizontalPosition: 'end',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar']
     });
   }
 }

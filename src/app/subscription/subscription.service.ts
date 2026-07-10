@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
@@ -14,10 +14,10 @@ export interface Subscription {
   providedIn: 'root'
 })
 export class SubscriptionService {
+  private http = inject(HttpClient);
+
   private subscriptionSubject = new BehaviorSubject<Subscription | null>(null);
   public subscription$ = this.subscriptionSubject.asObservable();
-
-  constructor(private http: HttpClient) {}
 
   get currentSubscription(): Subscription | null {
     return this.subscriptionSubject.value;

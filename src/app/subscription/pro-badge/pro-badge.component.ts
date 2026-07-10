@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-pro-badge',
   standalone: true,
-  imports: [CommonModule],
+  imports: [],
   template: `<span class="pro-badge">PRO</span>`,
   styles: [`
     .pro-badge {

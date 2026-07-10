@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
@@ -9,18 +9,18 @@ import { CookieConsentService, CookieConsent } from '../cookie-consent.service';
 
 @Component({
     selector: 'app-cookie-consent-banner',
-    imports: [CommonModule, FormsModule, RouterLink, MatButtonModule, MatSlideToggleModule, MatDividerModule],
+    imports: [FormsModule, RouterLink, MatButtonModule, MatSlideToggleModule, MatDividerModule],
     templateUrl: './cookie-consent-banner.component.html',
     styleUrl: './cookie-consent-banner.component.scss'
 })
 export class CookieConsentBannerComponent implements OnInit {
+  private cookieConsentService = inject(CookieConsentService);
+
   visible = false;
   functional = false;
   analytics = false;
   performance = false;
   marketing = false;
-
-  constructor(private cookieConsentService: CookieConsentService) {}
 
   ngOnInit(): void {
     this.cookieConsentService.bannerVisible$.subscribe(visible => {

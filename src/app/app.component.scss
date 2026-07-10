@@ -4,6 +4,29 @@
 
 .spacer { flex: 1 1 auto; }
 
+// ── Skip link (a11y) — visible only when focused ──
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: var(--spacing-md);
+  z-index: 2000;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  background: var(--color-primary, #1a8d6f);
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: top var(--transition-fast);
+
+  &:focus {
+    top: var(--spacing-md);
+  }
+}
+
+.main-content:focus {
+  outline: none;
+}
+
 .container {
   padding: var(--spacing-2xl);
   max-width: 1200px;
@@ -384,7 +407,7 @@ mat-nav-list {
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 0.5px;
-  background: linear-gradient(135deg, #f59e0b, #d97706);
+  background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%);
   color: #fff;
   line-height: 1.6;
   flex-shrink: 0;

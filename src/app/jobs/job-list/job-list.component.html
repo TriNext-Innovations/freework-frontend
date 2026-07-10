@@ -1,58 +1,87 @@
 <div class="job-list-container">
-  <!-- Header Section -->
-  <div class="header-section">
-    <div class="header-content">
-      <h1>
-        <mat-icon>work_outline</mat-icon>
-        Browse Jobs
-      </h1>
-      <p>Find your next opportunity from thousands of available projects</p>
-    </div>
-    <button
-      *ngIf="isCustomer()"
-      mat-raised-button
-      color="primary"
-      (click)="createNewJob()"
-      class="post-job-btn">
-      <mat-icon>add</mat-icon>
-      Post a Job
-    </button>
-  </div>
 
-  <!-- Filters Section -->
-  <mat-card class="filters-card">
+  <!-- Hero -->
+  <header class="jobs-hero aura-hero">
+    <div class="jobs-hero__text">
+      <span class="jobs-hero__eyebrow">
+        <span class="live-dot" aria-hidden="true"></span>
+        freework marketplace
+      </span>
+      @if (isCustomer()) {
+        <h1>Your <em>jobs</em>, your terms</h1>
+        <p>Manage your posts, review applicants, and find the right talent — you stay in control.</p>
+      } @else {
+        <h1>Find work you'll <em>love</em></h1>
+        <p>Real projects from real clients across South Africa — and every rand you earn is yours. 0% commission, always.</p>
+      }
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat__num">{{ totalElements || 0 }}</span>
+          <span class="hero-stat__label">live {{ totalElements === 1 ? 'opportunity' : 'opportunities' }}</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__num">0%</span>
+          <span class="hero-stat__label">commission, always</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__num">100%</span>
+          <span class="hero-stat__label">yours to keep</span>
+        </div>
+      </div>
+    </div>
+    @if (isCustomer()) {
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="createNewJob()"
+        class="post-job-btn">
+        <mat-icon>add</mat-icon>
+        Post a Job
+      </button>
+    }
+  </header>
+
+  <!-- Filters -->
+  <section class="filters-card" aria-label="Job filters">
     <form [formGroup]="filterForm">
-      <div class="filters-row">
-        <!-- Search -->
+
+      <!-- Work type quick chips + search row -->
+      <div class="filters-top">
         <mat-form-field appearance="outline" class="search-field">
           <mat-label>Search jobs</mat-label>
           <input matInput formControlName="search" placeholder="Keywords, skills, or title...">
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
 
+        <div class="worktype-chips" role="group" aria-label="Filter by work type">
+          @for (type of workTypes; track type.value) {
+            <button
+              type="button"
+              class="worktype-chip"
+              [class.worktype-chip--active]="activeLocationType === type.value"
+              [attr.aria-pressed]="activeLocationType === type.value"
+              (click)="setLocationType(type.value)">
+              {{ type.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      <div class="filters-row">
         <!-- Category -->
         <mat-form-field appearance="outline">
           <mat-label>Category</mat-label>
           <mat-select formControlName="category">
             <mat-option value="">All Categories</mat-option>
-            <mat-option *ngFor="let category of categories" [value]="category.id">
-              <mat-icon>{{ category.icon }}</mat-icon>
-              {{ category.name }}
-            </mat-option>
+            @for (category of categories; track category.id) {
+              <mat-option [value]="category.id">
+                <mat-icon>{{ category.icon }}</mat-icon>
+                {{ category.name }}
+              </mat-option>
+            }
           </mat-select>
           <mat-icon matPrefix>category</mat-icon>
-        </mat-form-field>
-
-        <!-- Location Type -->
-        <mat-form-field appearance="outline">
-          <mat-label>Work Type</mat-label>
-          <mat-select formControlName="locationType">
-            <mat-option value="">All Types</mat-option>
-            <mat-option value="REMOTE">Remote</mat-option>
-            <mat-option value="ONSITE">On-site</mat-option>
-            <mat-option value="HYBRID">Hybrid</mat-option>
-          </mat-select>
-          <mat-icon matPrefix>location_on</mat-icon>
         </mat-form-field>
 
         <!-- Budget Type -->
@@ -66,148 +95,195 @@
           <mat-icon matPrefix>business_center</mat-icon>
         </mat-form-field>
 
-        <!-- Clear Filters Button -->
-        <button mat-stroked-button type="button" (click)="clearFilters()" class="clear-btn">
-          <mat-icon>clear</mat-icon>
-          Clear
-        </button>
-      </div>
-
-      <!-- Budget Range -->
-      <div class="budget-range">
+        <!-- Budget Range -->
         <mat-form-field appearance="outline" class="budget-field">
           <mat-label>Min Budget</mat-label>
           <input matInput type="number" formControlName="minBudget" placeholder="0">
           <span matTextPrefix>R&nbsp;</span>
         </mat-form-field>
-        <span class="range-separator">to</span>
+
         <mat-form-field appearance="outline" class="budget-field">
           <mat-label>Max Budget</mat-label>
           <input matInput type="number" formControlName="maxBudget" placeholder="10000">
           <span matTextPrefix>R&nbsp;</span>
         </mat-form-field>
+
+        <!-- Clear Filters Button -->
+        @if (hasActiveFilters) {
+          <button mat-stroked-button type="button" (click)="clearFilters()" class="clear-btn">
+            <mat-icon>clear</mat-icon>
+            Clear
+          </button>
+        }
       </div>
     </form>
-  </mat-card>
+  </section>
 
   <!-- Results Info -->
-  <div class="results-info" *ngIf="!loading">
-    <p>
-      <strong>{{ totalElements }}</strong> job{{ totalElements !== 1 ? 's' : '' }} found
-    </p>
-  </div>
+  @if (!loading && !loadFailed) {
+    <div class="results-info">
+      <p>
+        <strong>{{ totalElements }}</strong>
+        {{ totalElements === 1 ? 'opportunity' : 'opportunities' }}
+        <span class="results-info__accent">waiting for someone like you</span>
+      </p>
+    </div>
+  }
 
   <!-- Skeleton Loader -->
-  <div class="skeleton-grid" *ngIf="loading" aria-label="Loading jobs" aria-busy="true">
-    <div class="skeleton-card" *ngFor="let n of [1,2,3,4,5,6]">
-      <div class="skeleton-card-header">
-        <div class="skeleton-lines">
-          <div class="skeleton-line skeleton-line--title"></div>
-          <div class="skeleton-line skeleton-line--sub"></div>
+  @if (loading) {
+    <div class="skeleton-grid" aria-label="Loading jobs" aria-busy="true">
+      @for (n of [1,2,3,4,5,6]; track n) {
+        <div class="skeleton-card">
+          <div class="skeleton-card-header">
+            <div class="skeleton-avatar"></div>
+            <div class="skeleton-lines">
+              <div class="skeleton-line skeleton-line--title"></div>
+              <div class="skeleton-line skeleton-line--sub"></div>
+            </div>
+            <div class="skeleton-chip"></div>
+          </div>
+          <div class="skeleton-body">
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line skeleton-line--short"></div>
+            <div class="skeleton-line skeleton-line--shorter"></div>
+          </div>
+          <div class="skeleton-chips">
+            <div class="skeleton-chip-sm"></div>
+            <div class="skeleton-chip-sm"></div>
+            <div class="skeleton-chip-sm"></div>
+          </div>
+          <div class="skeleton-footer">
+            <div class="skeleton-budget"></div>
+            <div class="skeleton-count"></div>
+          </div>
         </div>
-        <div class="skeleton-chip"></div>
-      </div>
-      <div class="skeleton-body">
-        <div class="skeleton-line"></div>
-        <div class="skeleton-line skeleton-line--short"></div>
-        <div class="skeleton-line skeleton-line--shorter"></div>
-      </div>
-      <div class="skeleton-meta">
-        <div class="skeleton-meta-item"></div>
-        <div class="skeleton-meta-item"></div>
-        <div class="skeleton-meta-item"></div>
-      </div>
-      <div class="skeleton-chips">
-        <div class="skeleton-chip-sm"></div>
-        <div class="skeleton-chip-sm"></div>
-        <div class="skeleton-chip-sm"></div>
-      </div>
-      <div class="skeleton-footer">
-        <div class="skeleton-budget"></div>
-        <div class="skeleton-count"></div>
-      </div>
+      }
     </div>
-  </div>
+  }
 
   <!-- Jobs List -->
-  <div class="jobs-grid" *ngIf="!loading && jobs.length > 0">
-    <mat-card class="job-card" *ngFor="let job of jobs" (click)="viewJobDetail(job.id)">
-      <!-- Card Header -->
-      <div class="job-card-header">
-        <div class="job-title-section">
-          <h3>{{ job.title }}</h3>
-          <span class="time-posted">{{ getTimeSincePosted(job.createdAt || job.created_at) }}</span>
-        </div>
-        <mat-chip *ngIf="job.locationType" [highlighted]="true" [color]="getLocationTypeColor(job.locationType)">
-          {{ getLocationTypeLabel(job.locationType) }}
-        </mat-chip>
-      </div>
+  @if (!loading && jobs.length > 0) {
+    <div class="jobs-grid">
+      @for (job of jobs; track job.id) {
+        <mat-card
+          class="job-card"
+          role="link"
+          tabindex="0"
+          [attr.aria-label]="'View job: ' + job.title"
+          (click)="viewJobDetail(job.id)"
+          (keyup.enter)="viewJobDetail(job.id)">
 
-      <!-- Job Description Preview -->
-      <p class="job-description">
-        {{ job.description.length > 200 ? (job.description.substring(0, 200) + '...') : job.description }}
-      </p>
+          <!-- Card Top -->
+          <div class="job-card-top">
+            <div class="job-card-icon" aria-hidden="true">
+              <mat-icon>{{ getCategoryIcon(job.category) }}</mat-icon>
+            </div>
+            <div class="job-title-section">
+              <h3>{{ job.title }}</h3>
+              <span class="job-card-sub">
+                {{ getTimeSincePosted(job.createdAt || job.created_at) }}
+                <span class="dot-sep" aria-hidden="true">·</span>
+                {{ getCategoryName(job.category) }}
+              </span>
+            </div>
+            @if (job.locationType) {
+              <span class="loc-badge" [class]="'loc-badge loc-badge--' + job.locationType.toLowerCase()">
+                {{ getLocationTypeLabel(job.locationType) }}
+              </span>
+            }
+          </div>
 
-      <!-- Job Meta Info -->
-      <div class="job-meta">
-        <div class="meta-item">
-          <mat-icon>category</mat-icon>
-          <span>{{ job.category }}</span>
-        </div>
-        <div class="meta-item" *ngIf="job.location">
-          <mat-icon>location_on</mat-icon>
-          <span>{{ job.location }}</span>
-        </div>
-        <div class="meta-item">
-          <mat-icon>event</mat-icon>
-          <span>{{ job.deadline | date: 'MMM d, yyyy' }}</span>
-        </div>
-      </div>
+          <!-- Job Description Preview -->
+          <p class="job-description">{{ job.description }}</p>
 
-      <!-- Skills -->
-      <div class="skills-section" *ngIf="job.skills && job.skills.length > 0">
-        <mat-chip-set>
-          <mat-chip *ngFor="let skill of job.skills.slice(0, 4)">
-            {{ skill }}
-          </mat-chip>
-          <mat-chip *ngIf="job.skills.length > 4">
-            +{{ job.skills.length - 4 }} more
-          </mat-chip>
-        </mat-chip-set>
-      </div>
+          <!-- Meta -->
+          <div class="job-meta">
+            @if (job.location) {
+              <div class="meta-item">
+                <mat-icon>location_on</mat-icon>
+                <span>{{ job.location }}</span>
+              </div>
+            }
+            @if (job.deadline) {
+              <div class="meta-item">
+                <mat-icon>event</mat-icon>
+                <span>Due {{ job.deadline | date: 'MMM d, yyyy' }}</span>
+              </div>
+            }
+          </div>
 
-      <!-- Card Footer -->
-      <div class="job-card-footer">
-        <div class="budget-section">
-          <span class="budget-amount">{{ formatBudget(job) }}</span>
-        </div>
-        <div class="applications-badge">
-          <mat-icon>people</mat-icon>
-          <span>{{ job.applicationsCount || 0 }} {{ (job.applicationsCount || 0) === 1 ? 'Application' : 'Applications' }}</span>
-        </div>
+          <!-- Skills -->
+          @if (job.skills && job.skills.length > 0) {
+            <div class="skills-section">
+              @for (skill of job.skills.slice(0, 4); track skill) {
+                <span class="skill-pill">{{ skill }}</span>
+              }
+              @if (job.skills.length > 4) {
+                <span class="skill-pill skill-pill--more">+{{ job.skills.length - 4 }}</span>
+              }
+            </div>
+          }
+
+          <!-- Card Footer -->
+          <div class="job-card-footer">
+            <div class="budget-section">
+              <span class="budget-amount">{{ formatBudget(job) }}</span>
+              @if (job.budgetType === 'FIXED') {
+                <span class="budget-type">fixed</span>
+              }
+            </div>
+            <div class="applications-badge">
+              <mat-icon>people</mat-icon>
+              <span>{{ job.applicationsCount || 0 }} {{ (job.applicationsCount || 0) === 1 ? 'applicant' : 'applicants' }}</span>
+            </div>
+          </div>
+        </mat-card>
+      }
+    </div>
+  }
+
+  <!-- Error -->
+  @if (!loading && loadFailed) {
+    <div class="state-block" role="alert">
+      <div class="state-icon state-icon--error">
+        <mat-icon>cloud_off</mat-icon>
       </div>
-    </mat-card>
-  </div>
+      <h3>Couldn't load jobs</h3>
+      <p>Something went wrong on our side. Check your connection and try again.</p>
+      <button mat-raised-button color="primary" (click)="loadJobs()">
+        <mat-icon>refresh</mat-icon>
+        Try again
+      </button>
+    </div>
+  }
 
   <!-- No Results -->
-  <div class="no-results" *ngIf="!loading && jobs.length === 0">
-    <mat-icon>search_off</mat-icon>
-    <h3>No jobs found</h3>
-    <p>Try adjusting your filters or search terms</p>
-    <button mat-raised-button color="primary" (click)="clearFilters()">
-      Clear Filters
-    </button>
-  </div>
+  @if (!loading && !loadFailed && jobs.length === 0) {
+    <div class="state-block">
+      <div class="state-icon">
+        <mat-icon>search_off</mat-icon>
+      </div>
+      <h3>No jobs found</h3>
+      <p>Try adjusting your filters or search terms — the right project might be one tweak away.</p>
+      @if (hasActiveFilters) {
+        <button mat-raised-button color="primary" (click)="clearFilters()">
+          Clear Filters
+        </button>
+      }
+    </div>
+  }
 
   <!-- Pagination -->
-  <mat-paginator
-    *ngIf="!loading && jobs.length > 0"
-    [length]="totalElements"
-    [pageSize]="pageSize"
-    [pageIndex]="pageIndex"
-    [pageSizeOptions]="[5, 10, 25, 50]"
-    (page)="onPageChange($event)"
-    showFirstLastButtons
-    class="jobs-paginator">
-  </mat-paginator>
+  @if (!loading && jobs.length > 0) {
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+      class="jobs-paginator">
+    </mat-paginator>
+  }
 </div>

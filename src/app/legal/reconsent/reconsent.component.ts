@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { Router, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,31 +13,28 @@ import { AuthService } from '../../auth/auth.service';
 @Component({
     selector: 'app-reconsent',
     imports: [
-        CommonModule,
-        RouterLink,
-        FormsModule,
-        MatCardModule,
-        MatButtonModule,
-        MatCheckboxModule,
-        MatIconModule,
-        MatProgressSpinnerModule
-    ],
+    RouterLink,
+    FormsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatProgressSpinnerModule
+],
     templateUrl: './reconsent.component.html',
     styleUrl: './reconsent.component.scss'
 })
 export class ReconsentComponent implements OnInit {
+  private legalService = inject(LegalService);
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   reconsentCheck: ReconsentCheck | null = null;
   loading = true;
   accepting = false;
   accepted = false;
   termsAccepted = false;
   error = '';
-
-  constructor(
-    private legalService: LegalService,
-    private authService: AuthService,
-    private router: Router
-  ) {}
 
   ngOnInit(): void {
     this.legalService.checkReconsent().subscribe({

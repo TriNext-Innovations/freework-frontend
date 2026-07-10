@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ViewChild, ElementRef } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, inject } from '@angular/core';
+
 import { HttpErrorResponse } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -23,24 +23,31 @@ import { ProfileService } from '../../profile/profile.service';
 @Component({
     selector: 'app-chat',
     imports: [
-        CommonModule,
-        FormsModule,
-        RouterModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatBadgeModule,
-        MatDividerModule,
-        MatProgressSpinnerModule,
-        MatSnackBarModule,
-        MatTooltipModule
-    ],
+    FormsModule,
+    RouterModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatBadgeModule,
+    MatDividerModule,
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatTooltipModule
+],
     templateUrl: './chat.component.html',
     styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit, OnDestroy {
+  private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private messagingService = inject(MessagingService);
+  private webSocketService = inject(WebSocketService);
+  private authService = inject(AuthService);
+  private profileService = inject(ProfileService);
+  private snackBar = inject(MatSnackBar);
+
   @ViewChild('messagesContainer') messagesContainer!: ElementRef;
   @ViewChild('messageInput') messageInput!: ElementRef;
 
@@ -67,15 +74,7 @@ export class ChatComponent implements OnInit, OnDestroy {
   private stopPolling$ = new Subject<void>();
   private typingTimeout: ReturnType<typeof setTimeout> | null = null;
 
-  constructor(
-    private route: ActivatedRoute,
-    private router: Router,
-    private messagingService: MessagingService,
-    private webSocketService: WebSocketService,
-    private authService: AuthService,
-    private profileService: ProfileService,
-    private snackBar: MatSnackBar
-  ) {
+  constructor() {
     this.currentUserId = this.authService.currentUserValue?.id || '';
   }
 

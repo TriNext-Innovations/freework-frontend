@@ -32,6 +32,10 @@ export class ThemeService {
   }
 
   private applyTheme(theme: Theme): void {
-    document.documentElement.setAttribute('data-theme', theme);
+    const el = document.documentElement;
+    el.setAttribute('data-theme', theme);
+    // Keep the root background in sync with the pre-paint value set in index.html,
+    // so toggling never leaves a stale colour behind body (e.g. overscroll areas).
+    el.style.backgroundColor = theme === 'light' ? '#F7F6F3' : '#0D1F1A';
   }
 }

@@ -1,31 +1,40 @@
 <div class="my-active-jobs-container">
   <div class="page-header">
     <div class="header-content">
-      <h1>
-        <mat-icon>work</mat-icon>
-        My Active Jobs
-      </h1>
-      <p class="subtitle" *ngIf="!isCustomer">View and manage jobs where your application has been accepted</p>
-      <p class="subtitle" *ngIf="isCustomer">Monitor and manage jobs you've posted that are in progress</p>
+      <span class="page-hero__eyebrow">work in motion</span>
+      <h1>Jobs <em>underway</em></h1>
+      @if (!isCustomer) {
+        <p class="subtitle">View and manage jobs where your application has been accepted.</p>
+      }
+      @if (isCustomer) {
+        <p class="subtitle">Monitor and manage the jobs you've posted that are in progress.</p>
+      }
     </div>
-    <button mat-raised-button color="primary" routerLink="/jobs" *ngIf="!isCustomer">
+    @if (!isCustomer) {
+<button mat-raised-button color="primary" routerLink="/jobs">
       <mat-icon>search</mat-icon>
       Browse More Jobs
     </button>
-    <button mat-raised-button color="primary" routerLink="/jobs/new" *ngIf="isCustomer">
+}
+    @if (isCustomer) {
+<button mat-raised-button color="primary" routerLink="/jobs/new">
       <mat-icon>add</mat-icon>
       Post New Job
     </button>
+}
   </div>
 
   <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
+  @if (loading) {
+<div class="loading-container">
     <mat-spinner diameter="50"></mat-spinner>
     <p>Loading your active jobs...</p>
   </div>
+}
 
   <!-- Error State -->
-  <div *ngIf="error && !loading" class="error-container">
+  @if (error && !loading) {
+<div class="error-container">
     <mat-icon color="warn">error</mat-icon>
     <h3>{{ error }}</h3>
     <button mat-raised-button color="primary" (click)="loadActiveJobs()">
@@ -33,9 +42,11 @@
       Try Again
     </button>
   </div>
+}
 
   <!-- Empty State for Freelancers -->
-  <div *ngIf="!loading && !error && !isCustomer && activeJobs.length === 0" class="empty-state">
+  @if (!loading && !error && !isCustomer && activeJobs.length === 0) {
+<div class="empty-state">
     <mat-icon>work_off</mat-icon>
     <h2>No Active Jobs Yet</h2>
     <p>You don't have any accepted job applications at the moment.</p>
@@ -45,9 +56,11 @@
       Browse Jobs
     </button>
   </div>
+}
 
   <!-- Empty State for Customers -->
-  <div *ngIf="!loading && !error && isCustomer && customerJobs.length === 0" class="empty-state">
+  @if (!loading && !error && isCustomer && customerJobs.length === 0) {
+<div class="empty-state">
     <mat-icon>work_off</mat-icon>
     <h2>No Active Jobs</h2>
     <p>You don't have any jobs in progress at the moment.</p>
@@ -57,15 +70,18 @@
       Post a Job
     </button>
   </div>
+}
 
   <!-- Active Jobs List for Freelancers -->
-  <div *ngIf="!loading && !error && !isCustomer && activeJobs.length > 0" class="jobs-list">
+  @if (!loading && !error && !isCustomer && activeJobs.length > 0) {
+<div class="jobs-list">
     <div class="jobs-summary">
       <mat-icon>analytics</mat-icon>
       <span>You have <strong>{{ activeJobs.length }}</strong> active {{ activeJobs.length === 1 ? 'job' : 'jobs' }}</span>
     </div>
 
-    <mat-card *ngFor="let activeJob of activeJobs" class="job-card">
+    @for (activeJob of activeJobs; track activeJob) {
+<mat-card class="job-card">
       <mat-card-header>
         <div mat-card-avatar class="job-avatar">
           <img [src]="activeJob.job.customerAvatar" [alt]="activeJob.job.customerName" />
@@ -89,14 +105,10 @@
               <mat-icon>assignment</mat-icon>
               Job Status
             </div>
-            <mat-chip-set>
-              <mat-chip
-                [highlighted]="true"
-                [color]="getStatusColor(activeJob.job.status)">
-                <mat-icon>{{ getStatusIcon(activeJob.job.status) }}</mat-icon>
-                {{ getStatusLabel(activeJob.job.status) }}
-              </mat-chip>
-            </mat-chip-set>
+            <span class="status-pill" [class]="getStatusClass(activeJob.job.status)">
+              <mat-icon>{{ getStatusIcon(activeJob.job.status) }}</mat-icon>
+              {{ getStatusLabel(activeJob.job.status) }}
+            </span>
           </div>
 
           <!-- Budget -->
@@ -111,15 +123,17 @@
           </div>
 
           <!-- Your Proposed Rate -->
-          <div class="info-item" *ngIf="activeJob.application.proposedRate">
+          @if (activeJob.application.proposedRate) {
+<div class="info-item">
             <div class="info-label">
               <mat-icon>local_offer</mat-icon>
               Your Rate
             </div>
             <div class="info-value">
-              ${{ activeJob.application.proposedRate }}{{ activeJob.job.budgetType === 'HOURLY' ? '/hr' : '' }}
+              R{{ activeJob.application.proposedRate }}{{ activeJob.job.budgetType === 'HOURLY' ? '/hr' : '' }}
             </div>
           </div>
+}
 
           <!-- Deadline -->
           <div class="info-item">
@@ -131,12 +145,16 @@
                  [class.urgent]="getDeadlineWarning(activeJob.job.deadline) === 'urgent'"
                  [class.warning]="getDeadlineWarning(activeJob.job.deadline) === 'warning'">
               {{ formatDate(activeJob.job.deadline) }}
-              <span class="days-remaining" *ngIf="calculateDaysUntilDeadline(activeJob.job.deadline) >= 0">
+              @if (calculateDaysUntilDeadline(activeJob.job.deadline) >= 0) {
+<span class="days-remaining">
                 ({{ calculateDaysUntilDeadline(activeJob.job.deadline) }} days remaining)
               </span>
-              <span class="overdue" *ngIf="calculateDaysUntilDeadline(activeJob.job.deadline) < 0">
+}
+              @if (calculateDaysUntilDeadline(activeJob.job.deadline) < 0) {
+<span class="overdue">
                 (OVERDUE)
               </span>
+}
             </div>
           </div>
 
@@ -170,17 +188,21 @@
             Required Skills
           </div>
           <mat-chip-set>
-            <mat-chip *ngFor="let skill of activeJob.job.skills">
+            @for (skill of activeJob.job.skills; track skill) {
+<mat-chip>
               {{ skill }}
             </mat-chip>
+}
           </mat-chip-set>
         </div>
 
         <!-- Estimated Duration -->
-        <div class="duration-section" *ngIf="activeJob.application.estimatedDuration">
+        @if (activeJob.application.estimatedDuration) {
+<div class="duration-section">
           <mat-icon>schedule</mat-icon>
           <strong>Your Estimated Duration:</strong> {{ activeJob.application.estimatedDuration }}
         </div>
+}
       </mat-card-content>
 
       <mat-card-actions>
@@ -188,10 +210,12 @@
           <mat-icon>visibility</mat-icon>
           View Details
         </button>
-        <button mat-button *ngIf="activeJob.job.customerId" (click)="messageClient(activeJob.job.customerId!, activeJob.job.id)">
+        @if (activeJob.job.customerId) {
+<button mat-button (click)="messageClient(activeJob.job.customerId!, activeJob.job.id)">
           <mat-icon>chat</mat-icon>
           Message Client
         </button>
+}
         @if (activeJob.job.status === 'IN_PROGRESS') {
           <button mat-raised-button color="primary" (click)="submitForReview(activeJob)">
             <mat-icon>rate_review</mat-icon>
@@ -204,22 +228,28 @@
             Awaiting client approval
           </span>
         }
-        <button mat-button *ngIf="activeJob.job.status === 'COMPLETED'" (click)="writeReview(activeJob)">
+        @if (activeJob.job.status === 'COMPLETED') {
+<button mat-button (click)="writeReview(activeJob)">
           <mat-icon>rate_review</mat-icon>
           Write Review
         </button>
+}
       </mat-card-actions>
     </mat-card>
+}
   </div>
+}
 
   <!-- Active Jobs List for Customers -->
-  <div *ngIf="!loading && !error && isCustomer && customerJobs.length > 0" class="jobs-list">
+  @if (!loading && !error && isCustomer && customerJobs.length > 0) {
+<div class="jobs-list">
     <div class="jobs-summary">
       <mat-icon>analytics</mat-icon>
       <span>You have <strong>{{ customerJobs.length }}</strong> active {{ customerJobs.length === 1 ? 'job' : 'jobs' }}</span>
     </div>
 
-    <mat-card *ngFor="let job of customerJobs" class="job-card">
+    @for (job of customerJobs; track job) {
+<mat-card class="job-card">
       <mat-card-header>
         <mat-card-title>
           <a [routerLink]="['/jobs', job.id]" class="job-title-link">
@@ -240,14 +270,10 @@
               <mat-icon>assignment</mat-icon>
               Status
             </div>
-            <mat-chip-set>
-              <mat-chip
-                [highlighted]="true"
-                [color]="getStatusColor(job.status)">
-                <mat-icon>{{ getStatusIcon(job.status) }}</mat-icon>
-                {{ getStatusLabel(job.status) }}
-              </mat-chip>
-            </mat-chip-set>
+            <span class="status-pill" [class]="getStatusClass(job.status)">
+              <mat-icon>{{ getStatusIcon(job.status) }}</mat-icon>
+              {{ getStatusLabel(job.status) }}
+            </span>
           </div>
 
           <!-- Budget -->
@@ -284,12 +310,16 @@
                  [class.urgent]="getDeadlineWarning(job.deadline) === 'urgent'"
                  [class.warning]="getDeadlineWarning(job.deadline) === 'warning'">
               {{ formatDate(job.deadline) }}
-              <span class="days-remaining" *ngIf="calculateDaysUntilDeadline(job.deadline) >= 0">
+              @if (calculateDaysUntilDeadline(job.deadline) >= 0) {
+<span class="days-remaining">
                 ({{ calculateDaysUntilDeadline(job.deadline) }} days remaining)
               </span>
-              <span class="overdue" *ngIf="calculateDaysUntilDeadline(job.deadline) < 0">
+}
+              @if (calculateDaysUntilDeadline(job.deadline) < 0) {
+<span class="overdue">
                 (OVERDUE)
               </span>
+}
             </div>
           </div>
 
@@ -323,9 +353,11 @@
             Required Skills
           </div>
           <mat-chip-set>
-            <mat-chip *ngFor="let skill of job.skills">
+            @for (skill of job.skills; track skill) {
+<mat-chip>
               {{ skill }}
             </mat-chip>
+}
           </mat-chip-set>
         </div>
 
@@ -343,9 +375,11 @@
         <button mat-button [routerLink]="['/jobs', job.id, 'applications']">
           <mat-icon>people</mat-icon>
           View Applications
-          <mat-chip *ngIf="(job.applicationsCount || 0) > 0" [highlighted]="true" color="accent">
+          @if ((job.applicationsCount || 0) > 0) {
+<mat-chip [highlighted]="true" color="accent">
             {{ job.applicationsCount || 0 }}
           </mat-chip>
+}
         </button>
         <button mat-button [routerLink]="['/jobs', job.id, 'edit']">
           <mat-icon>edit</mat-icon>
@@ -353,5 +387,7 @@
         </button>
       </mat-card-actions>
     </mat-card>
+}
   </div>
+}
 </div>

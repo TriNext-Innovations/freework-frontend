@@ -1,11 +1,45 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8">
   <title>freework — doing what you love</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Set the theme before first paint — kills the flash of the wrong theme (FOUC).
+       Must run in <head>, before <body> renders. Mirrors ThemeService.resolveInitialTheme(). -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('freework_theme');
+        if (t !== 'dark' && t !== 'light') {
+          t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+        }
+        var el = document.documentElement;
+        el.setAttribute('data-theme', t);
+        el.style.backgroundColor = (t === 'light') ? '#F7F6F3' : '#0D1F1A';
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'dark');
+        document.documentElement.style.backgroundColor = '#0D1F1A';
+      }
+    })();
+  </script>
+
   <meta name="description" content="freework — share your skill with the world. Photography, development, design, writing — whatever you do best, someone out there needs it.">
+  <meta name="theme-color" content="#0f1f1a">
+
+  <!-- Open Graph / social sharing -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="freework">
+  <meta property="og:title" content="freework — doing what you love">
+  <meta property="og:description" content="South Africa's 0%-commission freelance marketplace. Find work or hire talent — what you earn is yours.">
+  <meta property="og:url" content="https://freework.co.za/">
+  <meta property="og:image" content="https://freework.co.za/Joburg_dark.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="freework — doing what you love">
+  <meta name="twitter:description" content="South Africa's 0%-commission freelance marketplace. Find work or hire talent — what you earn is yours.">
+  <meta name="twitter:image" content="https://freework.co.za/Joburg_dark.jpg">
+
   <link rel="icon" type="image/svg+xml" href="assets/freework-icon-colour.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

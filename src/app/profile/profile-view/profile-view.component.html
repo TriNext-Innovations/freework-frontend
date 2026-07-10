@@ -1,243 +1,418 @@
 <div class="profile-container">
-  <!-- Loading State -->
-  <div *ngIf="isLoading" class="loading-container">
-    <mat-spinner diameter="48"></mat-spinner>
-    <p>Loading profile...</p>
-  </div>
+
+  <!-- Skeleton Loading State -->
+  @if (isLoading) {
+    <div class="profile-content" aria-busy="true" aria-label="Loading profile">
+      <div class="profile-header skeleton-header">
+        <div class="header-background"></div>
+        <div class="header-content">
+          <div class="profile-picture-wrapper">
+            <div class="skeleton-avatar"></div>
+          </div>
+          <div class="profile-info">
+            <div class="skeleton-line skeleton-line--title"></div>
+            <div class="skeleton-line skeleton-line--sub"></div>
+            <div class="skeleton-meta">
+              <div class="skeleton-chip-sm"></div>
+              <div class="skeleton-chip-sm"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="profile-body">
+        <div class="main-column">
+          <div class="profile-section">
+            <div class="skeleton-line skeleton-line--section-title"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line skeleton-line--short"></div>
+          </div>
+          <div class="profile-section">
+            <div class="skeleton-line skeleton-line--section-title"></div>
+            <div class="skeleton-chips">
+              <div class="skeleton-chip-sm"></div>
+              <div class="skeleton-chip-sm"></div>
+              <div class="skeleton-chip-sm"></div>
+              <div class="skeleton-chip-sm"></div>
+            </div>
+          </div>
+        </div>
+        <aside class="sidebar">
+          <div class="sidebar-section">
+            <div class="skeleton-line skeleton-line--sub"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line"></div>
+            <div class="skeleton-line skeleton-line--short"></div>
+          </div>
+        </aside>
+      </div>
+    </div>
+  }
 
   <!-- Error State -->
-  <div *ngIf="error && !isLoading" class="error-container">
-    <mat-icon class="error-icon">error_outline</mat-icon>
-    <p>{{ error }}</p>
-  </div>
+  @if (error && !isLoading) {
+    <div class="state-block" role="alert">
+      <div class="state-icon state-icon--error">
+        <mat-icon>person_off</mat-icon>
+      </div>
+      <h3>Couldn't load profile</h3>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="loadMyProfile()">
+        <mat-icon>refresh</mat-icon>
+        Try again
+      </button>
+    </div>
+  }
 
   <!-- Profile Content -->
-  <div *ngIf="profile && !isLoading" class="profile-content">
-    <!-- Header Section -->
-    <div class="profile-header">
-      <div class="header-background"></div>
-      <div class="header-content">
-        <div class="profile-picture-wrapper">
-          <img
-            *ngIf="getProfileImage(profile)"
-            [src]="getProfileImage(profile)"
-            [alt]="profile.firstName + ' ' + profile.lastName"
-            class="profile-picture"
-          />
-          <div *ngIf="!getProfileImage(profile)" class="profile-picture profile-picture--placeholder">
-            <mat-icon>person</mat-icon>
-          </div>
-          <div class="role-badge" [class.freelancer]="isFreelancer(profile)" [class.customer]="isCustomer(profile)">
-            {{ profile.role }}
-          </div>
-        </div>
+  @if (profile && !isLoading) {
+    <div class="profile-content">
 
-        <div class="profile-info">
-          <div class="name-section">
-            <h1>{{ profile.firstName }} {{ profile.lastName }}</h1>
-            <p class="title" *ngIf="isFreelancer(profile) && profile.title">{{ profile.title }}</p>
-            <p class="company" *ngIf="isCustomer(profile) && profile.company">{{ profile.company }}</p>
+      <!-- Hero Header -->
+      <header class="profile-hero aura-hero">
+        <span class="profile-eyebrow">
+          <span class="live-dot" aria-hidden="true"></span>
+          freework profile
+        </span>
+        <h1>
+          @if (isOwnProfile) {
+            Your work, <em>your story</em>
+          } @else {
+            {{ profile.firstName }}'s <em>profile</em>
+          }
+        </h1>
+      </header>
+
+      <!-- Profile Header Card -->
+      <div class="profile-header">
+        <div class="header-background"></div>
+        <div class="header-content">
+          <div class="profile-picture-wrapper">
+            @if (getProfileImage(profile)) {
+              <img
+                [src]="getProfileImage(profile)"
+                [alt]="profile.firstName + ' ' + profile.lastName"
+                class="profile-picture"
+              />
+            }
+            @if (!getProfileImage(profile)) {
+              <div class="profile-picture profile-picture--placeholder">
+                <mat-icon>person</mat-icon>
+              </div>
+            }
+            <span class="role-badge" [class.freelancer]="isFreelancer(profile)" [class.customer]="isCustomer(profile)">
+              {{ profile.role }}
+            </span>
           </div>
 
-          <div class="meta-info">
-            <span *ngIf="profile.location" class="info-item">
-              <mat-icon>location_on</mat-icon> {{ profile.location }}
-            </span>
-            <span *ngIf="profile.email" class="info-item">
-              <mat-icon>email</mat-icon> {{ profile.email }}
-            </span>
-            <span *ngIf="profile.phone" class="info-item">
-              <mat-icon>phone</mat-icon> {{ profile.phone }}
-            </span>
-          </div>
-
-          <div class="rating-section" *ngIf="profile.rating !== null && profile.rating !== undefined">
-            <div class="rating">
-              <mat-icon class="star-icon">star</mat-icon>
-              <span class="rating-value">{{ profile.rating }}</span>
-              <span class="rating-count">({{ profile.totalReviews }} reviews)</span>
+          <div class="profile-info">
+            <div class="name-section">
+              <h2>{{ profile.firstName }} {{ profile.lastName }}</h2>
+              @if (isFreelancer(profile) && profile.title) {
+                <p class="title">{{ profile.title }}</p>
+              }
+              @if (isCustomer(profile) && profile.company) {
+                <p class="company">{{ profile.company }}</p>
+              }
             </div>
-          </div>
 
-          <button *ngIf="isOwnProfile" mat-raised-button color="primary" (click)="editProfile()" class="edit-btn">
-            <mat-icon>edit</mat-icon> Edit Profile
-          </button>
+            <div class="meta-info">
+              @if (profile.location) {
+                <span class="info-item">
+                  <mat-icon>location_on</mat-icon> {{ profile.location }}
+                </span>
+              }
+              @if (profile.email) {
+                <span class="info-item">
+                  <mat-icon>email</mat-icon> {{ profile.email }}
+                </span>
+              }
+              @if (profile.phone) {
+                <span class="info-item">
+                  <mat-icon>phone</mat-icon> {{ profile.phone }}
+                </span>
+              }
+            </div>
+
+            @if (profile.rating !== null && profile.rating !== undefined) {
+              <div class="rating-section">
+                <div class="rating">
+                  <mat-icon class="star-icon">star</mat-icon>
+                  <span class="rating-value">{{ profile.rating }}</span>
+                  <span class="rating-count">({{ profile.totalReviews }} reviews)</span>
+                </div>
+              </div>
+            }
+
+            @if (isOwnProfile) {
+              <button mat-raised-button color="primary" (click)="editProfile()" class="edit-btn">
+                <mat-icon>edit</mat-icon> Edit Profile
+              </button>
+            }
+          </div>
         </div>
       </div>
-    </div>
 
-    <!-- Main Content -->
-    <div class="profile-body">
-      <div class="main-column">
-        <!-- Bio Section -->
-        <section class="profile-section" *ngIf="profile.bio">
-          <h2><mat-icon>person</mat-icon> About</h2>
-          <p class="bio">{{ profile.bio }}</p>
-        </section>
+      <!-- Main Content -->
+      <div class="profile-body">
+        <div class="main-column">
 
-        <!-- Freelancer Specific Sections -->
-        <ng-container *ngIf="isFreelancer(profile)">
-          <!-- Skills Section -->
-          <section class="profile-section" *ngIf="profile.skills && profile.skills.length > 0">
-            <h2><mat-icon>code</mat-icon> Skills</h2>
-            <div class="skills-list">
-              <span *ngFor="let skill of profile.skills" class="skill-badge">{{ skill }}</span>
-            </div>
-          </section>
+          <!-- Bio Section -->
+          @if (profile.bio) {
+            <section class="profile-section">
+              <h3 class="section-title">
+                <div class="section-icon" aria-hidden="true"><mat-icon>person</mat-icon></div>
+                About
+              </h3>
+              <p class="bio">{{ profile.bio }}</p>
+            </section>
+          }
 
-          <!-- Portfolio Section -->
-          <section class="profile-section" *ngIf="profile.portfolio && profile.portfolio.length > 0">
-            <h2><mat-icon>work</mat-icon> Portfolio</h2>
-            <div class="portfolio-grid">
-              <div *ngFor="let item of profile.portfolio" class="portfolio-item">
-                <div class="portfolio-image">
-                  <img *ngIf="item.imageUrl" [src]="item.imageUrl" [alt]="item.title" />
-                  <div *ngIf="!item.imageUrl" class="portfolio-image-placeholder">
-                    <mat-icon>image</mat-icon>
-                  </div>
+          <!-- Freelancer Specific Sections -->
+          @if (isFreelancer(profile)) {
+
+            <!-- Skills Section -->
+            @if (profile.skills && profile.skills.length > 0) {
+              <section class="profile-section">
+                <h3 class="section-title">
+                  <div class="section-icon" aria-hidden="true"><mat-icon>code</mat-icon></div>
+                  Skills
+                </h3>
+                <div class="skills-list">
+                  @for (skill of profile.skills; track skill) {
+                    <span class="skill-pill">{{ skill }}</span>
+                  }
                 </div>
-                <div class="portfolio-info">
-                  <h3>{{ item.title }}</h3>
-                  <p>{{ item.description }}</p>
-                  <div class="technologies" *ngIf="item.technologies && item.technologies.length > 0">
-                    <span *ngFor="let tech of item.technologies" class="tech-badge">{{ tech }}</span>
+              </section>
+            }
+
+            <!-- Portfolio Section -->
+            @if (profile.portfolio && profile.portfolio.length > 0) {
+              <section class="profile-section">
+                <h3 class="section-title">
+                  <div class="section-icon" aria-hidden="true"><mat-icon>work</mat-icon></div>
+                  Portfolio
+                </h3>
+                <div class="portfolio-grid">
+                  @for (item of profile.portfolio; track item) {
+                    <div class="portfolio-item">
+                      <div class="portfolio-image">
+                        @if (item.imageUrl) {
+                          <img [src]="item.imageUrl" [alt]="item.title" />
+                        }
+                        @if (!item.imageUrl) {
+                          <div class="portfolio-image-placeholder">
+                            <mat-icon>image</mat-icon>
+                          </div>
+                        }
+                      </div>
+                      <div class="portfolio-info">
+                        <h4>{{ item.title }}</h4>
+                        <p>{{ item.description }}</p>
+                        @if (item.technologies && item.technologies.length > 0) {
+                          <div class="technologies">
+                            @for (tech of item.technologies; track tech) {
+                              <span class="tech-badge">{{ tech }}</span>
+                            }
+                          </div>
+                        }
+                        @if (item.projectUrl) {
+                          <a [href]="item.projectUrl" target="_blank" rel="noopener" class="view-project">
+                            View Project <mat-icon>open_in_new</mat-icon>
+                          </a>
+                        }
+                      </div>
+                    </div>
+                  }
+                </div>
+              </section>
+            }
+
+            <!-- Experience Section -->
+            @if (profile.experience) {
+              <section class="profile-section">
+                <h3 class="section-title">
+                  <div class="section-icon" aria-hidden="true"><mat-icon>history</mat-icon></div>
+                  Experience
+                </h3>
+                <p class="bio">{{ profile.experience }}</p>
+              </section>
+            }
+
+            <!-- Education Section -->
+            @if (profile.education) {
+              <section class="profile-section">
+                <h3 class="section-title">
+                  <div class="section-icon" aria-hidden="true"><mat-icon>school</mat-icon></div>
+                  Education
+                </h3>
+                <p class="bio">{{ profile.education }}</p>
+              </section>
+            }
+
+            <!-- Certifications Section -->
+            @if (profile.certifications && profile.certifications.length > 0) {
+              <section class="profile-section">
+                <h3 class="section-title">
+                  <div class="section-icon" aria-hidden="true"><mat-icon>verified</mat-icon></div>
+                  Certifications
+                </h3>
+                <div class="certifications-list">
+                  @for (cert of profile.certifications; track cert) {
+                    <div class="certification-item">
+                      <h4>{{ cert.name }}</h4>
+                      <p class="issuer">{{ cert.issuer }}</p>
+                      <p class="date">Issued: {{ cert.issueDate | date: 'MMM yyyy' }}</p>
+                      @if (cert.credentialUrl) {
+                        <a [href]="cert.credentialUrl" target="_blank" rel="noopener" class="credential-link">
+                          View Credential <mat-icon>open_in_new</mat-icon>
+                        </a>
+                      }
+                    </div>
+                  }
+                </div>
+              </section>
+            }
+          }
+
+          <!-- Customer Specific Sections -->
+          @if (isCustomer(profile)) {
+            <section class="profile-section stats-section">
+              <h3 class="section-title">
+                <div class="section-icon" aria-hidden="true"><mat-icon>bar_chart</mat-icon></div>
+                Statistics
+              </h3>
+              <div class="stats-grid">
+                <div class="stat-item">
+                  <div class="stat-value">{{ profile.totalJobsPosted || 0 }}</div>
+                  <div class="stat-label">Jobs Posted</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">{{ profile.rating || 'N/A' }}</div>
+                  <div class="stat-label">Rating</div>
+                </div>
+                <div class="stat-item">
+                  <div class="stat-value">{{ profile.totalReviews || 0 }}</div>
+                  <div class="stat-label">Reviews</div>
+                </div>
+              </div>
+            </section>
+
+            @if (profile.industry) {
+              <section class="profile-section">
+                <h3 class="section-title">
+                  <div class="section-icon" aria-hidden="true"><mat-icon>business</mat-icon></div>
+                  Company Information
+                </h3>
+                <div class="company-info">
+                  <p><strong>Industry:</strong> {{ profile.industry }}</p>
+                  @if (profile.companySize) {
+                    <p><strong>Company Size:</strong> {{ profile.companySize }}</p>
+                  }
+                  @if (profile.website) {
+                    <p>
+                      <strong>Website:</strong>
+                      <a [href]="profile.website" target="_blank" rel="noopener">{{ profile.website }}</a>
+                    </p>
+                  }
+                  @if (profile.verifiedPayment) {
+                    <p class="verified">
+                      <mat-icon>check_circle</mat-icon> Verified Payment Method
+                    </p>
+                  }
+                </div>
+              </section>
+            }
+          }
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+
+          <!-- Quick Stats for Freelancers -->
+          @if (isFreelancer(profile)) {
+            <div class="sidebar-section">
+              <h4 class="sidebar-heading">Quick Stats</h4>
+              <div class="quick-stats">
+                <div class="stat">
+                  <span class="stat-label">Hourly Rate</span>
+                  <span class="stat-value">R{{ profile.hourlyRate || 'N/A' }}/hr</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Availability</span>
+                  <span class="stat-value">{{ getAvailabilityLabel(profile.availability) }}</span>
+                </div>
+                <div class="stat">
+                  <span class="stat-label">Completed Jobs</span>
+                  <span class="stat-value">{{ profile.completedJobs || 0 }}</span>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Languages -->
+          @if (isFreelancer(profile) && profile.languages && profile.languages.length > 0) {
+            <div class="sidebar-section">
+              <h4 class="sidebar-heading">Languages</h4>
+              <div class="languages-list">
+                @for (lang of profile.languages; track lang) {
+                  <div class="language-item">
+                    <span class="language-name">{{ lang.name }}</span>
+                    <span class="language-level">{{ getProficiencyLabel(lang.proficiency) }}</span>
                   </div>
-                  <a *ngIf="item.projectUrl" [href]="item.projectUrl" target="_blank" rel="noopener" class="view-project">
-                    View Project <mat-icon>open_in_new</mat-icon>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Social Links -->
+          @if (profile.socialLinks) {
+            <div class="sidebar-section">
+              <h4 class="sidebar-heading">Connect</h4>
+              <div class="social-links">
+                @if (profile.socialLinks.linkedin) {
+                  <a [href]="profile.socialLinks.linkedin" target="_blank" rel="noopener" class="social-link">
+                    <mat-icon>link</mat-icon> LinkedIn
                   </a>
-                </div>
+                }
+                @if (profile.socialLinks.github) {
+                  <a [href]="profile.socialLinks.github" target="_blank" rel="noopener" class="social-link">
+                    <mat-icon>code</mat-icon> GitHub
+                  </a>
+                }
+                @if (profile.socialLinks.twitter) {
+                  <a [href]="profile.socialLinks.twitter" target="_blank" rel="noopener" class="social-link">
+                    <mat-icon>alternate_email</mat-icon> Twitter / X
+                  </a>
+                }
+                @if (profile.socialLinks.website) {
+                  <a [href]="profile.socialLinks.website" target="_blank" rel="noopener" class="social-link">
+                    <mat-icon>language</mat-icon> Website
+                  </a>
+                }
+                @if (profile.socialLinks.behance) {
+                  <a [href]="profile.socialLinks.behance" target="_blank" rel="noopener" class="social-link">
+                    <mat-icon>palette</mat-icon> Behance
+                  </a>
+                }
+                @if (profile.socialLinks.dribbble) {
+                  <a [href]="profile.socialLinks.dribbble" target="_blank" rel="noopener" class="social-link">
+                    <mat-icon>sports_basketball</mat-icon> Dribbble
+                  </a>
+                }
               </div>
             </div>
-          </section>
+          }
 
-          <!-- Experience Section -->
-          <section class="profile-section" *ngIf="profile.experience">
-            <h2><mat-icon>history</mat-icon> Experience</h2>
-            <p class="bio">{{ profile.experience }}</p>
-          </section>
+          <!-- Member Since -->
+          <div class="sidebar-section">
+            <h4 class="sidebar-heading">Member Since</h4>
+            <p>{{ profile.createdAt | date: 'MMMM yyyy' }}</p>
+          </div>
 
-          <!-- Education Section -->
-          <section class="profile-section" *ngIf="profile.education">
-            <h2><mat-icon>school</mat-icon> Education</h2>
-            <p class="bio">{{ profile.education }}</p>
-          </section>
-
-          <!-- Certifications Section -->
-          <section class="profile-section" *ngIf="profile.certifications && profile.certifications.length > 0">
-            <h2><mat-icon>verified</mat-icon> Certifications</h2>
-            <div class="certifications-list">
-              <div *ngFor="let cert of profile.certifications" class="certification-item">
-                <h3>{{ cert.name }}</h3>
-                <p class="issuer">{{ cert.issuer }}</p>
-                <p class="date">Issued: {{ cert.issueDate | date: 'MMM yyyy' }}</p>
-                <a *ngIf="cert.credentialUrl" [href]="cert.credentialUrl" target="_blank" rel="noopener" class="credential-link">
-                  View Credential <mat-icon>open_in_new</mat-icon>
-                </a>
-              </div>
-            </div>
-          </section>
-        </ng-container>
-
-        <!-- Customer Specific Sections -->
-        <ng-container *ngIf="isCustomer(profile)">
-          <section class="profile-section stats-section">
-            <h2><mat-icon>bar_chart</mat-icon> Statistics</h2>
-            <div class="stats-grid">
-              <div class="stat-item">
-                <div class="stat-value">{{ profile.totalJobsPosted || 0 }}</div>
-                <div class="stat-label">Jobs Posted</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">{{ profile.rating || 'N/A' }}</div>
-                <div class="stat-label">Rating</div>
-              </div>
-              <div class="stat-item">
-                <div class="stat-value">{{ profile.totalReviews || 0 }}</div>
-                <div class="stat-label">Reviews</div>
-              </div>
-            </div>
-          </section>
-
-          <section class="profile-section" *ngIf="profile.industry">
-            <h2><mat-icon>business</mat-icon> Company Information</h2>
-            <div class="company-info">
-              <p><strong>Industry:</strong> {{ profile.industry }}</p>
-              <p *ngIf="profile.companySize"><strong>Company Size:</strong> {{ profile.companySize }}</p>
-              <p *ngIf="profile.website">
-                <strong>Website:</strong>
-                <a [href]="profile.website" target="_blank" rel="noopener">{{ profile.website }}</a>
-              </p>
-              <p *ngIf="profile.verifiedPayment" class="verified">
-                <mat-icon>check_circle</mat-icon> Verified Payment Method
-              </p>
-            </div>
-          </section>
-        </ng-container>
+        </aside>
       </div>
-
-      <!-- Sidebar -->
-      <aside class="sidebar">
-        <!-- Quick Stats for Freelancers -->
-        <div class="sidebar-section" *ngIf="isFreelancer(profile)">
-          <h3>Quick Stats</h3>
-          <div class="quick-stats">
-            <div class="stat">
-              <span class="stat-label">Hourly Rate</span>
-              <span class="stat-value">R{{ profile.hourlyRate || 'N/A' }}/hr</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Availability</span>
-              <span class="stat-value">{{ getAvailabilityLabel(profile.availability) }}</span>
-            </div>
-            <div class="stat">
-              <span class="stat-label">Completed Jobs</span>
-              <span class="stat-value">{{ profile.completedJobs || 0 }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Languages -->
-        <div class="sidebar-section" *ngIf="isFreelancer(profile) && profile.languages && profile.languages.length > 0">
-          <h3>Languages</h3>
-          <div class="languages-list">
-            <div *ngFor="let lang of profile.languages" class="language-item">
-              <span class="language-name">{{ lang.name }}</span>
-              <span class="language-level">{{ getProficiencyLabel(lang.proficiency) }}</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Social Links -->
-        <div class="sidebar-section" *ngIf="profile.socialLinks">
-          <h3>Connect</h3>
-          <div class="social-links">
-            <a *ngIf="profile.socialLinks.linkedin" [href]="profile.socialLinks.linkedin" target="_blank" rel="noopener" class="social-link">
-              <mat-icon>link</mat-icon> LinkedIn
-            </a>
-            <a *ngIf="profile.socialLinks.github" [href]="profile.socialLinks.github" target="_blank" rel="noopener" class="social-link">
-              <mat-icon>code</mat-icon> GitHub
-            </a>
-            <a *ngIf="profile.socialLinks.twitter" [href]="profile.socialLinks.twitter" target="_blank" rel="noopener" class="social-link">
-              <mat-icon>alternate_email</mat-icon> Twitter / X
-            </a>
-            <a *ngIf="profile.socialLinks.website" [href]="profile.socialLinks.website" target="_blank" rel="noopener" class="social-link">
-              <mat-icon>language</mat-icon> Website
-            </a>
-            <a *ngIf="profile.socialLinks.behance" [href]="profile.socialLinks.behance" target="_blank" rel="noopener" class="social-link">
-              <mat-icon>palette</mat-icon> Behance
-            </a>
-            <a *ngIf="profile.socialLinks.dribbble" [href]="profile.socialLinks.dribbble" target="_blank" rel="noopener" class="social-link">
-              <mat-icon>sports_basketball</mat-icon> Dribbble
-            </a>
-          </div>
-        </div>
-
-        <!-- Member Since -->
-        <div class="sidebar-section">
-          <h3>Member Since</h3>
-          <p>{{ profile.createdAt | date: 'MMMM yyyy' }}</p>
-        </div>
-      </aside>
     </div>
-  </div>
+  }
+
 </div>

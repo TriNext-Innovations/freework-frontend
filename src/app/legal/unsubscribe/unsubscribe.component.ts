@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,27 +10,24 @@ import { LegalService } from '../legal.service';
 @Component({
     selector: 'app-unsubscribe',
     imports: [
-        CommonModule,
-        RouterLink,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        MatProgressSpinnerModule
-    ],
+    RouterLink,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatProgressSpinnerModule
+],
     templateUrl: './unsubscribe.component.html',
     styleUrl: './unsubscribe.component.scss'
 })
 export class UnsubscribeComponent implements OnInit {
+  private route = inject(ActivatedRoute);
+  private legalService = inject(LegalService);
+
   loading = true;
   success = false;
   error = false;
   email = '';
   errorMessage = '';
-
-  constructor(
-    private route: ActivatedRoute,
-    private legalService: LegalService
-  ) {}
 
   ngOnInit(): void {
     const token = this.route.snapshot.queryParams['token'];

@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, OnInit, inject } from '@angular/core';
+
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -7,21 +7,25 @@ import { MatIconModule } from '@angular/material/icon';
 
 @Component({
     selector: 'app-payment-result',
-    imports: [CommonModule, MatCardModule, MatButtonModule, MatIconModule, RouterLink],
+    imports: [MatCardModule, MatButtonModule, MatIconModule, RouterLink],
     template: `
     <div class="result-container">
       <mat-card class="result-card">
         <mat-card-content>
-          <ng-container *ngIf="success">
+          @if (success) {
+
             <mat-icon class="success-icon">check_circle</mat-icon>
             <h2>Payment Successful</h2>
             <p>Your payment has been processed successfully.</p>
-          </ng-container>
-          <ng-container *ngIf="!success">
+          
+}
+          @if (!success) {
+
             <mat-icon class="error-icon">cancel</mat-icon>
             <h2>Payment Cancelled</h2>
             <p>Your payment was cancelled. No charges were made.</p>
-          </ng-container>
+          
+}
           <a mat-raised-button color="primary" routerLink="/payments">View Payments</a>
         </mat-card-content>
       </mat-card>
@@ -35,9 +39,9 @@ import { MatIconModule } from '@angular/material/icon';
   `]
 })
 export class PaymentResultComponent implements OnInit {
-  success = false;
+  private route = inject(ActivatedRoute);
 
-  constructor(private route: ActivatedRoute) {}
+  success = false;
 
   ngOnInit(): void {
     this.success = this.route.snapshot.data['success'] ?? false;

@@ -74,13 +74,11 @@ export class MyActiveJobsComponent implements OnInit {
     this.loading = true;
     this.error = null;
 
-    // Get jobs posted by the customer that are in progress
+    // Show ALL jobs the customer has posted — a freshly-posted OPEN job with no
+    // applications yet must still appear here, otherwise the owner loses track of it (#168).
     this.jobService.getMyJobs().subscribe({
       next: (response) => {
-        // Filter for jobs that are in progress, awaiting review, or have accepted applications
-        this.customerJobs = response.content.filter(
-          job => job.status === 'IN_PROGRESS' || job.status === 'REVIEW' || (job.applicationsCount && job.applicationsCount > 0)
-        );
+        this.customerJobs = response.content;
         this.loading = false;
       },
       error: (error) => {
@@ -162,15 +160,9 @@ export class MyActiveJobsComponent implements OnInit {
     this.router.navigate(['/jobs', jobId]);
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'OPEN': 'primary',
-      'IN_PROGRESS': 'accent',
-      'REVIEW': 'accent',
-      'COMPLETED': 'warn',
-      'CANCELLED': ''
-    };
-    return colors[status] || '';
+  /** Brand status-pill class (custom span pill, not mat-chip). */
+  getStatusClass(status: string): string {
+    return 'jstatus-' + (status || '').toLowerCase();
   }
 
   getStatusLabel(status: string): string {
@@ -196,9 +188,9 @@ export class MyActiveJobsComponent implements OnInit {
   }
 
   formatBudget(job: Job): string {
-    const amount = new Intl.NumberFormat('en-US', {
+    const amount = new Intl.NumberFormat('en-ZA', {
       style: 'currency',
-      currency: 'USD',
+      currency: 'ZAR',
       minimumFractionDigits: 0
     }).format(job.budget);
 
@@ -207,7 +199,7 @@ export class MyActiveJobsComponent implements OnInit {
 
   formatDate(date: Date | string | undefined): string {
     if (!date) return 'N/A';
-    return new Date(date).toLocaleDateString('en-US', {
+    return new Date(date).toLocaleDateString('en-ZA', {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
@@ -235,6 +227,7 @@ export class MyActiveJobsComponent implements OnInit {
     });
   }
 
+  /** Freelancer (assigned): submit work for the customer to review (IN_PROGRESS → REVIEW). */
   submitForReview(activeJob: ActiveJob): void {
     this.jobService.updateJobStatus(activeJob.job.id, 'REVIEW').subscribe({
       next: (job) => {

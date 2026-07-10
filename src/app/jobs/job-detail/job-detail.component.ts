@@ -13,6 +13,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { JobService } from '../job.service';
 import { AuthService } from '../../auth/auth.service';
+import { MessagingService } from '../../messaging/messaging.service';
 import { Job, JOB_CATEGORIES } from '../models';
 import { RatingSummaryComponent } from '../../reviews/rating-summary/rating-summary.component';
 import { ReviewListComponent } from '../../reviews/review-list/review-list.component';
@@ -50,6 +51,7 @@ export class JobDetailComponent implements OnInit {
     private router: Router,
     private jobService: JobService,
     private authService: AuthService,
+    private messagingService: MessagingService,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {}
@@ -149,8 +151,9 @@ export class JobDetailComponent implements OnInit {
           this.showSuccess('Job deleted successfully');
           this.router.navigate(['/jobs']);
         },
-        error: () => {
-          this.showError('Failed to delete job');
+        error: (err) => {
+          // Backend blocks deleting in-progress/in-review jobs (#171) — surface its reason
+          this.showError(err?.error?.message || 'Failed to delete job');
         }
       });
     }
@@ -163,8 +166,12 @@ export class JobDetailComponent implements OnInit {
   }
 
   contactCustomer(): void {
-    // TODO: Implement messaging functionality
-    this.showSuccess('Messaging feature coming soon!');
+    if (!this.job?.customerId) return;
+    this.messagingService.getOrCreateConversation(this.job.customerId, this.job.id)
+      .subscribe({
+        next: (conversation) => this.router.navigate(['/messages', conversation.id]),
+        error: () => this.showError('Failed to start conversation')
+      });
   }
 
   goBack(): void {
@@ -211,51 +218,48 @@ export class JobDetailComponent implements OnInit {
     return labels[status] || status;
   }
 
-  getStatusColor(status: string): string {
-    const colors: Record<string, string> = {
-      'OPEN': 'primary',      // Blue - for open jobs
-      'IN_PROGRESS': 'accent', // Green/Teal - for active work
-      'REVIEW': 'accent',      // Awaiting customer approval
-      'COMPLETED': 'warn',     // Orange/Amber - for finished jobs
-      'CANCELLED': 'warn'      // Red - for cancelled jobs (changed from empty string)
-    };
-    return colors[status] || 'primary';
+  /** Brand status-pill class (custom span pill, not mat-chip). */
+  getStatusClass(status: string): string {
+    return 'jstatus-' + (status || '').toLowerCase();
   }
 
-  isInReview(): boolean {
-    return this.job?.status === 'REVIEW';
+  // ── Lifecycle actions (#167) ───────────────────────────────────────────────
+
+  /** Customer-only: accept the freelancer's submitted work (REVIEW → COMPLETED). */
+  canAcceptWork(): boolean {
+    return this.isOwner && this.job?.status === 'REVIEW';
   }
 
-  markAsCompleted(): void {
-    if (!this.job) return;
+  /** Freelancer (assigned): submit work for the customer to review (IN_PROGRESS → REVIEW). */
+  canSubmitForReview(): boolean {
+    return !this.isOwner && this.job?.status === 'IN_PROGRESS';
+  }
 
-    const confirmed = confirm('Accept this work and mark the job as completed? This confirms the freelancer has delivered.');
-    if (!confirmed) return;
+  /** Customer-only: send submitted work back to the freelancer (REVIEW → IN_PROGRESS). */
+  canRequestChanges(): boolean {
+    return this.isOwner && this.job?.status === 'REVIEW';
+  }
 
-    this.jobService.updateJobStatus(this.job.id, 'COMPLETED').subscribe({
-      next: (job) => {
-        this.job = job;
-        this.showSuccess('Job marked as completed. You can now leave a review.');
-      },
-      error: (error) => {
-        console.error('Error completing job:', error);
-        this.showError('Could not mark the job as completed. Please try again.');
-      }
-    });
+  submitForReview(): void {
+    this.changeStatus('REVIEW', 'Work submitted for review.');
+  }
+
+  acceptWork(): void {
+    this.changeStatus('COMPLETED', 'Work accepted — job marked complete.');
   }
 
   requestChanges(): void {
-    if (!this.job) return;
+    this.changeStatus('IN_PROGRESS', 'Sent back to the freelancer for changes.');
+  }
 
-    this.jobService.updateJobStatus(this.job.id, 'IN_PROGRESS').subscribe({
-      next: (job) => {
-        this.job = job;
-        this.showSuccess('Sent back to the freelancer for changes.');
+  private changeStatus(status: string, successMsg: string): void {
+    if (!this.job) return;
+    this.jobService.updateJobStatus(this.job.id, status).subscribe({
+      next: (updated) => {
+        this.job = updated;
+        this.showSuccess(successMsg);
       },
-      error: (error) => {
-        console.error('Error requesting changes:', error);
-        this.showError('Could not send the job back for changes. Please try again.');
-      }
+      error: () => this.showError('Failed to update job status. Please try again.')
     });
   }
 

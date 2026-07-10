@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,15 +12,14 @@ import { ReviewType } from '../models';
 @Component({
     selector: 'app-reviews-demo',
     imports: [
-        CommonModule,
-        MatTabsModule,
-        MatCardModule,
-        MatButtonModule,
-        MatIconModule,
-        ReviewFormComponent,
-        ReviewListComponent,
-        RatingSummaryComponent
-    ],
+    MatTabsModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    ReviewFormComponent,
+    ReviewListComponent,
+    RatingSummaryComponent
+],
     templateUrl: './reviews-demo.component.html',
     styleUrls: ['./reviews-demo.component.scss']
 })

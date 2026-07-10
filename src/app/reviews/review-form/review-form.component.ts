@@ -1,5 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, Output, EventEmitter, inject } from '@angular/core';
+
 import { FormsModule } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,22 +16,24 @@ import { CreateReviewRequest, ReviewType } from '../models';
 @Component({
     selector: 'app-review-form',
     imports: [
-        CommonModule,
-        FormsModule,
-        MatCardModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        MatIconModule,
-        MatChipsModule,
-        MatSnackBarModule,
-        MatProgressSpinnerModule,
-        MatTooltipModule
-    ],
+    FormsModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    MatIconModule,
+    MatChipsModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
+    MatTooltipModule
+],
     templateUrl: './review-form.component.html',
     styleUrls: ['./review-form.component.scss']
 })
 export class ReviewFormComponent {
+  private reviewService = inject(ReviewService);
+  private snackBar = inject(MatSnackBar);
+
   @Input() jobId!: string;
   @Input() revieweeId!: string;
   @Input() revieweeName!: string;
@@ -48,11 +50,6 @@ export class ReviewFormComponent {
   currentCon = '';
 
   submitting = false;
-
-  constructor(
-    private reviewService: ReviewService,
-    private snackBar: MatSnackBar
-  ) {}
 
   setRating(rating: number): void {
     this.rating = rating;

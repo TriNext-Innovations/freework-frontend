@@ -1,12 +1,15 @@
 <div class="reconsent-container">
   <mat-card class="reconsent-card">
 
-    <div *ngIf="loading" class="loading-state">
+    @if (loading) {
+<div class="loading-state">
       <mat-spinner diameter="48"></mat-spinner>
       <p>Checking your consent status...</p>
     </div>
+}
 
-    <ng-container *ngIf="!loading && reconsentCheck?.reconsentRequired">
+    @if (!loading && reconsentCheck?.reconsentRequired) {
+
       <mat-card-header>
         <mat-card-title>
           <mat-icon>gavel</mat-icon>
@@ -15,12 +18,15 @@
       </mat-card-header>
 
       <mat-card-content>
-        <div *ngIf="accepted" class="accepted-state">
+        @if (accepted) {
+<div class="accepted-state">
           <mat-icon>check_circle</mat-icon>
           <p>Thank you! Redirecting you now...</p>
         </div>
+}
 
-        <ng-container *ngIf="!accepted">
+        @if (!accepted) {
+
           <p class="reconsent-intro">
             We have updated our <strong>{{ getDocumentLabel(reconsentCheck!.documentType!) }}</strong>.
             Version <strong>{{ reconsentCheck!.currentVersion }}</strong> is now in effect.
@@ -28,9 +34,11 @@
           </p>
 
           <div class="version-info">
-            <span *ngIf="reconsentCheck!.userConsentedVersion">
+            @if (reconsentCheck!.userConsentedVersion) {
+<span>
               You previously accepted version {{ reconsentCheck!.userConsentedVersion }}.
             </span>
+}
             <span>The current version is {{ reconsentCheck!.currentVersion }}.</span>
           </div>
 
@@ -49,10 +57,12 @@
             version {{ reconsentCheck!.currentVersion }}
           </mat-checkbox>
 
-          <div *ngIf="error" class="error-msg">
+          @if (error) {
+<div class="error-msg">
             <mat-icon>error</mat-icon>
             {{ error }}
           </div>
+}
 
           <div class="reconsent-actions">
             <button
@@ -61,14 +71,22 @@
               [disabled]="!termsAccepted || accepting"
               (click)="accept()"
               class="accept-btn">
-              <mat-spinner *ngIf="accepting" diameter="18"></mat-spinner>
-              <span *ngIf="!accepting">Accept & Continue</span>
-              <span *ngIf="accepting">Saving...</span>
+              @if (accepting) {
+<mat-spinner diameter="18"></mat-spinner>
+}
+              @if (!accepting) {
+<span>Accept & Continue</span>
+}
+              @if (accepting) {
+<span>Saving...</span>
+}
             </button>
           </div>
-        </ng-container>
+        
+}
       </mat-card-content>
-    </ng-container>
+    
+}
 
   </mat-card>
 </div>

@@ -29,14 +29,18 @@
     <mat-form-field appearance="outline" class="full-width">
       <mat-label>Type DELETE to confirm</mat-label>
       <input matInput formControlName="confirmation" placeholder="DELETE" autocomplete="off">
-      <mat-error *ngIf="form.get('confirmation')?.hasError('pattern')">Type exactly DELETE (uppercase)</mat-error>
+      @if (form.get('confirmation')?.hasError('pattern')) {
+<mat-error>Type exactly DELETE (uppercase)</mat-error>
+}
     </mat-form-field>
   </form>
 
-  <div *ngIf="error" class="error-msg">
+  @if (error) {
+<div class="error-msg">
     <mat-icon>error</mat-icon>
     {{ error }}
   </div>
+}
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
@@ -46,8 +50,14 @@
     class="delete-btn"
     [disabled]="!canDelete"
     (click)="delete()">
-    <mat-spinner *ngIf="loading" diameter="16"></mat-spinner>
-    <span *ngIf="!loading">Permanently Delete Account</span>
-    <span *ngIf="loading">Deleting...</span>
+    @if (loading) {
+<mat-spinner diameter="16"></mat-spinner>
+}
+    @if (!loading) {
+<span>Permanently Delete Account</span>
+}
+    @if (loading) {
+<span>Deleting...</span>
+}
   </button>
 </mat-dialog-actions>

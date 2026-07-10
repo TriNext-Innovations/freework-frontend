@@ -1,22 +1,66 @@
 .settings-container {
   max-width: 700px;
-  margin: 24px auto;
-  padding: 0 16px;
+  margin: 0 auto;
+  padding: var(--spacing-2xl) var(--spacing-md) var(--spacing-3xl);
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+}
+
+.page-hero {
+  &__eyebrow {
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--color-accent-500);
+    margin-bottom: var(--spacing-sm);
+  }
 
   h1 {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 0;
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.1;
+    margin: 0 0 var(--spacing-sm);
+    color: var(--color-text-primary);
+
+    em {
+      font-family: 'Instrument Serif', Georgia, serif;
+      font-style: italic;
+      font-weight: 400;
+      background: linear-gradient(120deg, #2BB88A 0%, #1A8D6F 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      padding-right: 0.06em;
+    }
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    font-size: 15px;
+    line-height: 1.6;
   }
 }
 
 .privacy-card {
   mat-card-content {
     padding-top: 0.5rem;
+  }
+
+  // "Download My Data" is an action item (no routerLink) — keep the affordance,
+  // and dim it while the export is in flight.
+  a[role='button'] {
+    cursor: pointer;
+
+    &.list-item-busy {
+      opacity: 0.6;
+      pointer-events: none;
+    }
   }
 }
 
@@ -36,7 +80,7 @@
     p {
       margin: 0;
       font-size: 0.85rem;
-      color: var(--mat-app-on-surface-variant, #aaa);
+      color: var(--color-text-secondary);
     }
   }
 }
@@ -48,10 +92,10 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #f44336;
+    color: var(--color-error-500);
 
     mat-icon {
-      color: #f44336;
+      color: var(--color-error-500);
     }
   }
 }
@@ -74,7 +118,7 @@
     p {
       margin: 0.25rem 0 0;
       font-size: 0.85rem;
-      color: var(--mat-app-on-surface-variant, #aaa);
+      color: var(--color-text-secondary);
     }
   }
 }
@@ -83,7 +127,7 @@
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  color: #FF9800 !important;
+  color: var(--color-warning-500) !important;
   font-size: 0.825rem !important;
   margin-top: 0.5rem !important;
 
@@ -96,11 +140,11 @@
 
 .delete-account-btn {
   border-color: rgba(244, 67, 54, 0.5) !important;
-  color: #f44336 !important;
+  color: var(--color-error-500) !important;
   white-space: nowrap;
 
   mat-icon {
-    color: #f44336;
+    color: var(--color-error-500);
   }
 
   &:disabled {

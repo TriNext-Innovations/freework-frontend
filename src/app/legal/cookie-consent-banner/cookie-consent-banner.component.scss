@@ -4,9 +4,9 @@
   left: 0;
   right: 0;
   z-index: 9999;
-  background: var(--mat-app-surface, #1e1e1e);
-  border-top: 2px solid #1B3F8B;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
+  background: var(--color-surface-raised);
+  border-top: 2px solid var(--color-accent-700);
+  box-shadow: 0 -4px 20px var(--color-text-tertiary);
   max-height: 80vh;
   overflow-y: auto;
 
@@ -35,7 +35,7 @@
 
 .cookie-description {
   font-size: 0.875rem;
-  color: var(--mat-app-on-surface-variant, #aaa);
+  color: var(--color-text-secondary);
   margin-bottom: 1rem;
   line-height: 1.5;
 }
@@ -50,7 +50,7 @@
 }
 
 .cookie-categories {
-  background: var(--mat-app-surface-variant, #2a2a2a);
+  background: var(--color-surface);
   border-radius: 8px;
   overflow: hidden;
   margin-bottom: 1rem;
@@ -69,7 +69,7 @@
 
 .cookie-category-desc {
   font-size: 0.8rem;
-  color: var(--mat-app-on-surface-variant, #aaa);
+  color: var(--color-text-secondary);
   margin: 0.25rem 0 0;
 }
 

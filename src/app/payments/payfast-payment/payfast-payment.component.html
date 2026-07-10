@@ -1,11 +1,14 @@
 <div class="checkout-container container">
 
-  <div *ngIf="loading" class="loading-state">
+  @if (loading) {
+<div class="loading-state">
     <mat-spinner diameter="48"></mat-spinner>
     <p>Loading job details...</p>
   </div>
+}
 
-  <ng-container *ngIf="!loading && job">
+  @if (!loading && job) {
+
     <div class="checkout-header">
       <a mat-icon-button routerLink="/payments" class="back-btn">
         <mat-icon>arrow_back</mat-icon>
@@ -60,7 +63,7 @@
               <mat-icon>payments</mat-icon>
             </div>
             <h2>{{ formatCurrency(job.budget) }}</h2>
-            <p class="action-desc">You'll be redirected to our secure payment page to complete your payment.</p>
+            <p class="action-desc">You'll be redirected to <strong>PayFast</strong>, our secure South African payment provider, to complete your payment.</p>
 
             <button
               mat-raised-button
@@ -68,8 +71,12 @@
               (click)="proceedToPayment()"
               [disabled]="redirecting"
             >
-              <mat-spinner diameter="20" *ngIf="redirecting"></mat-spinner>
-              <mat-icon *ngIf="!redirecting">open_in_new</mat-icon>
+              @if (redirecting) {
+<mat-spinner diameter="20"></mat-spinner>
+}
+              @if (!redirecting) {
+<mat-icon>open_in_new</mat-icon>
+}
               {{ redirecting ? 'Redirecting...' : 'Proceed to Payment' }}
             </button>
 
@@ -96,5 +103,6 @@
       </div>
 
     </div>
-  </ng-container>
+  
+}
 </div>

@@ -36,6 +36,11 @@
           <strong>{{ registeredEmail }}</strong>
         </p>
         <p class="inbox-hint">Click the link in the email to verify your account and get started. Check your spam folder if you don't see it.</p>
+        <button *ngIf="!resendSent" mat-stroked-button class="resend-btn" [disabled]="resendLoading" (click)="resendVerification(registeredEmail)">
+          <mat-spinner *ngIf="resendLoading" diameter="16"></mat-spinner>
+          <span *ngIf="!resendLoading">Resend verification email</span>
+        </button>
+        <p *ngIf="resendSent" class="resend-sent"><mat-icon>check_circle</mat-icon> Verification email resent!</p>
         <div class="toggle-link">
           <p>Already verified? <a tabindex="0" (click)="registrationComplete = false; isRegister = false" (keyup.enter)="registrationComplete = false; isRegister = false" (keydown.space)="registrationComplete = false; isRegister = false">Sign in</a></p>
         </div>
@@ -99,6 +104,11 @@
               <mat-error *ngIf="f['password'].hasError('minlength')">At least 6 characters</mat-error>
               <mat-error *ngIf="f['password'].hasError('pattern')">Must contain uppercase, lowercase and a number</mat-error>
             </mat-form-field>
+
+            <!-- Forgot password link — login mode only -->
+            <div class="forgot-link" *ngIf="!isRegister">
+              <a routerLink="/forgot-password">Forgot your password?</a>
+            </div>
 
             <!-- Register-only: Confirm Password -->
             <div class="extra-fields" [class.visible]="isRegister">
@@ -182,6 +192,11 @@
           <mat-icon>error</mat-icon>
           <span>{{ errorMessage }}</span>
         </div>
+        <p *ngIf="unverifiedLoginEmail" class="resend-hint">
+          Didn't get the email?
+          <a *ngIf="!resendSent" tabindex="0" [class.disabled]="resendLoading" (click)="!resendLoading && resendVerification(unverifiedLoginEmail)" (keyup.enter)="!resendLoading && resendVerification(unverifiedLoginEmail)">Resend verification email</a>
+          <span *ngIf="resendSent" class="resend-confirmed">Sent!</span>
+        </p>
 
         <!-- Submit Button -->
         <button

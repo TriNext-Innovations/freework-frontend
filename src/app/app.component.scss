@@ -376,20 +376,20 @@ mat-nav-list {
 }
 
 // ── Main content area ─────────────────────────────
-// Flex column so the in-flow footer (margin-top: auto) sits at the bottom edge
-// on short pages and after the content — below the fold — on long ones.
-// Routed components keep their bounded height: percentage heights still resolve
-// because .main-content itself has a definite height (flex: 1 of the 100vh shell).
+// Flex column so the in-flow footer (margin-top: auto on its :host) sits at the
+// bottom edge on short pages and after the content — below the fold — on long
+// ones. Routed components keep their bounded height: percentage heights still
+// resolve because .main-content itself has a definite height (flex: 1 of the
+// 100vh shell).
+// NOTE: the required `> * { flex-shrink: 0 }` lives in styles.scss — routed
+// components lack this component's _ngcontent attribute, so a scoped child
+// selector here can never match them.
 .main-content {
   display: flex;
   flex-direction: column;
   flex: 1;
   overflow-y: auto;
   background: transparent;
-
-  > *:not(app-footer) {
-    flex-shrink: 0;
-  }
 }
 
 // ── PRO badge & upgrade link ──────────────────────

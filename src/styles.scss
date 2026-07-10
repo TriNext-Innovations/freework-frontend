@@ -1036,3 +1036,15 @@ app-root { position: relative; z-index: 1; }
   }
 }
 
+
+// ═══════════════════════════════════════════════════════════════
+// APP SHELL — scroll-region children (global on purpose)
+// The .main-content flex column (app.component.scss) must not shrink its
+// children: router-outlet-created components carry no _ngcontent attribute,
+// so this rule cannot live in a component stylesheet. Without it, flex
+// shrinks routed pages to their min-height and their content visually
+// overflows across the in-flow footer.
+// ═══════════════════════════════════════════════════════════════
+.main-content > * {
+  flex-shrink: 0;
+}

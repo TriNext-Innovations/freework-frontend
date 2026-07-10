@@ -237,11 +237,12 @@
         </div>
       </mat-toolbar>
 
-      <!-- Main Content -->
+      <!-- Main Content — footer lives inside the scroll region so it's reached
+           by scrolling instead of permanently occupying viewport height -->
       <main id="main-content" class="main-content" tabindex="-1">
         <router-outlet></router-outlet>
+        <app-footer></app-footer>
       </main>
-      <app-footer></app-footer>
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

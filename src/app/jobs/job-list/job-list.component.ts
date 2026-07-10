@@ -168,7 +168,8 @@ export class JobListComponent implements OnInit {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.loadJobs();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // The app shell scrolls inside .main-content, not the window
+    document.querySelector('.main-content')?.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   clearFilters(): void {

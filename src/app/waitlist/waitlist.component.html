@@ -1,0 +1,153 @@
+<section class="waitlist">
+  <header class="waitlist-hero aura-hero">
+    <span class="waitlist-hero__eyebrow">
+      <span class="live-dot" aria-hidden="true"></span>
+      Opening to a first group
+    </span>
+    <h1>South African developers, paid in <em>rand</em></h1>
+    <p>
+      FreeWork matches businesses with vetted local freelance developers. For the first group we
+      match every job by hand, and the client's payment is held in escrow until they sign off on the work.
+    </p>
+    <div class="hero-stats">
+      <div class="hero-stat">
+        <span class="hero-stat__num">0%</span>
+        <span class="hero-stat__label">taken from developers</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat__num">ZAR</span>
+        <span class="hero-stat__label">invoices and payouts</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat__num">Escrow</span>
+        <span class="hero-stat__label">until sign-off</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="waitlist__panel">
+    @if (state() === 'done') {
+      <div class="waitlist__done" role="status">
+        <h2>You're on the list.</h2>
+        @if (audience() === 'client') {
+          <p>We'll email you within two working days to talk through what you need and line up developers.</p>
+        } @else {
+          <p>We'll email you when there's work that matches your stack. Founding members get GROWTH free for three months.</p>
+        }
+      </div>
+    } @else {
+      <div class="audience-chips" role="group" aria-label="Who are you?">
+        <button type="button" class="audience-chip" [class.audience-chip--active]="audience() === 'client'"
+          [attr.aria-pressed]="audience() === 'client'" (click)="setAudience('client')">I need a developer</button>
+        <button type="button" class="audience-chip" [class.audience-chip--active]="audience() === 'freelancer'"
+          [attr.aria-pressed]="audience() === 'freelancer'" (click)="setAudience('freelancer')">I'm a developer</button>
+      </div>
+
+      <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+        <mat-form-field appearance="outline">
+          <mat-label>Your name</mat-label>
+          <input matInput formControlName="name" autocomplete="name" required>
+          @if (form.controls.name.hasError('required')) {
+            <mat-error>Tell us your name.</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Email</mat-label>
+          <input matInput type="email" formControlName="email" autocomplete="email" required>
+          @if (form.controls.email.hasError('required')) {
+            <mat-error>We need an email to reach you.</mat-error>
+          } @else if (form.controls.email.hasError('email')) {
+            <mat-error>That doesn't look like an email address.</mat-error>
+          }
+        </mat-form-field>
+
+        @if (audience() === 'client') {
+          <mat-form-field appearance="outline">
+            <mat-label>Company (optional)</mat-label>
+            <input matInput formControlName="company" autocomplete="organization">
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>What do you need built?</mat-label>
+            <textarea matInput formControlName="need" rows="3" required
+              placeholder="e.g. Fix our WooCommerce checkout, or build a small internal dashboard"></textarea>
+            @if (form.controls.need.hasError('required')) {
+              <mat-error>A sentence or two is enough.</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="waitlist__row">
+            <mat-form-field appearance="outline">
+              <mat-label>Budget</mat-label>
+              <mat-select formControlName="budget" required>
+                @for (b of budgets; track b) {
+                  <mat-option [value]="b">{{ b }}</mat-option>
+                }
+              </mat-select>
+              @if (form.controls.budget.hasError('required')) {
+                <mat-error>Pick a range.</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>When?</mat-label>
+              <mat-select formControlName="start" required>
+                @for (s of starts; track s) {
+                  <mat-option [value]="s">{{ s }}</mat-option>
+                }
+              </mat-select>
+              @if (form.controls.start.hasError('required')) {
+                <mat-error>Pick a timeframe.</mat-error>
+              }
+            </mat-form-field>
+          </div>
+        } @else {
+          <mat-form-field appearance="outline">
+            <mat-label>Main stack</mat-label>
+            <input matInput formControlName="stack" required placeholder="e.g. Angular, Spring Boot, Postgres">
+            @if (form.controls.stack.hasError('required')) {
+              <mat-error>What do you build with?</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>GitHub profile (optional)</mat-label>
+            <input matInput formControlName="github" placeholder="github.com/yourname">
+            @if (form.controls.github.hasError('pattern')) {
+              <mat-error>Use your profile link, e.g. github.com/yourname.</mat-error>
+            }
+          </mat-form-field>
+        }
+
+        <!-- Honeypot: hidden from people and screen readers, filled only by bots -->
+        <div class="waitlist__hp" aria-hidden="true">
+          <label for="waitlist-website">Website</label>
+          <input id="waitlist-website" type="text" formControlName="website" tabindex="-1" autocomplete="off">
+        </div>
+
+        <mat-checkbox formControlName="consent" class="waitlist__consent">
+          FreeWork may store these details and email me about the waitlist, as set out in the
+          <a routerLink="/legal/privacy-policy">Privacy Policy</a>.
+        </mat-checkbox>
+        @if (form.controls.consent.touched && form.controls.consent.hasError('required')) {
+          <p class="waitlist__error" role="alert">Please tick the box so we're allowed to contact you.</p>
+        }
+
+        @if (state() === 'error') {
+          <p class="waitlist__error" role="alert">
+            That didn't go through. Please try again in a minute.
+          </p>
+        }
+
+        <button mat-flat-button type="submit" class="waitlist__submit" [disabled]="state() === 'sending'">
+          @if (state() === 'sending') {
+            <mat-spinner diameter="18"></mat-spinner>
+          } @else {
+            {{ audience() === 'client' ? 'Get matched' : 'Join the waitlist' }}
+          }
+        </button>
+      </form>
+    }
+  </div>
+</section>

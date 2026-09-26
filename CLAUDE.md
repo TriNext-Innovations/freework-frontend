@@ -53,7 +53,7 @@ all other authenticated endpoints are under `/api/*` (use `buildApiEndpointUrl`)
 | `feature/*` | — (CI only) | — |
 | `develop` | — (CI only; dev is local) | — |
 | `staging` | staging — **Cloudflare Pages** | staging.freework.co.za |
-| `main` | — (CI only for now) | freework.co.za (prod, deferred) |
+| `main` | production — **Cloudflare Pages** (waitlist mode) | freework.co.za |
 
 ## Deployment
 
@@ -61,8 +61,14 @@ all other authenticated endpoints are under `/api/*` (use `buildApiEndpointUrl`)
 - **CI** (lint + build, Node 24) runs on every push/PR
 - **`staging`** → **Cloudflare Pages** project `freework-frontend-staging` via
   `wrangler-action` → staging.freework.co.za (talks to `api-staging.freework.co.za`)
-- **`main`** → CI only. Prod frontend is deferred until the prod backend
-  (`api.freework.co.za`) exists; then add a Cloudflare Pages prod deploy.
+- **`main`** → **Cloudflare Pages** project `freework-frontend` (GitHub `production`
+  environment) → freework.co.za. Until the prod backend exists, `environment.prod.ts` sets
+  `waitlistMode: true`: prod serves only the waitlist and the static legal pages
+  (`app.routes.ts`). Sign-ups go to the Pages Function `functions/api/waitlist.ts`, which
+  upserts a Zoho CRM lead; its `ZOHO_*` secrets live in the Pages project settings.
+  Set `waitlistMode: false` when `api.freework.co.za` is live.
+- freework.co.za was previously served by a stale Vercel deployment (Feb 2026, `vercel.json`).
+  Cutting over means pointing the domain at the Pages project; retire Vercel after.
 
 Cloudflare Pages specifics:
 - **Direct Upload only — do NOT connect the Pages project's Git integration.**

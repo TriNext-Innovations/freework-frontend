@@ -9,9 +9,9 @@ on:
 # Branch → environment mapping:
 #   develop → CI only (dev is local; no cloud deploy)
 #   staging → Cloudflare Pages (staging.freework.co.za) — talks to api-staging.freework.co.za
-#   main    → CI only FOR NOW. Prod frontend is deferred until the prod backend
-#             (api.freework.co.za) exists; otherwise we'd publish a UI that can't
-#             reach an API. When prod is ready, add a Cloudflare Pages prod deploy.
+#   main    → Cloudflare Pages (freework.co.za). While the prod backend does not exist,
+#             the production build runs in waitlist mode (environment.prod.ts): only the
+#             waitlist + static legal pages, with sign-ups going to functions/api/waitlist.ts.
 
 env:
   # Node 24 (npm 11) matches the version the committed package-lock.json was
@@ -35,6 +35,8 @@ jobs:
       - run: npm ci
 
       - run: npm run lint
+
+      - run: npm run test:functions
 
       - name: Resolve Angular build configuration
         id: cfg
@@ -86,3 +88,44 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           command: pages deploy dist/angular-app/browser --project-name=freework-frontend-staging --branch=staging
+
+  # ── Deploy: production (main → Cloudflare Pages → freework.co.za) ───────────
+  # Requires GitHub secrets in a `production` environment (add required reviewers there
+  # to gate every prod deploy):
+  #   CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID — same as staging
+  # Waitlist function secrets live in the Pages project, not GitHub:
+  #   ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN (+ optional ZOHO_ACCOUNTS_URL)
+  # `pages deploy` runs from the repo root so it also bundles ./functions.
+  # Map freework.co.za + www to the project once (Pages → custom domains).
+  deploy-production:
+    name: Deploy → Production (Cloudflare Pages)
+    needs: lint-and-build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+
+      - run: npm ci
+
+      - run: npm run build -- --configuration production
+
+      - name: Ensure Cloudflare Pages project exists
+        uses: cloudflare/wrangler-action@v3
+        continue-on-error: true
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages project create freework-frontend --production-branch=main
+
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy dist/angular-app/browser --project-name=freework-frontend --branch=main

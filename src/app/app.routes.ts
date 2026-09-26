@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard, roleGuard, profileSetupDeactivateGuard } from './auth/auth.guard';
+import { environment } from '../environments/environment';
 
-export const routes: Routes = [
+const appRoutes: Routes = [
   // Public routes
   {
     path: '',
@@ -241,3 +242,27 @@ export const routes: Routes = [
     redirectTo: '/jobs'
   }
 ];
+
+// Legal pages that read static content only — the POPIA request form needs the API.
+const STATIC_LEGAL_PATHS = new Set([
+  'legal/privacy-policy',
+  'legal/cookie-policy',
+  'legal/freelancer-terms',
+  'legal/business-terms'
+]);
+
+// While the API is not deployed, prod serves only the waitlist and the static legal pages.
+const waitlistRoutes: Routes = [
+  {
+    path: '',
+    loadComponent: () => import('./waitlist/waitlist.component').then(m => m.WaitlistComponent),
+    pathMatch: 'full'
+  },
+  ...appRoutes.filter(route => route.path !== undefined && STATIC_LEGAL_PATHS.has(route.path)),
+  {
+    path: '**',
+    redirectTo: ''
+  }
+];
+
+export const routes: Routes = environment.waitlistMode ? waitlistRoutes : appRoutes;

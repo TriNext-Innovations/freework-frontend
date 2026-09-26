@@ -52,6 +52,8 @@ export class AppComponent implements OnInit, OnDestroy {
   private document = inject<Document>(DOCUMENT);
 
   title = 'Freework';
+  readonly waitlistMode = environment.waitlistMode;
+  readonly currentYear = new Date().getFullYear();
   sidenavOpened = false;
   isDesktop = false;
   currentUser$: Observable<User | null>;

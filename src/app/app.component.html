@@ -1,3 +1,31 @@
+@if (waitlistMode) {
+  <!-- Waitlist mode: no app chrome, because the API behind it is not deployed -->
+  <app-cookie-consent-banner></app-cookie-consent-banner>
+  <div class="waitlist-shell">
+    <header class="waitlist-shell__header">
+      <a routerLink="/" class="waitlist-shell__logo" aria-label="freework home">
+        <svg viewBox="0 0 64 52" width="28" height="23" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M2 13 C14 13 20 29 32 29 C44 29 50 13 62 13" stroke="#2BB88A" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <path d="M2 39 C14 39 20 23 32 23 C44 23 50 39 62 39" stroke="#1A8D6F" stroke-width="7" fill="none" stroke-linecap="round" opacity="0.75"/>
+        </svg>
+        <span>freework</span>
+      </a>
+    </header>
+    <main id="main-content" class="waitlist-shell__main" tabindex="-1">
+      <router-outlet></router-outlet>
+    </main>
+    <footer class="waitlist-shell__footer">
+      <nav aria-label="Legal links">
+        <a routerLink="/legal/privacy-policy">Privacy Policy</a>
+        <a routerLink="/legal/cookie-policy">Cookie Policy</a>
+        <a routerLink="/legal/freelancer-terms">Freelancer Terms</a>
+        <a routerLink="/legal/business-terms">Business Terms</a>
+        <a href="mailto:privacy@freework.co.za">POPIA requests</a>
+      </nav>
+      <p>&copy; {{ currentYear }} TriNext Innovations (Pty) Ltd, trading as Freework</p>
+    </footer>
+  </div>
+} @else {
 <mat-sidenav-container class="sidenav-container">
   <!-- Side Navigation -->
   <mat-sidenav #sidenav [(opened)]="sidenavOpened" [mode]="sidenavMode" [class.desktop-nav]="isDesktop">
@@ -246,3 +274,4 @@
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
+}

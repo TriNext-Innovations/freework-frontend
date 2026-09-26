@@ -1,5 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: 'https://api-staging.freework.co.za',
-  chatbotApiKey: ''
+  chatbotApiKey: '',
+  // Waitlist mode: serve only the waitlist + legal pages (the API is not deployed)
+  waitlistMode: false
 };

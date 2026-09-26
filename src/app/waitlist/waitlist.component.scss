@@ -1,0 +1,255 @@
+// Follows "The Weave" (see CLAUDE.md; reference: jobs/job-list). The hero's <em> accent
+// comes from the global .aura-hero styles, so there is one serif brand moment per page.
+
+.waitlist {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: var(--spacing-md) var(--spacing-md) var(--spacing-3xl);
+  box-sizing: border-box;
+}
+
+// ── Hero ─────────────────────────────────────────────────────────────
+.waitlist-hero {
+  h1 {
+    max-width: 16ch;
+    margin: var(--spacing-lg) 0;
+    font-size: clamp(2rem, 4.5vw, 3rem);
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    color: var(--color-text-primary);
+  }
+
+  p {
+    margin: 0;
+    max-width: 56ch;
+    color: var(--color-text-secondary);
+    font-size: clamp(15px, 1.4vw, 18px);
+    line-height: 1.6;
+  }
+}
+
+.waitlist-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: 0.42rem 0.9rem;
+  border-radius: var(--radius-full);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-600);
+  background: rgba(43, 184, 138, 0.1);
+  border: 1px solid rgba(43, 184, 138, 0.28);
+}
+
+.live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--color-accent-500);
+  animation: live-pulse 2.4s ease-out infinite;
+}
+
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0 rgba(43, 184, 138, 0.45); }
+  70%  { box-shadow: 0 0 0 8px rgba(43, 184, 138, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(43, 184, 138, 0); }
+}
+
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(1.5rem, 4vw, 3.25rem);
+  margin-top: clamp(1.75rem, 4vw, 2.75rem);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--color-border);
+}
+
+.hero-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.hero-stat__num {
+  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.hero-stat__label {
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+}
+
+// ── Form panel ───────────────────────────────────────────────────────
+.waitlist__panel {
+  width: 100%;
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--spacing-xl);
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  background: var(--color-surface);
+
+  @media (max-width: 480px) {
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+}
+
+// Segmented pill chips, the same pattern as .worktype-chips on the jobs page
+.audience-chips {
+  display: flex;
+  gap: 4px;
+  margin-bottom: var(--spacing-lg);
+  padding: 4px;
+  border-radius: var(--radius-full);
+  background: var(--color-gray-100);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.audience-chip {
+  flex: 1;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px 12px;
+  border-radius: var(--radius-full);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  background: transparent;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+
+  &:hover {
+    color: var(--color-text-primary);
+    background: var(--color-gray-200);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-accent-500);
+    outline-offset: 1px;
+  }
+
+  &--active,
+  &--active:hover {
+    background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(43, 184, 138, 0.35);
+  }
+}
+
+.waitlist__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-md);
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}
+
+// Off-screen rather than display:none, so naive bots still fill it
+.waitlist__hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.waitlist__consent {
+  margin: var(--spacing-xs) 0 var(--spacing-md);
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+
+  a {
+    color: var(--color-text-primary);
+  }
+}
+
+.waitlist__error {
+  margin: 0 0 var(--spacing-md);
+  color: var(--color-error-500);
+  font-size: 0.9rem;
+}
+
+// Primary CTA: teal gradient pill, lifts 1px on hover
+.waitlist__submit {
+  height: 52px;
+  border-radius: var(--radius-full) !important;
+  background: linear-gradient(135deg, #2BB88A 0%, #1A8D6F 100%) !important;
+  color: #fff !important;
+  font-size: 15px;
+  font-weight: 700;
+  box-shadow: 0 4px 14px rgba(43, 184, 138, 0.35);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+
+  &:hover:not([disabled]) {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(43, 184, 138, 0.45);
+  }
+
+  &[disabled] {
+    opacity: 0.7;
+  }
+
+  mat-spinner {
+    margin: 0 auto;
+  }
+}
+
+.waitlist__done {
+  h2 {
+    margin: 0 0 var(--spacing-sm);
+  }
+
+  p {
+    margin: 0;
+    color: var(--color-text-secondary);
+    line-height: 1.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .live-dot {
+    animation: none;
+  }
+
+  .waitlist__submit,
+  .audience-chip {
+    transition: none;
+  }
+
+  .waitlist__submit:hover:not([disabled]) {
+    transform: none;
+  }
+}

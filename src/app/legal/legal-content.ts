@@ -28,7 +28,7 @@ export const LEGAL_CONTENT: {
         {
           id: 'introduction',
           heading: '1. Introduction',
-          content: `<p>Freework (Pty) Ltd ("Freework", "we", "us" or "our") is committed to protecting your personal information in accordance with the Protection of Personal Information Act 4 of 2013 ("POPIA") and all applicable South African privacy legislation.</p>
+          content: `<p>Freework is operated by TriNext Innovations (Pty) Ltd (registration number 2026/327860/07) ("Freework", "we", "us" or "our"), which is committed to protecting your personal information in accordance with the Protection of Personal Information Act 4 of 2013 ("POPIA") and all applicable South African privacy legislation.</p>
 <p>This Privacy Policy explains how we collect, use, store, share and protect your personal information when you use the Freework platform, including our website at freework.co.za and our mobile application (collectively, the "Platform").</p>
 <p>By registering on or using the Platform, you confirm that you have read, understood and agree to the collection and use of your personal information as described in this policy.</p>`
         },
@@ -37,13 +37,13 @@ export const LEGAL_CONTENT: {
           heading: '2. Who We Are',
           content: `<p><strong>Responsible Party (as defined under POPIA):</strong></p>
 <ul>
-  <li><strong>Name:</strong> Freework (Pty) Ltd</li>
-  <li><strong>Registration Number:</strong> [To be inserted upon incorporation]</li>
+  <li><strong>Name:</strong> TriNext Innovations (Pty) Ltd, trading as Freework</li>
+  <li><strong>Registration Number:</strong> 2026/327860/07</li>
   <li><strong>Address:</strong> South Africa</li>
   <li><strong>Email:</strong> privacy@freework.co.za</li>
   <li><strong>Information Officer:</strong> [Name to be designated]</li>
 </ul>
-<p>We are registered with the Information Regulator of South Africa as required by POPIA.</p>`
+<p>Freework is intended to become a separate subsidiary company of TriNext Innovations (Pty) Ltd. If it does, we will update this policy and tell you before your personal information is transferred to it.</p>`
         },
         {
           id: 'information-we-collect',
@@ -187,7 +187,7 @@ export const LEGAL_CONTENT: {
 <ul>
   <li><strong>Email:</strong> <a href="mailto:privacy@freework.co.za">privacy@freework.co.za</a></li>
   <li><strong>POPIA Data Request:</strong> <a routerLink="/legal/popia-request">Submit a formal request</a></li>
-  <li><strong>Postal Address:</strong> Freework (Pty) Ltd, South Africa</li>
+  <li><strong>Postal Address:</strong> TriNext Innovations (Pty) Ltd (trading as Freework), South Africa</li>
 </ul>
 <p>We will respond to all requests within 30 days as required by POPIA.</p>`
         }
@@ -203,7 +203,7 @@ export const LEGAL_CONTENT: {
         {
           id: 'introduction',
           heading: '1. Introduction',
-          content: `<p>This Cookie Policy explains how Freework (Pty) Ltd ("Freework", "we", "us") uses cookies and similar tracking technologies on the Freework platform (freework.co.za). This policy forms part of our <a routerLink="/legal/privacy-policy">Privacy Policy</a>.</p>
+          content: `<p>This Cookie Policy explains how TriNext Innovations (Pty) Ltd, trading as Freework ("Freework", "we", "us"), uses cookies and similar tracking technologies on the Freework platform (freework.co.za). This policy forms part of our <a routerLink="/legal/privacy-policy">Privacy Policy</a>.</p>
 <p>By using our Platform, you consent to the use of essential cookies. For non-essential cookies (analytics, functional, marketing), we will ask for your specific consent through our cookie consent banner.</p>`
         },
         {
@@ -351,7 +351,7 @@ export const LEGAL_CONTENT: {
           content: `<p>In these Terms and Conditions:</p>
 <ul>
   <li><strong>"Platform"</strong> means the Freework website and application at freework.co.za</li>
-  <li><strong>"Freework"</strong> means Freework (Pty) Ltd, a company registered in South Africa</li>
+  <li><strong>"Freework"</strong> means TriNext Innovations (Pty) Ltd (registration number 2026/327860/07), trading as Freework</li>
   <li><strong>"Freelancer"</strong> means you, a registered user offering services on the Platform</li>
   <li><strong>"Business"</strong> or <strong>"Client"</strong> means a registered user seeking to hire Freelancers</li>
   <li><strong>"Project"</strong> means a specific job or task posted by a Business and accepted by a Freelancer</li>
@@ -552,7 +552,7 @@ export const LEGAL_CONTENT: {
           content: `<p>In these Terms and Conditions:</p>
 <ul>
   <li><strong>"Platform"</strong> means the Freework website and application at freework.co.za</li>
-  <li><strong>"Freework"</strong> means Freework (Pty) Ltd, a company registered in South Africa</li>
+  <li><strong>"Freework"</strong> means TriNext Innovations (Pty) Ltd (registration number 2026/327860/07), trading as Freework</li>
   <li><strong>"Business"</strong> or <strong>"Client"</strong> means you, a registered user seeking to hire Freelancers</li>
   <li><strong>"Freelancer"</strong> means a registered user offering services on the Platform</li>
   <li><strong>"Project"</strong> means a specific job or task you post on the Platform</li>

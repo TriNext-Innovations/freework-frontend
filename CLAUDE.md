@@ -65,8 +65,15 @@ all other authenticated endpoints are under `/api/*` (use `buildApiEndpointUrl`)
   environment) → freework.co.za. Until the prod backend exists, `environment.prod.ts` sets
   `waitlistMode: true`: prod serves only the waitlist and the static legal pages
   (`app.routes.ts`). Sign-ups go to the Pages Function `functions/api/waitlist.ts`, which
-  upserts a Zoho CRM lead; its `ZOHO_*` secrets live in the Pages project settings.
+  always writes to the D1 database `freework-waitlist` (binding `WAITLIST_DB`, schema in
+  `migrations/`) and also upserts a Zoho CRM lead when the optional `ZOHO_*` secrets are set on
+  the Pages project. Rows with `zoho_synced = 0` still need importing into Zoho.
   Set `waitlistMode: false` when `api.freework.co.za` is live.
+- Prod lives in Cloudflare account `247b4b93dc62903f6223aba5da202e6b` (the one holding the
+  freework.co.za zone; staging's Pages project is in a different account). Until the GitHub
+  `production` environment has `CLOUDFLARE_API_TOKEN`, the deploy job skips, so deploy by hand
+  from the repo root (it must be the root so `functions/` is bundled):
+  `npm run build -- --configuration production && npx wrangler pages deploy dist/angular-app/browser --project-name=freework-frontend --branch=main`
 - freework.co.za was previously served by a stale Vercel deployment (Feb 2026, `vercel.json`).
   Cutting over means pointing the domain at the Pages project; retire Vercel after.
 

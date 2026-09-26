@@ -68,3 +68,45 @@ test('handler: Zoho failure → 502 without detail', async () => {
   const r = await onRequestPost({ request: req(client), env });
   assert.equal(r.status, 502); assert.equal(JSON.stringify(await r.json()).includes('MANDATORY'), false);
 });
+
+function fakeDb(fail = false) {
+  const rows: unknown[][] = [];
+  const db = {
+    prepare: (_q: string) => ({
+      bind: (...values: unknown[]) => ({
+        run: async () => {
+          if (fail) throw new Error('D1 down');
+          rows.push(values);
+          return {};
+        }
+      })
+    })
+  };
+  return { db, rows };
+}
+
+test('handler: stores in D1 when Zoho is not configured', async () => {
+  const { db, rows } = fakeDb();
+  const r = await onRequestPost({ request: req(client), env: { WAITLIST_DB: db } });
+  assert.equal(r.status, 202);
+  assert.equal(rows.length, 1);
+  const [audience, first, last, email, company, description, synced] = rows[0];
+  assert.deepEqual([audience, first, last, email, company, synced], ['client', 'Thandi', 'Mokoena', 'thandi@example.co.za', 'Acme', 0]);
+  assert.match(String(description), /^FreeWork — waitlist-client — JOB: Fix checkout/);
+});
+
+test('handler: Zoho failure still succeeds when D1 stores, flagged unsynced', async () => {
+  globalThis.fetch = (async () => Response.json({ data: [{ status: 'error' }] }, { status: 500 })) as typeof fetch;
+  const { db, rows } = fakeDb();
+  const r = await onRequestPost({ request: req(freelancer), env: { ...env, WAITLIST_DB: db } });
+  assert.equal(r.status, 202);
+  assert.equal(rows[0][6], 0);
+});
+
+test('handler: D1 failure still succeeds when Zoho syncs; both failing is 502', async () => {
+  globalThis.fetch = (async (url: string) => url.includes('oauth')
+    ? Response.json({ access_token: 'tok2', expires_in: 3600 })
+    : Response.json({ data: [{ status: 'success' }] })) as typeof fetch;
+  assert.equal((await onRequestPost({ request: req(client), env: { ...env, WAITLIST_DB: fakeDb(true).db } })).status, 202);
+  assert.equal((await onRequestPost({ request: req(client), env: { WAITLIST_DB: fakeDb(true).db } })).status, 502);
+});

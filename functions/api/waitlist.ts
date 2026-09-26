@@ -1,15 +1,17 @@
 /**
  * Cloudflare Pages Function: POST /api/waitlist
  *
- * Records a waitlist sign-up as a Zoho CRM lead while the Spring API is not deployed.
+ * Records a waitlist sign-up while the Spring API is not deployed:
+ *   1. always in the D1 database bound as WAITLIST_DB (the durable record; schema in migrations/), and
+ *   2. as a Zoho CRM lead when Zoho credentials are configured (zoho_synced marks which rows made it).
  * Leads follow the CRM convention in freework-operations/sales/OUTREACH_PLAYBOOK.md:
  * the Description starts with "FreeWork — waitlist-client —" or "FreeWork — waitlist-freelancer —".
  *
- * Required env vars (Pages project → Settings → Variables and Secrets, never committed):
- *   ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN  — a Zoho self-client with scope ZohoCRM.modules.leads.CREATE,ZohoCRM.modules.leads.UPDATE
- * Optional:
- *   ZOHO_ACCOUNTS_URL          — default https://accounts.zoho.com (use your data centre's accounts domain)
- *   WAITLIST_ALLOWED_ORIGINS   — comma-separated; default https://freework.co.za,https://www.freework.co.za
+ * Bindings and env vars (Pages project settings, never committed):
+ *   WAITLIST_DB                — D1 binding (database freework-waitlist)
+ *   ZOHO_CLIENT_ID, ZOHO_CLIENT_SECRET, ZOHO_REFRESH_TOKEN  — optional; a Zoho self-client with scope ZohoCRM.modules.leads.CREATE,ZohoCRM.modules.leads.UPDATE
+ *   ZOHO_ACCOUNTS_URL          — optional; default https://accounts.zoho.com
+ *   WAITLIST_ALLOWED_ORIGINS   — optional; comma-separated; default https://freework.co.za,https://www.freework.co.za
  */
 
 export const BUDGETS = ['Under R5,000', 'R5,000 – R20,000', 'R20,000 – R50,000', 'R50,000+'];
@@ -27,7 +29,9 @@ export interface ZohoLead {
   Description: string;
 }
 
-type Validation = { ok: true; lead: ZohoLead } | { ok: false; error: string } | { ok: 'bot' };
+export type Audience = 'client' | 'freelancer';
+
+type Validation = { ok: true; audience: Audience; lead: ZohoLead } | { ok: false; error: string } | { ok: 'bot' };
 
 function text(value: unknown, max: number): string | null {
   if (value === undefined || value === null) return '';
@@ -68,6 +72,7 @@ export function toLead(body: unknown, now: Date = new Date()): Validation {
     if (typeof start !== 'string' || !STARTS.includes(start)) return { ok: false, error: 'Invalid start' };
     return {
       ok: true,
+      audience,
       lead: {
         ...names,
         Email: email,
@@ -83,6 +88,7 @@ export function toLead(body: unknown, now: Date = new Date()): Validation {
   if (github === null || (github !== '' && !GITHUB_PATTERN.test(github))) return { ok: false, error: 'Invalid GitHub link' };
   return {
     ok: true,
+    audience,
     lead: {
       ...names,
       Email: email,
@@ -93,7 +99,13 @@ export function toLead(body: unknown, now: Date = new Date()): Validation {
 }
 
 // Access tokens live an hour; reuse one across invocations on a warm instance.
+/** The subset of Cloudflare's D1 API this function uses. */
+export interface D1Like {
+  prepare(query: string): { bind(...values: unknown[]): { run(): Promise<unknown> } };
+}
+
 export interface Env {
+  WAITLIST_DB?: D1Like;
   ZOHO_CLIENT_ID?: string;
   ZOHO_CLIENT_SECRET?: string;
   ZOHO_REFRESH_TOKEN?: string;
@@ -148,6 +160,19 @@ async function upsertLead(lead: ZohoLead, env: Env): Promise<void> {
   }
 }
 
+function zohoConfigured(env: Env): boolean {
+  return !!(env.ZOHO_CLIENT_ID && env.ZOHO_CLIENT_SECRET && env.ZOHO_REFRESH_TOKEN);
+}
+
+async function storeSignup(db: D1Like, audience: Audience, lead: ZohoLead, zohoSynced: boolean): Promise<void> {
+  await db
+    .prepare(
+      'INSERT INTO signups (audience, first_name, last_name, email, company, description, zoho_synced) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    )
+    .bind(audience, lead.First_Name ?? null, lead.Last_Name, lead.Email, lead.Company, lead.Description, zohoSynced ? 1 : 0)
+    .run();
+}
+
 function reply(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), {
     status,
@@ -181,12 +206,28 @@ export async function onRequestPost({ request, env }: PagesContext): Promise<Res
   if (result.ok === 'bot') return reply(202, { ok: true });
   if (!result.ok) return reply(400, { ok: false, error: result.error });
 
-  try {
-    await upsertLead(result.lead, env);
-  } catch (err) {
-    // Visible in the Pages function logs; never echo upstream detail to the client
-    console.error('waitlist: lead not recorded', err instanceof Error ? err.message : err);
-    return reply(502, { ok: false, error: 'Could not record your sign-up' });
+  // Zoho first so the D1 row records whether it synced; D1 is the record of truth either way.
+  let zohoSynced = false;
+  if (zohoConfigured(env)) {
+    try {
+      await upsertLead(result.lead, env);
+      zohoSynced = true;
+    } catch (err) {
+      // Visible in the Pages function logs; never echo upstream detail to the client
+      console.error('waitlist: Zoho sync failed', err instanceof Error ? err.message : err);
+    }
   }
+
+  let stored = false;
+  if (env.WAITLIST_DB) {
+    try {
+      await storeSignup(env.WAITLIST_DB, result.audience, result.lead, zohoSynced);
+      stored = true;
+    } catch (err) {
+      console.error('waitlist: D1 insert failed', err instanceof Error ? err.message : err);
+    }
+  }
+
+  if (!stored && !zohoSynced) return reply(502, { ok: false, error: 'Could not record your sign-up' });
   return reply(202, { ok: true });
 }

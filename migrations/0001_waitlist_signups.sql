@@ -1,5 +1,5 @@
 -- D1 database freework-waitlist, bound to the Pages project as WAITLIST_DB.
--- Apply: npx wrangler d1 migrations apply freework-waitlist --remote
+-- Applied 2026-09-26 with: npx wrangler d1 execute freework-waitlist --remote --file <this file>
 CREATE TABLE IF NOT EXISTS signups (
   id          INTEGER PRIMARY KEY AUTOINCREMENT,
   created_at  TEXT    NOT NULL DEFAULT (strftime('%Y-%m-%dT%H:%M:%fZ', 'now')),

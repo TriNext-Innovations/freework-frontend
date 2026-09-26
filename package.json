@@ -8,7 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "ng lint",
-    "test:functions": "node --test tests/functions/"
+    "test:functions": "node --test \"tests/functions/*.test.ts\""
   },
   "private": true,
   "dependencies": {
